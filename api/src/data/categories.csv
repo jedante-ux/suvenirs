@@ -1,0 +1,202 @@
+nivel,categoria,categoria_padre
+0,ARTÍCULOS PARA CAJAS TEMÁTICAS,
+1,REGALOS PREMIUM,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Nuestras cajas y canastos,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja de papelería,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja navideña,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja bienestar,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja día de la madre y día de la mujer,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja deportiva,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja día del AMOR,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja ECO,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja escritorio y papelería,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja gourmet y dieciochera,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja día del padre,ARTÍCULOS PARA CAJAS TEMÁTICAS
+1,Caja tecnológica,ARTÍCULOS PARA CAJAS TEMÁTICAS
+
+0,NOVEDADES,
+1,NOVEDADES 2025,NOVEDADES
+1,NOVEDADES 2024,NOVEDADES
+1,Novedades Publicitarios,NOVEDADES
+1,Novedades Trofeos y Premios,NOVEDADES
+
+0,THE GREEN LIFE,
+1,Artículos de Escritorio,THE GREEN LIFE
+2,Lápices,Artículos de Escritorio
+2,Libretas,Artículos de Escritorio
+2,Mousepads,Artículos de Escritorio
+1,Artículos para beber,THE GREEN LIFE
+2,Botellas y Vasos,Artículos para beber
+1,Gifts,THE GREEN LIFE
+2,Sets,Gifts
+2,Llaveros,Gifts
+
+0,ACCESORIOS AUTOMÓVIL,
+0,BELLEZA Y SALUD,
+0,BILLETERAS Y PORTA-DOCUMENTOS,
+
+0,BOLÍGRAFOS Y LÁPICES,
+1,Todos,BOLÍGRAFOS Y LÁPICES
+1,Touch-Screen,BOLÍGRAFOS Y LÁPICES
+1,Plásticos Cuerpo Blanco,BOLÍGRAFOS Y LÁPICES
+1,Plásticos Cuerpo Color,BOLÍGRAFOS Y LÁPICES
+1,Plásticos Color Metalizado,BOLÍGRAFOS Y LÁPICES
+1,Plásticos Cuerpo Plateado,BOLÍGRAFOS Y LÁPICES
+1,Funcionales y Destacadores,BOLÍGRAFOS Y LÁPICES
+1,Metálicos y Ejecutivos,BOLÍGRAFOS Y LÁPICES
+1,Ecológicos,BOLÍGRAFOS Y LÁPICES
+
+0,BOLSAS PUBLICITARIAS,
+1,Bolsas y Mochilas Plegables,BOLSAS PUBLICITARIAS
+1,Bolsas de Algodón,BOLSAS PUBLICITARIAS
+1,Bolsas de Fieltro,BOLSAS PUBLICITARIAS
+1,Bolsas de Papel,BOLSAS PUBLICITARIAS
+1,Bolsas de TNT,BOLSAS PUBLICITARIAS
+1,Bolsas de Yute,BOLSAS PUBLICITARIAS
+1,Bolsas de Poliéster,BOLSAS PUBLICITARIAS
+
+0,BOLSOS Y MOCHILAS,
+1,Bolsos Deportivos y de Viaje,BOLSOS Y MOCHILAS
+1,Bananos,BOLSOS Y MOCHILAS
+1,Mujer – Playa,BOLSOS Y MOCHILAS
+1,Mochilas,BOLSOS Y MOCHILAS
+1,Coolers y Loncheras,BOLSOS Y MOCHILAS
+1,Maletines y Fundas,BOLSOS Y MOCHILAS
+
+0,CAJAS AUTO-ARMABLES Y PACKING,
+0,CELULARES – COMPUTACIÓN,
+0,COBRE – ENCOBRIZADOS,
+0,CUADERNOS – LIBRETAS – MEMO SET,
+0,DEPORTES,
+
+0,DESCANSO Y DIVERSIÓN,
+1,Anti-Stress,DESCANSO Y DIVERSIÓN
+1,Fiestas y Animación,DESCANSO Y DIVERSIÓN
+1,Juegos y Pasatiempos,DESCANSO Y DIVERSIÓN
+1,Viajes y Vacaciones,DESCANSO Y DIVERSIÓN
+
+0,ECOLÓGICOS,
+1,Eco-Friendly,ECOLÓGICOS
+1,Bamboo,ECOLÓGICOS
+1,BOLÍGRAFOS Y LÁPICES,ECOLÓGICOS
+
+0,ELECTRÓNICOS,
+1,Audio,ELECTRÓNICOS
+1,Punteros Láser y Datashow,ELECTRÓNICOS
+1,Relojes y Calculadoras,ELECTRÓNICOS
+1,Linternas – LED,ELECTRÓNICOS
+
+0,EMBALAJE Y DEMARCATORIA,
+0,GORROS, JOCKEYS Y SOMBREROS,
+0,HERRAMIENTAS,
+0,HOGAR Y DECORACIÓN,
+0,INFANTIL,
+
+0,INVIERNO,
+1,Paraguas y Capas de Agua,INVIERNO
+1,Ropa de Invierno,INVIERNO
+
+0,LANYARDS E IDENTIFICACIÓN,
+0,LÍNEA INVIERNO,
+0,LIQUIDACIÓN,
+
+0,LLAVEROS,
+1,Promocionales,LLAVEROS
+1,Metal – Cuero – Madera,LLAVEROS
+
+0,MEDALLAS – TROFEOS – GALVANOS,
+0,MUG – VASOS – BOTELLAS – TERMOS,
+
+0,NEGOCIOS Y EMPRESAS,
+1,Escritorio y Oficina,NEGOCIOS Y EMPRESAS
+1,Carpetas y Portafolios,NEGOCIOS Y EMPRESAS
+
+0,OFERTAS,
+0,PARRILLA Y ASADOS,
+0,PRODUCTOS DE TELA NO TEJIDA (TNT),
+0,COVID-19,
+0,PRODUCTOS SUBLIMACIÓN,
+0,PROTECCIÓN RFID,
+0,REGALOS PREMIUM,
+0,ROPA PUBLICITARIA,
+1,Poleras y Shorts,ROPA PUBLICITARIA
+1,Ropa de Invierno,ROPA PUBLICITARIA
+1,Ropa de Seguridad,ROPA PUBLICITARIA
+
+0,SET DE REGALOS,
+
+0,TERRAZA Y JARDÍN,
+1,Sillas, Mesas y Reposeras,TERRAZA Y JARDÍN
+1,Toldo y Quitasoles,TERRAZA Y JARDÍN
+1,Parrilla y Asados,TERRAZA Y JARDÍN
+
+0,VAMOS CHILE!!,
+0,VERANO,
+0,VESTIMENTA DEPORTIVA,
+0,VINO – GOURMET – SOMMELIER,
+0,PRODUCTOS CON CERTIFICACIONES,
+
+0,ARTÍCULOS PUBLICITARIOS,
+1,Accesorios-Herramientas,ARTÍCULOS PUBLICITARIOS
+1,Tecnológicos,ARTÍCULOS PUBLICITARIOS
+2,Pendrives,Tecnológicos
+2,Power Banks,Tecnológicos
+2,Audífonos-Parlantes,Tecnológicos
+2,Otros Tecnológicos,Tecnológicos
+1,Bolígrafos-Lápices-Estuches,ARTÍCULOS PUBLICITARIOS
+1,Botellas-Mugs-Tazones-Termos-Vasos,ARTÍCULOS PUBLICITARIOS
+2,Botellas,Botellas-Mugs-Tazones-Termos-Vasos
+2,Mugs y Tazones,Botellas-Mugs-Tazones-Termos-Vasos
+2,Termos,Botellas-Mugs-Tazones-Termos-Vasos
+2,Recipientes de vidrio,Botellas-Mugs-Tazones-Termos-Vasos
+1,Chapitas Publicitarias,ARTÍCULOS PUBLICITARIOS
+1,Envases y Atomizadores,ARTÍCULOS PUBLICITARIOS
+1,Lanyards e Identificación,ARTÍCULOS PUBLICITARIOS
+1,Llaveros,ARTÍCULOS PUBLICITARIOS
+1,Libretas-Cuadernos-Memo Set,ARTÍCULOS PUBLICITARIOS
+1,Mochilas-Bananos-Bolsos-Morrales,ARTÍCULOS PUBLICITARIOS
+1,Set de Vino-Descorchadores-Bolsas para vinos,ARTÍCULOS PUBLICITARIOS
+1,Set Parrillero-Destapadores-Posavasos,ARTÍCULOS PUBLICITARIOS
+
+0,TROFEOS Y PREMIOS,
+1,Copas y Torres,TROFEOS Y PREMIOS
+2,Copas Línea Comercial,Copas y Torres
+2,Copas Línea Clásica,Copas y Torres
+2,Kit de Copas,Copas y Torres
+2,Copas en Promoción,Copas y Torres
+2,Torres,Copas y Torres
+1,Trofeos,TROFEOS Y PREMIOS
+2,Trofeos Acrílicos,Trofeos
+2,Trofeos Metálicos,Trofeos
+2,Trofeos Plásticos,Trofeos
+2,Trofeos Resina,Trofeos
+1,Medallas – Cintas – Sellos – Accesorios,TROFEOS Y PREMIOS
+2,Medallas,Medallas – Cintas – Sellos – Accesorios
+2,Cintas 1 color,Medallas – Cintas – Sellos – Accesorios
+2,Cintas 2 colores,Medallas – Cintas – Sellos – Accesorios
+2,Cintas 3 colores,Medallas – Cintas – Sellos – Accesorios
+2,Sellos,Medallas – Cintas – Sellos – Accesorios
+2,Accesorios para Medallas,Medallas – Cintas – Sellos – Accesorios
+1,Moldes,TROFEOS Y PREMIOS
+2,Moldes Plástico,Moldes
+2,Moldes Resina,Moldes
+1,Galvanos de Cristal,TROFEOS Y PREMIOS
+1,Galvanos de Madera y Varios,TROFEOS Y PREMIOS
+1,Bandejas-Rocas,TROFEOS Y PREMIOS
+1,Insumos,TROFEOS Y PREMIOS
+1,Cajas-Estuches de presentación,TROFEOS Y PREMIOS
+1,Placas,TROFEOS Y PREMIOS
+
+0,TIMBRES AUTOMÁTICOS,
+1,Timbres Rectangulares y Fechadores,TIMBRES AUTOMÁTICOS
+1,Timbres Cuadrados y Redondos,TIMBRES AUTOMÁTICOS
+1,Timbres de Bolsillo y Dactilares,TIMBRES AUTOMÁTICOS
+1,Accesorios para Timbres,TIMBRES AUTOMÁTICOS
+
+0,LÍNEA BAMBOO,
+0,LÍNEA COBRE,
+
+0,PACKAGING,
+1,Bolsas Papel Kraft,PACKAGING
+1,Sacos de Yute,PACKAGING
+1,Cajas de Cartón Autoarmables,PACKAGING
