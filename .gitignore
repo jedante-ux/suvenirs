@@ -36,6 +36,9 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# credentials file (NEVER commit)
+.credentials.md
+
 # vercel
 .vercel
 
@@ -51,3 +54,4 @@ next-env.d.ts
 
 # Docker volumes (if local)
 mongo_data/
+.claude/

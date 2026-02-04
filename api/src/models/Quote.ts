@@ -114,9 +114,9 @@ const quoteSchema = new Schema<IQuote>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (_doc, ret) {
-        ret.id = ret._id.toString();
-        ret._id = ret._id.toString();
+      transform: function (_doc, ret: Record<string, unknown>) {
+        ret.id = String(ret._id);
+        ret._id = String(ret._id);
         delete ret.__v;
         return ret;
       },

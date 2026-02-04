@@ -65,7 +65,7 @@ class PexelsService {
         throw new Error(`Pexels API error: ${response.status}`);
       }
 
-      const data: PexelsSearchResponse = await response.json();
+      const data = await response.json() as PexelsSearchResponse;
       return data;
     } catch (error) {
       console.error('Error fetching photos from Pexels:', error);
@@ -95,7 +95,7 @@ class PexelsService {
         throw new Error(`Pexels API error: ${response.status}`);
       }
 
-      const data: PexelsPhoto = await response.json();
+      const data = await response.json() as PexelsPhoto;
       return data;
     } catch (error) {
       console.error('Error fetching photo from Pexels:', error);
