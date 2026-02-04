@@ -128,7 +128,7 @@ class PexelsService {
         throw new Error(`Pexels API error: ${response.status}`);
       }
 
-      const data: PexelsSearchResponse = await response.json();
+      const data = await response.json() as PexelsSearchResponse;
       return data;
     } catch (error) {
       console.error('Error fetching curated photos from Pexels:', error);

@@ -62,9 +62,10 @@ export const authorize = (...roles: string[]) => {
 };
 
 export const generateToken = (user: { id: string; email: string; role: string }): string => {
+  const options: jwt.SignOptions = { expiresIn: env.JWT_EXPIRES_IN };
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     env.JWT_SECRET,
-    { expiresIn: env.JWT_EXPIRES_IN }
+    options
   );
 };
