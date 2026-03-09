@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  firstName String
+  lastName  String
+  phone     String?
+  company   String?
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  blogPosts BlogPost[]
+
+  @@map("profiles")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Category {
+  id           String     @id @default(uuid()) @db.Uuid
+  categoryId   String     @unique
+  name         String
+  slug         String     @unique
+  description  String?
+  image        String?
+  icon         String?
+  parentId     String?    @db.Uuid
+  parent       Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children     Category[] @relation("CategoryChildren")
+  order        Int        @default(0)
+  isActive     Boolean    @default(true)
+  productCount Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String    @id @default(uuid()) @db.Uuid
+  productId   String    @unique
+  name        String
+  slug        String    @unique
+  description String
+  categoryId  String?   @db.Uuid
+  category    Category? @relation(fields: [categoryId], references: [id])
+  quantity    Int       @default(0)
+  price       Float?
+  salePrice   Float?
+  currency    String    @default("CLP")
+  image       String    @default("/placeholder-product.jpg")
+  featured    Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("products")
+}
+
+model Quote {
+  id              String      @id @default(uuid()) @db.Uuid
+  quoteNumber     String      @unique
+  totalItems      Int
+  totalUnits      Int
+  quotedAmount    Float       @default(0)
+  finalAmount     Float       @default(0)
+  customerName    String?
+  customerEmail   String?
+  customerPhone   String?
+  customerCompany String?
+  notes           String?
+  status          QuoteStatus @default(PENDING)
+  source          QuoteSource @default(WEB)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  items QuoteItem[]
+
+  @@map("quotes")
+}
+
+model QuoteItem {
+  id          String @id @default(uuid()) @db.Uuid
+  quoteId     String @db.Uuid
+  quote       Quote  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId   String
+  productName String
+  quantity    Int
+  description String @default("")
+
+  @@map("quote_items")
+}
+
+enum QuoteStatus {
+  PENDING
+  CONTACTED
+  QUOTED
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum QuoteSource {
+  WHATSAPP
+  WEB
+  MANUAL
+}
+
+model BlogPost {
+  id          String    @id @default(uuid()) @db.Uuid
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  authorId    String    @db.Uuid
+  author      Profile   @relation(fields: [authorId], references: [id])
+  tags        String[]
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("blog_posts")
+}
