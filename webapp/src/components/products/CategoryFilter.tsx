@@ -74,7 +74,7 @@ export default function CategoryFilter({
             <span className="font-medium">Todas las categorías</span>
           </SelectItem>
           {categories.map((category) => (
-            <SelectItem key={category._id} value={category.slug}>
+            <SelectItem key={category.id} value={category.slug}>
               <div className="flex items-center justify-between w-full gap-2">
                 <span>{category.name}</span>
                 {category.productCount > 0 && (

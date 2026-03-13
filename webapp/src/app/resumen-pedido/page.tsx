@@ -101,7 +101,7 @@ export default function ResumenPedidoPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {state.items.map((item, index) => (
-                  <div key={item.product._id}>
+                  <div key={item.product.id}>
                     {index > 0 && <Separator className="my-4" />}
                     <div className="flex gap-4">
                       <div className="relative w-24 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
@@ -160,7 +160,7 @@ export default function ResumenPedidoPage() {
                   <h4 className="font-medium mb-2 text-sm">Detalle del pedido:</h4>
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     {state.items.map((item) => (
-                      <li key={item.product._id} className="flex justify-between items-start">
+                      <li key={item.product.id} className="flex justify-between items-start">
                         <div className="truncate mr-2">
                           <span className="font-mono text-xs block">{item.product.productId}</span>
                           <span>{item.product.name}</span>

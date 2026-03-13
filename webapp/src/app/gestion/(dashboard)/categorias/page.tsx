@@ -105,7 +105,7 @@ export default function CategoriasPage() {
       name: category.name,
       description: category.description,
       slug: category.slug,
-      parent: typeof category.parent === 'object' && category.parent ? category.parent._id : category.parent,
+      parent: typeof category.parent === 'object' && category.parent ? category.parent.id : category.parent,
       order: category.order,
       isActive: category.isActive,
       image: category.image || '',
@@ -125,7 +125,7 @@ export default function CategoriasPage() {
 
     try {
       const url = editingCategory
-        ? `${API_URL}/admin/categories/${editingCategory._id}`
+        ? `${API_URL}/admin/categories/${editingCategory.id}`
         : `${API_URL}/admin/categories`;
 
       const method = editingCategory ? 'PUT' : 'POST';
@@ -171,7 +171,7 @@ export default function CategoriasPage() {
     if (!categoryToDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/admin/categories/${categoryToDelete._id}`, {
+      const res = await fetch(`${API_URL}/admin/categories/${categoryToDelete.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -208,7 +208,7 @@ export default function CategoriasPage() {
   };
 
   const getCategoryName = (categoryId: string) => {
-    const category = categories.find(cat => cat._id === categoryId || cat.categoryId === categoryId);
+    const category = categories.find(cat => cat.id === categoryId || cat.categoryId === categoryId);
     return category?.name || 'Sin categoría padre';
   };
 
@@ -274,7 +274,7 @@ export default function CategoriasPage() {
               ) : (
                 <>
                   {filteredCategories.map((category) => (
-                    <TableRow key={category._id}>
+                    <TableRow key={category.id}>
                       <TableCell className="font-mono text-xs px-2 py-2">{category.categoryId}</TableCell>
                       <TableCell className="font-medium px-2 py-2">
                         <div className="flex items-center gap-1">
@@ -406,7 +406,7 @@ export default function CategoriasPage() {
                     <span className="text-muted-foreground">Sin categoría padre</span>
                   </SelectItem>
                   {getParentCategories().map((category) => (
-                    <SelectItem key={category._id} value={category._id}>
+                    <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
                   ))}

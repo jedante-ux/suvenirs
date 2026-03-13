@@ -43,10 +43,10 @@ export default function FeaturedProducts() {
 
             // Combine: prioritize search results, then add random ones
             const combinedProducts = [...response.data];
-            const existingIds = new Set(response.data.map(p => p._id));
+            const existingIds = new Set(response.data.map(p => p.id));
 
             for (const product of randomResponse.data) {
-              if (!existingIds.has(product._id) && combinedProducts.length < 15) {
+              if (!existingIds.has(product.id) && combinedProducts.length < 15) {
                 combinedProducts.push(product);
               }
             }
@@ -152,7 +152,7 @@ export default function FeaturedProducts() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {products.map((product) => (
             <Card
-              key={product._id}
+              key={product.id}
               className="group overflow-hidden hover:shadow-lg transition-all duration-300"
             >
               {/* Image */}

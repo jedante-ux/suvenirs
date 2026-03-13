@@ -1,5 +1,4 @@
 export interface Category {
-  _id: string;
   id: string;
   categoryId: string;
   name: string;
@@ -8,6 +7,7 @@ export interface Category {
   image?: string;
   icon?: string;
   parent?: string | Category;
+  parentId?: string;
   order: number;
   isActive: boolean;
   productCount: number;
@@ -17,12 +17,12 @@ export interface Category {
 
 export interface Product {
   id: string;
-  _id: string; // Mantener temporalmente para compatibilidad
   productId: string;
   name: string;
   slug: string;
   description: string;
-  category?: string | Category;
+  categoryId?: string;
+  category?: { name: string; slug: string; description?: string; icon?: string | null };
   quantity: number;
   price?: number;
   salePrice?: number;
@@ -63,7 +63,6 @@ export interface PaginatedResponse<T> {
 
 export interface User {
   id: string;
-  _id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -71,7 +70,6 @@ export interface User {
   company?: string;
   role: 'admin' | 'user';
   isActive: boolean;
-  isVerified: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -85,7 +83,6 @@ export interface QuoteItem {
 
 export interface Quote {
   id: string;
-  _id: string; // Mantener temporalmente para compatibilidad
   quoteNumber: string;
   items: QuoteItem[];
   totalItems: number;
@@ -95,8 +92,8 @@ export interface Quote {
   customerPhone?: string;
   customerCompany?: string;
   notes?: string;
-  status: 'pending' | 'contacted' | 'quoted' | 'approved' | 'rejected' | 'completed';
-  source: 'whatsapp' | 'web' | 'manual';
+  status: 'PENDING' | 'CONTACTED' | 'QUOTED' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
+  source: 'WHATSAPP' | 'WEB' | 'MANUAL';
   createdAt: string;
   updatedAt: string;
 }
@@ -110,13 +107,13 @@ export interface AuthState {
 
 export interface BlogPost {
   id: string;
-  _id: string;
   title: string;
   slug: string;
   excerpt: string;
   content: string;
   coverImage?: string;
-  author: User | string;
+  authorId: string;
+  author?: User | string;
   tags: string[];
   isPublished: boolean;
   publishedAt?: string;

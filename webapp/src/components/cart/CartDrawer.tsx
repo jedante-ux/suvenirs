@@ -40,7 +40,7 @@ export default function CartDrawer() {
             <>
               <div className="flex-1 overflow-y-auto space-y-4 pb-4 min-h-0">
                 {state.items.map((item) => (
-                  <div key={item.product._id} className="flex gap-4 p-4 bg-muted/50 rounded-lg border border-border/50">
+                  <div key={item.product.id} className="flex gap-4 p-4 bg-muted/50 rounded-lg border border-border/50">
                     <div className="relative w-20 h-20 bg-muted rounded-md overflow-hidden flex-shrink-0">
                       <Image
                         src={item.product.image || '/placeholder-product.jpg'}
@@ -66,7 +66,7 @@ export default function CartDrawer() {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -77,7 +77,7 @@ export default function CartDrawer() {
                             variant="outline"
                             size="icon"
                             className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                             disabled={item.quantity >= item.product.quantity}
                           >
                             <Plus className="h-3 w-3" />
@@ -88,7 +88,7 @@ export default function CartDrawer() {
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 text-destructive hover:text-destructive"
-                          onClick={() => removeItem(item.product._id)}
+                          onClick={() => removeItem(item.product.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

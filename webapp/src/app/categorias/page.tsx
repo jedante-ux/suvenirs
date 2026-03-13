@@ -94,7 +94,7 @@ export default function CategoriasPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {filteredCategories.map((category) => (
                 <Link
-                  key={category._id}
+                  key={category.id}
                   href={`/productos?categoria=${category.slug}`}
                 >
                   <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full cursor-pointer p-0 gap-0">

@@ -176,12 +176,7 @@ export default function ProductosPage() {
     setEditingProduct(product);
 
     // Extract category ID properly
-    let categoryId: string | undefined;
-    if (typeof product.category === 'object' && product.category) {
-      categoryId = product.category._id;
-    } else if (typeof product.category === 'string' && product.category) {
-      categoryId = product.category;
-    }
+    const categoryId: string | undefined = product.categoryId || undefined;
 
     setFormData({
       productId: product.productId,
@@ -210,7 +205,7 @@ export default function ProductosPage() {
 
     try {
       const url = editingProduct
-        ? `${API_URL}/products/${editingProduct._id}`
+        ? `${API_URL}/products/${editingProduct.id}`
         : `${API_URL}/products`;
 
       const res = await fetch(url, {
@@ -241,7 +236,7 @@ export default function ProductosPage() {
     if (!productToDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/products/${productToDelete._id}`, {
+      const res = await fetch(`${API_URL}/products/${productToDelete.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -262,15 +257,9 @@ export default function ProductosPage() {
 
   const toggleFeatured = async (product: Product) => {
     try {
-      // Extract category ID properly
-      let categoryId: string | undefined;
-      if (typeof product.category === 'object' && product.category) {
-        categoryId = product.category._id;
-      } else if (typeof product.category === 'string' && product.category) {
-        categoryId = product.category;
-      }
+      const categoryId: string | undefined = product.categoryId || undefined;
 
-      const res = await fetch(`${API_URL}/products/${product._id}`, {
+      const res = await fetch(`${API_URL}/products/${product.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -477,7 +466,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                     )}
                     {categories.filter(cat => !cat.parent).map((category) => (
                       <DropdownMenuCheckboxItem
-                        key={category._id}
+                        key={category.id}
                         checked={pendingCategories.includes(category.slug)}
                         onCheckedChange={() => toggleCategory(category.slug)}
                         onSelect={(e) => e.preventDefault()}
@@ -566,7 +555,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
             </TableHeader>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product._id}>
+                <TableRow key={product.id}>
                   <TableCell>
                     <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
                       <Image
@@ -774,7 +763,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                 <SelectTrigger id="category">
                   <SelectValue>
                     {formData.category
-                      ? categories.find(c => c._id === formData.category)?.name || 'Sin categoría'
+                      ? categories.find(c => c.id === formData.category)?.name || 'Sin categoría'
                       : 'Sin categoría'}
                   </SelectValue>
                 </SelectTrigger>
@@ -783,7 +772,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                     <span className="text-muted-foreground">Sin categoría</span>
                   </SelectItem>
                   {categories.map((category) => (
-                    <SelectItem key={category._id} value={category._id}>
+                    <SelectItem key={category.id} value={category.id}>
                       {category.name}
                     </SelectItem>
                   ))}

@@ -125,7 +125,7 @@ export default function BlogAdminPage() {
     if (!postToDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/blog/${postToDelete._id}`, {
+      const res = await fetch(`${API_URL}/blog/${postToDelete.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -143,7 +143,7 @@ export default function BlogAdminPage() {
 
   const togglePublish = async (post: BlogPost) => {
     try {
-      const res = await fetch(`${API_URL}/blog/${post._id}/publish`, {
+      const res = await fetch(`${API_URL}/blog/${post.id}/publish`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -157,7 +157,8 @@ export default function BlogAdminPage() {
     }
   };
 
-  const getAuthorName = (author: User | string) => {
+  const getAuthorName = (author: User | string | undefined) => {
+    if (!author) return ''
     if (typeof author === 'object' && author) {
       return `${author.firstName} ${author.lastName}`;
     }
@@ -290,7 +291,7 @@ export default function BlogAdminPage() {
               </TableHeader>
               <TableBody>
                 {posts.map((post) => (
-                  <TableRow key={post._id}>
+                  <TableRow key={post.id}>
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm line-clamp-1">{post.title}</p>
@@ -344,7 +345,7 @@ export default function BlogAdminPage() {
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon" asChild>
-                          <Link href={`/gestion/blog/${post._id}/editar`}>
+                          <Link href={`/gestion/blog/${post.id}/editar`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
                         </Button>

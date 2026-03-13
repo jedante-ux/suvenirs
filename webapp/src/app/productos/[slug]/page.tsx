@@ -75,12 +75,12 @@ export default function ProductDetailPage() {
           });
           // Filter out current product
           setRelatedProducts(
-            related.data.filter((p) => p._id !== productData._id).slice(0, 4)
+            related.data.filter((p) => p.id !== productData.id).slice(0, 4)
           );
         } else {
           const related = await getProducts({ limit: 5, random: true });
           setRelatedProducts(
-            related.data.filter((p) => p._id !== productData._id).slice(0, 4)
+            related.data.filter((p) => p.id !== productData.id).slice(0, 4)
           );
         }
       } catch (error) {
@@ -373,7 +373,7 @@ export default function ProductDetailPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {relatedProducts.map((relatedProduct) => (
                 <Link
-                  key={relatedProduct._id}
+                  key={relatedProduct.id}
                   href={`/productos/${relatedProduct.slug}`}
                 >
                   <div

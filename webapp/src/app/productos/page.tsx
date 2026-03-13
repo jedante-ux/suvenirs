@@ -194,7 +194,7 @@ function ProductosContent() {
     if (pendingCategories.length > 0) {
       pendingCategories.forEach((categorySlug) => {
         const category = categories.find(
-          (cat) => cat.slug === categorySlug || cat._id === categorySlug
+          (cat) => cat.slug === categorySlug || cat.id === categorySlug
         );
         filters.push({
           type: 'category',
@@ -299,7 +299,7 @@ function ProductosContent() {
                     )}
                     {categories.filter(cat => !cat.parent).map((category) => (
                       <DropdownMenuCheckboxItem
-                        key={category._id}
+                        key={category.id}
                         checked={pendingCategories.includes(category.slug)}
                         onCheckedChange={() => toggleCategory(category.slug)}
                         onSelect={(e) => e.preventDefault()}

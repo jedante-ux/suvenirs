@@ -107,8 +107,8 @@ export default function CotizacionesPage() {
       const result = await res.json();
 
       if (result.success) {
-        setQuotes(quotes.map(q => q._id === quoteId ? { ...q, status: newStatus as Quote['status'] } : q));
-        if (selectedQuote?._id === quoteId) {
+        setQuotes(quotes.map(q => q.id === quoteId ? { ...q, status: newStatus as Quote['status'] } : q));
+        if (selectedQuote?.id === quoteId) {
           setSelectedQuote({ ...selectedQuote, status: newStatus as Quote['status'] });
         }
       }
@@ -121,7 +121,7 @@ export default function CotizacionesPage() {
     if (!quoteToDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/quotes/${quoteToDelete._id}`, {
+      const res = await fetch(`${API_URL}/quotes/${quoteToDelete.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -202,7 +202,7 @@ export default function CotizacionesPage() {
             </TableHeader>
             <TableBody>
               {quotes.map((quote) => (
-                <TableRow key={quote._id}>
+                <TableRow key={quote.id}>
                   <TableCell className="font-mono text-sm">{quote.quoteNumber}</TableCell>
                   <TableCell>
                     <div>
@@ -218,7 +218,7 @@ export default function CotizacionesPage() {
                   <TableCell className="text-center">
                     <Select
                       value={quote.status}
-                      onValueChange={(value) => updateStatus(quote._id, value)}
+                      onValueChange={(value) => updateStatus(quote.id, value)}
                     >
                       <SelectTrigger className="w-32">
                         <Badge className={statusColors[quote.status]}>
@@ -377,7 +377,7 @@ export default function CotizacionesPage() {
                   <p className="text-sm text-muted-foreground">Estado actual</p>
                   <Select
                     value={selectedQuote.status}
-                    onValueChange={(value) => updateStatus(selectedQuote._id, value)}
+                    onValueChange={(value) => updateStatus(selectedQuote.id, value)}
                   >
                     <SelectTrigger className="w-40 mt-1">
                       <Badge className={statusColors[selectedQuote.status]}>

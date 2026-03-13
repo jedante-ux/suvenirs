@@ -316,7 +316,7 @@ export default function DashboardPage() {
             <div className="space-y-4">
               {data.quotes.recent.map((quote: any) => (
                 <div
-                  key={quote._id}
+                  key={quote.id}
                   className="flex items-center justify-between p-4 border rounded-lg"
                 >
                   <div>

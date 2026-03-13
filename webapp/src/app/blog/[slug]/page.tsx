@@ -51,7 +51,8 @@ export default function BlogPostPage() {
     }
   }, [slug]);
 
-  const getAuthorName = (author: User | string) => {
+  const getAuthorName = (author: User | string | undefined) => {
+    if (!author) return '';
     if (typeof author === 'object' && author) {
       return `${author.firstName} ${author.lastName}`;
     }

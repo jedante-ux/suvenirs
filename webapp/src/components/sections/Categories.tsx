@@ -112,7 +112,7 @@ export default function Categories() {
           className="categories-swiper"
         >
           {categories.map((category) => (
-            <SwiperSlide key={category._id}>
+            <SwiperSlide key={category.id}>
               <Link
                 href={`/productos?category=${category.slug}`}
                 className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 block h-64"

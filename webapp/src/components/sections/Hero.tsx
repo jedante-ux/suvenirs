@@ -90,7 +90,7 @@ export default function Hero() {
             >
               {products.slice(0, 9).map((product, index) => (
                 <Link
-                  key={product._id}
+                  key={product.id}
                   href={`/productos/${product.slug}`}
                   className="group relative aspect-square rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
                   style={{
