@@ -46,7 +46,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Pencil, Trash2, Loader2, Search, Star, Upload, Download, X, FolderTree, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import Image from 'next/image';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = '/api';
 
 interface ProductFormData {
   productId: string;

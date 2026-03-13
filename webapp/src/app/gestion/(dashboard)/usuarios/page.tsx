@@ -34,7 +34,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Plus, Pencil, Trash2, Loader2, Search, Key, Shield, UserIcon } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = '/api';
 
 interface UserFormData {
   email: string;

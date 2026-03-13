@@ -17,7 +17,7 @@ import {
   Share2,
 } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = '/api';
 
 export default function BlogPostPage() {
   const params = useParams();

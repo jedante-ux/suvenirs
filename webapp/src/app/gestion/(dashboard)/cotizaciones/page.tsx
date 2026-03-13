@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/table';
 import { Eye, Loader2, MessageCircle, Trash2 } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = '/api';
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
