@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     if (category) {
       const slugs = category.split(',').map(s => s.trim())
       const cats = await prisma.category.findMany({ where: { slug: { in: slugs } }, select: { id: true } })
-      if (cats.length > 0) where.categoryId = { in: cats.map(c => c.id) }
+      if (cats.length > 0) where.categoryId = { in: cats.map((c: { id: string }) => c.id) }
     }
 
     if (featured !== null && featured !== undefined && featured !== '') where.featured = featured === 'true'
