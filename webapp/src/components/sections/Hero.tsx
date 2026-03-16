@@ -27,9 +27,9 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen pt-16 md:pt-20 bg-white overflow-hidden">
-      <div className="container relative z-10 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)]">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center h-full">
+    <section className="relative pt-16 md:pt-20 bg-white overflow-hidden">
+      <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
           {/* Left column - Text content */}
           <div className="text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start gap-3 mb-6">
@@ -56,11 +56,11 @@ export default function Hero() {
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 w-full">
               <Button
                 asChild
                 size="lg"
-                className="bg-primary text-white hover:bg-primary/90 rounded-lg px-8 group"
+                className="w-full sm:w-auto bg-primary text-white hover:bg-primary/90 rounded-lg px-8 group"
               >
                 <Link href="/productos">
                   Ver colección
@@ -71,7 +71,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground rounded-lg px-8"
+                className="w-full sm:w-auto border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground rounded-lg px-8"
               >
                 <Link href="/contacto">
                   Cotizar ahora
@@ -81,9 +81,9 @@ export default function Hero() {
           </div>
 
           {/* Right column - Product grid */}
-          <div className="relative hidden lg:block" style={{ perspective: '1500px' }}>
+          <div className="relative block" style={{ perspective: '1500px' }}>
             <div
-              className="grid grid-cols-3 grid-rows-3 gap-3 w-full max-w-lg mx-auto animate-float3D"
+              className="grid grid-cols-3 grid-rows-3 gap-2 lg:gap-3 w-full max-w-sm lg:max-w-lg mx-auto animate-float3D"
               style={{
                 transformStyle: 'preserve-3d'
               }}
