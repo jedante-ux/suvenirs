@@ -71,8 +71,9 @@ export async function GET(req: NextRequest) {
       data: products,
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     })
-  } catch {
-    return NextResponse.json({ success: false, error: 'Error fetching products' }, { status: 500 })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return NextResponse.json({ success: false, error: msg }, { status: 500 })
   }
 }
 
