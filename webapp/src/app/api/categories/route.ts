@@ -23,8 +23,9 @@ export async function GET() {
     )
 
     return NextResponse.json({ success: true, data: result })
-  } catch {
-    return NextResponse.json({ success: false, error: 'Error fetching categories' }, { status: 500 })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return NextResponse.json({ success: false, error: msg }, { status: 500 })
   }
 }
 
