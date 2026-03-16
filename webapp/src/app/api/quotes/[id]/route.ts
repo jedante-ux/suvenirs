@@ -8,7 +8,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const { id } = await params
-    const quote = await prisma.quote.findUnique({ where: { id }, include: { items: true } })
+    const quote = await prisma.quote.findUnique({ where: { id }, include: { items: true, stampingType: true } })
     if (!quote) return NextResponse.json({ success: false, error: 'Quote not found' }, { status: 404 })
     return NextResponse.json({ success: true, data: quote })
   } catch {
@@ -22,8 +22,36 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     const { id } = await params
-    const body = await req.json()
-    const quote = await prisma.quote.update({ where: { id }, data: body, include: { items: true } })
+    const { items, ...fields } = await req.json()
+
+    const totalItems = items?.length ?? undefined
+    const totalUnits = items?.reduce((s: number, i: { quantity: number }) => s + i.quantity, 0) ?? undefined
+
+    const quote = await prisma.$transaction(async (tx) => {
+      if (items) {
+        await tx.quoteItem.deleteMany({ where: { quoteId: id } })
+      }
+      return tx.quote.update({
+        where: { id },
+        data: {
+          ...fields,
+          ...(totalItems !== undefined && { totalItems, totalUnits }),
+          ...(items && {
+            items: {
+              create: items.map((item: { productId: string; productName: string; quantity: number; unitPrice?: number; description?: string }) => ({
+                productId: item.productId,
+                productName: item.productName,
+                quantity: item.quantity,
+                unitPrice: item.unitPrice ?? 0,
+                description: item.description || '',
+              })),
+            },
+          }),
+        },
+        include: { items: true, stampingType: true },
+      })
+    })
+
     return NextResponse.json({ success: true, data: quote })
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 400 })

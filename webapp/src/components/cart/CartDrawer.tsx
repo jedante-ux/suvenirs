@@ -7,6 +7,53 @@ import { formatDescription } from '@/lib/utils';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+function QuantityInput({ value, max, onUpdate }: { value: number; max: number; onUpdate: (n: number) => void }) {
+  const [input, setInput] = useState(String(value));
+
+  const commit = (raw: string) => {
+    const n = parseInt(raw, 10);
+    if (!isNaN(n) && n >= 1 && n <= max) {
+      onUpdate(n);
+      setInput(String(n));
+    } else {
+      setInput(String(value));
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7 flex-shrink-0"
+        onClick={() => { const n = value - 1; onUpdate(n); setInput(String(n <= 0 ? value : n)); }}
+      >
+        <Minus className="h-3 w-3" />
+      </Button>
+      <input
+        type="number"
+        min={1}
+        max={max}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onBlur={(e) => commit(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && commit(input)}
+        className="w-12 h-7 text-center text-sm font-medium border border-input rounded-md bg-background focus:outline-none focus:ring-1 focus:ring-primary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7 flex-shrink-0"
+        onClick={() => { const n = value + 1; if (n <= max) { onUpdate(n); setInput(String(n)); } }}
+        disabled={value >= max}
+      >
+        <Plus className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+}
 
 export default function CartDrawer() {
   const { state, closeCart, removeItem, updateQuantity, clearCart, getTotalItems } = useCart();
@@ -61,28 +108,11 @@ export default function CartDrawer() {
                       </p>
 
                       <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            disabled={item.quantity >= item.product.quantity}
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                        </div>
+                        <QuantityInput
+                          value={item.quantity}
+                          max={item.product.quantity}
+                          onUpdate={(n) => updateQuantity(item.product.id, n)}
+                        />
 
                         <Button
                           variant="ghost"

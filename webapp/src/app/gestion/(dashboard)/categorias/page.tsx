@@ -63,7 +63,7 @@ const emptyCategory: CategoryFormData = {
 };
 
 export default function CategoriasPage() {
-  const { token } = useAuth();
+  const { token, isLoading: authLoading } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -87,10 +87,10 @@ export default function CategoriasPage() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (!authLoading) {
       fetchCategories();
     }
-  }, [token, search]);
+  }, [authLoading, search]);
 
   const openCreateDialog = () => {
     setEditingCategory(null);
@@ -217,7 +217,7 @@ export default function CategoriasPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestión de Categorías</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Gestión de Categorías</h1>
           <p className="text-muted-foreground">Administra las categorías de productos</p>
         </div>
         <Button onClick={openCreateDialog}>
@@ -278,11 +278,11 @@ export default function CategoriasPage() {
                       <TableCell className="font-mono text-xs px-2 py-2">{category.categoryId}</TableCell>
                       <TableCell className="font-medium px-2 py-2">
                         <div className="flex items-center gap-1">
-                          <FolderTree className="h-3 w-3 text-muted-foreground" />
+                          <FolderTree className="h-4 w-4 text-primary/50 flex-shrink-0" />
                           <span className="truncate">{category.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground px-2 py-2 truncate">{category.slug}</TableCell>
+                      <TableCell className="px-2 py-2"><code className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded font-mono">{category.slug}</code></TableCell>
                       {!showOnlyParents && (
                         <TableCell className="px-2 py-2">
                           {typeof category.parent === 'object' && category.parent ? (
@@ -307,11 +307,11 @@ export default function CategoriasPage() {
                       </TableCell>
                       <TableCell className="text-right px-2 py-2">
                         <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEditDialog(category)}>
-                            <Pencil className="h-3 w-3" />
+                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-primary/10 hover:text-primary" onClick={() => openEditDialog(category)}>
+                            <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openDeleteDialog(category)}>
-                            <Trash2 className="h-3 w-3" />
+                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive" onClick={() => openDeleteDialog(category)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -319,8 +319,11 @@ export default function CategoriasPage() {
                   ))}
                   {filteredCategories.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={showOnlyParents ? 7 : 8} className="text-center py-8 text-muted-foreground">
-                        No se encontraron categorías
+                      <TableCell colSpan={showOnlyParents ? 7 : 8} className="py-16">
+                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                          <FolderTree className="h-8 w-8 opacity-30" />
+                          <p className="text-sm">No se encontraron categorías</p>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}

@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, Star, Eye } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
@@ -15,19 +16,21 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index }: ProductCardProps) {
-  const { addItem, openCart } = useCart();
+  const { addItem } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product, 1);
-    openCart();
+    toast.success('Producto agregado al carrito', {
+      description: product.name,
+    });
   };
 
   return (
     <Link href={`/productos/${product.slug}`}>
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full cursor-pointer p-0 gap-0">
-        <div className="relative aspect-square bg-[#f5f5f5] p-4 rounded-t-xl">
+        <div className="relative aspect-square bg-muted/50 overflow-hidden rounded-t-xl">
           <div className="relative w-full h-full overflow-hidden rounded-lg">
             <Image
               src={product.image || '/placeholder-product.jpg'}
@@ -50,49 +53,23 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         </div>
 
         <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground font-mono">{product.productId}</p>
-          <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+          <p className="text-[10px] text-muted-foreground/60 font-mono tracking-wide uppercase">{product.productId}</p>
+          <h3 className="font-semibold text-base line-clamp-2 leading-snug group-hover:text-primary transition-colors">
             {product.name}
           </h3>
-          {/* Prices */}
-          {(product.price || product.salePrice) && (
-            <div className="flex items-baseline gap-2 mt-3">
-              {product.salePrice && product.price ? (
-                <>
-                  <span className="text-2xl font-bold text-primary">
-                    ${product.salePrice.toLocaleString('es-CL')}
-                  </span>
-                  <span className="text-sm text-muted-foreground line-through">
-                    ${product.price.toLocaleString('es-CL')}
-                  </span>
-                  <Badge variant="destructive" className="ml-auto">
-                    {Math.round((1 - product.salePrice / product.price) * 100)}% OFF
-                  </Badge>
-                </>
-              ) : product.price ? (
-                <span className="text-2xl font-bold">
-                  ${product.price.toLocaleString('es-CL')}
-                </span>
-              ) : product.salePrice ? (
-                <span className="text-2xl font-bold text-primary">
-                  ${product.salePrice.toLocaleString('es-CL')}
-                </span>
-              ) : null}
-            </div>
-          )}
 
         </CardContent>
 
         <CardFooter className="p-4 pt-0 gap-2">
           <Button
             variant="outline"
-            className="flex-1 min-w-0 basis-0 border-pink-500 text-pink-500 hover:bg-pink-50 bg-white"
+            className="flex-1 min-w-0 basis-0 border-primary/40 text-primary hover:bg-primary/5 bg-white"
           >
             <Eye className="mr-2 h-4 w-4" />
             Ver detalle
           </Button>
           <Button
-            className="flex-1 min-w-0 basis-0"
+            className="flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] hover:shadow-md transition-all duration-200"
             onClick={handleAddToCart}
             disabled={product.quantity === 0}
           >

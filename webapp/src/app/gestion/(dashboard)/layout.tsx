@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
 import {
   LayoutDashboard,
@@ -32,6 +33,7 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -79,44 +81,59 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b">
-            <h1 className="text-xl font-bold text-primary">Suvenirs Admin</h1>
-            <p className="text-xs text-muted-foreground mt-1">Panel de Gestión</p>
+          <div className="p-5 border-b bg-primary/5">
+            <div className="flex items-center gap-2.5 mb-0.5">
+              <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-primary-foreground">S</span>
+              </div>
+              <Logo size="sm" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 pl-9">Panel de Gestión</p>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted transition-colors"
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            ))}
+          <nav className="flex-1 p-3 space-y-0.5">
+            {navItems.map((item) => {
+              const isActive = item.href === '/gestion'
+                ? pathname === '/gestion'
+                : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors',
+                    isActive
+                      ? 'bg-primary/10 text-primary font-semibold border-l-2 border-primary pl-[10px]'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  )}
+                >
+                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-medium text-primary">
+          <div className="p-4 border-t bg-muted/30">
+            <div className="flex items-center gap-3 mb-3 p-2.5 rounded-lg bg-background border border-border">
+              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+                <span className="text-xs font-bold text-primary-foreground">
                   {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
+                <p className="text-sm font-semibold truncate">
                   {user?.firstName} {user?.lastName}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
               </div>
             </div>
             <Button
-              variant="outline"
-              className="w-full justify-start"
+              variant="ghost"
+              className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10 text-sm"
               onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />

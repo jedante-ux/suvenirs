@@ -72,25 +72,47 @@ model Product {
 }
 
 model Quote {
-  id              String      @id @default(uuid()) @db.Uuid
-  quoteNumber     String      @unique
-  totalItems      Int
-  totalUnits      Int
-  quotedAmount    Float       @default(0)
-  finalAmount     Float       @default(0)
-  customerName    String?
-  customerEmail   String?
-  customerPhone   String?
-  customerCompany String?
-  notes           String?
-  status          QuoteStatus @default(PENDING)
-  source          QuoteSource @default(WEB)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id               String        @id @default(uuid()) @db.Uuid
+  quoteNumber      String        @unique
+  publicToken      String        @unique @default(uuid()) @db.Uuid
+  totalItems       Int
+  totalUnits       Int
+  quotedAmount     Float         @default(0)
+  finalAmount      Float         @default(0)
+  customerName     String?
+  customerEmail    String?
+  customerPhone    String?
+  customerCompany  String?
+  notes            String?
+  shippingService  String?
+  shippingPrice    Float         @default(0)
+  stampingTypeId   String?       @db.Uuid
+  stampingType     StampingType? @relation(fields: [stampingTypeId], references: [id])
+  stampingPrice    Float         @default(0)
+  status           QuoteStatus   @default(PENDING)
+  source           QuoteSource   @default(WEB)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   items QuoteItem[]
 
   @@map("quotes")
+}
+
+model StampingType {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String   @unique
+  name      String
+  price     Float    @default(40000)
+  minUnits  Int?
+  maxUnits  Int?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quotes Quote[]
+
+  @@map("stamping_types")
 }
 
 model QuoteItem {
@@ -100,6 +122,7 @@ model QuoteItem {
   productId   String
   productName String
   quantity    Int
+  unitPrice   Float  @default(0)
   description String @default("")
 
   @@map("quote_items")

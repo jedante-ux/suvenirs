@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -76,7 +77,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-2xl font-bold text-primary">Suvenirs</span>
+            <Logo size="md" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -133,10 +134,10 @@ export default function Header() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors p-2"
+                  className="text-muted-foreground hover:text-primary transition-colors p-2 opacity-60 rounded-md hover:bg-primary/5"
                   aria-label={social.name}
                 >
-                  <social.icon size={18} />
+                  <social.icon size={15} />
                 </a>
               ))}
             </div>
@@ -145,7 +146,7 @@ export default function Header() {
             <Button variant="ghost" size="icon" className="relative" onClick={openCart}>
               <CartIcon size={22} />
               {getTotalItems() > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background">
                   {getTotalItems()}
                 </Badge>
               )}
@@ -160,7 +161,7 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
-                  <SheetTitle className="text-left text-primary">Suvenirs</SheetTitle>
+                  <SheetTitle className="text-left"><Logo size="sm" /></SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 mt-8">
                   {navLinks.map((link) => (

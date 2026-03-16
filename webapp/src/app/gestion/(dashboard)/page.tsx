@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, FileText, Users, AlertTriangle, Star, Loader2, DollarSign, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getStatusBadgeClass, getStatusLabel } from '@/lib/statusBadge';
 import { Button } from '@/components/ui/button';
 
 const API_URL = '/api';
@@ -51,7 +52,7 @@ function formatCLP(amount: number): string {
 }
 
 export default function DashboardPage() {
-  const { token } = useAuth();
+  const { token, isLoading: authLoading } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [salesData, setSalesData] = useState<MonthlySalesData | null>(null);
@@ -77,10 +78,10 @@ export default function DashboardPage() {
       }
     };
 
-    if (token) {
+    if (!authLoading) {
       fetchDashboard();
     }
-  }, [token]);
+  }, [authLoading]);
 
   // Fetch monthly sales data
   useEffect(() => {
@@ -102,10 +103,10 @@ export default function DashboardPage() {
       }
     };
 
-    if (token) {
+    if (!authLoading) {
       fetchMonthlySales();
     }
-  }, [token, selectedYear, selectedMonth]);
+  }, [authLoading, selectedYear, selectedMonth]);
 
   // Navigate to previous month
   const goToPreviousMonth = () => {
@@ -146,29 +147,11 @@ export default function DashboardPage() {
     );
   }
 
-  const statusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 text-yellow-800',
-    contacted: 'bg-blue-100 text-blue-800',
-    quoted: 'bg-purple-100 text-purple-800',
-    approved: 'bg-green-100 text-green-800',
-    rejected: 'bg-red-100 text-red-800',
-    completed: 'bg-gray-100 text-gray-800',
-  };
-
-  const statusLabels: Record<string, string> = {
-    pending: 'Pendiente',
-    contacted: 'Contactado',
-    quoted: 'Cotizado',
-    approved: 'Aprobado',
-    rejected: 'Rechazado',
-    completed: 'Completado',
-  };
-
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Resumen general del sistema</p>
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">Resumen general del sistema</p>
       </div>
 
       {/* Stats Grid */}
@@ -176,11 +159,13 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Productos Totales</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Package className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.products.total || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold tracking-tight">{data?.products.total || 0}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               {data?.products.active || 0} activos
             </p>
           </CardContent>
@@ -189,11 +174,13 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Productos Destacados</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
+            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+              <Star className="h-4 w-4 text-amber-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.products.featured || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold tracking-tight">{data?.products.featured || 0}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Marcados como destacados
             </p>
           </CardContent>
@@ -202,11 +189,13 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Cotizaciones</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+              <FileText className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data?.quotes.total || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold tracking-tight">{data?.quotes.total || 0}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               {data?.quotes.pending || 0} pendientes
             </p>
           </CardContent>
@@ -215,11 +204,13 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Sin Stock</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-500">{data?.products.outOfStock || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-bold tracking-tight text-destructive">{data?.products.outOfStock || 0}</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Productos agotados
             </p>
           </CardContent>
@@ -232,7 +223,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-green-500" />
+                <TrendingUp className="h-5 w-5 text-primary" />
                 Ventas del Mes
               </CardTitle>
               <CardDescription>
@@ -270,30 +261,30 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="flex items-center gap-2 text-green-700 mb-1">
+              <div className="p-4 bg-primary/5 rounded-xl border border-primary/15">
+                <div className="flex items-center gap-2 text-primary mb-1">
                   <DollarSign className="h-4 w-4" />
                   <span className="text-sm font-medium">Total Vendido</span>
                 </div>
-                <p className="text-2xl font-bold text-green-700">
+                <p className="text-2xl font-bold text-primary">
                   {formatCLP(salesData?.sales.totalAmount || 0)}
                 </p>
               </div>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex items-center gap-2 text-blue-700 mb-1">
+              <div className="p-4 bg-secondary/50 rounded-xl border border-secondary">
+                <div className="flex items-center gap-2 text-foreground mb-1">
                   <Package className="h-4 w-4" />
                   <span className="text-sm font-medium">Unidades Vendidas</span>
                 </div>
-                <p className="text-2xl font-bold text-blue-700">
+                <p className="text-2xl font-bold text-foreground">
                   {salesData?.sales.totalUnits.toLocaleString('es-CL') || 0}
                 </p>
               </div>
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <div className="flex items-center gap-2 text-purple-700 mb-1">
+              <div className="p-4 bg-accent/30 rounded-xl border border-accent">
+                <div className="flex items-center gap-2 text-accent-foreground mb-1">
                   <FileText className="h-4 w-4" />
                   <span className="text-sm font-medium">Ventas Completadas</span>
                 </div>
-                <p className="text-2xl font-bold text-purple-700">
+                <p className="text-2xl font-bold text-accent-foreground">
                   {salesData?.sales.count || 0}
                   <span className="text-sm font-normal ml-2">
                     de {salesData?.sales.totalQuotes || 0} cotizaciones
@@ -317,7 +308,7 @@ export default function DashboardPage() {
               {data.quotes.recent.map((quote: any) => (
                 <div
                   key={quote.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between p-4 border rounded-xl hover:bg-muted/50 transition-colors"
                 >
                   <div>
                     <p className="font-medium">{quote.quoteNumber}</p>
@@ -334,16 +325,17 @@ export default function DashboardPage() {
                       })}
                     </p>
                   </div>
-                  <Badge className={statusColors[quote.status]}>
-                    {statusLabels[quote.status]}
+                  <Badge className={getStatusBadgeClass(quote.status)}>
+                    {getStatusLabel(quote.status)}
                   </Badge>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-8">
-              No hay cotizaciones recientes
-            </p>
+            <div className="text-center py-12">
+              <FileText className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">No hay cotizaciones recientes</p>
+            </div>
           )}
         </CardContent>
       </Card>

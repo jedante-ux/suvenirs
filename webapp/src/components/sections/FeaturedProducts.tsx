@@ -12,12 +12,13 @@ import { useCart } from '@/context/CartContext';
 import { Package, ShoppingCart, Star, Sparkles } from 'lucide-react';
 import { getProducts } from '@/lib/api';
 import { buildRecommendationQuery, hasSearchHistory, getRecentSearchTerms } from '@/lib/searchHistory';
+import { toast } from 'sonner';
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPersonalized, setIsPersonalized] = useState(false);
-  const { addItem, openCart } = useCart();
+  const { addItem } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -79,7 +80,9 @@ export default function FeaturedProducts() {
 
   const handleAddToCart = (product: Product) => {
     addItem(product, 1);
-    openCart();
+    toast.success('Producto agregado al carrito', {
+      description: product.name,
+    });
   };
 
   if (loading) {

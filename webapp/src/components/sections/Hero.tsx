@@ -35,12 +35,12 @@ export default function Hero() {
             <div className="flex items-center justify-center lg:justify-start gap-3 mb-6">
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-black/10 backdrop-blur-sm text-black border-0"
+                className="px-4 py-2 bg-primary/10 backdrop-blur-sm text-primary border border-primary/20"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-black text-white border-0">
+              <Badge className="px-4 py-2 bg-primary text-primary-foreground border-0">
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -60,7 +60,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-pink-500 text-white hover:bg-pink-600 rounded-full px-8 group"
+                className="bg-primary text-white hover:bg-primary/90 rounded-lg px-8 group"
               >
                 <Link href="/productos">
                   Ver colección
@@ -71,7 +71,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-2 border-pink-500 text-pink-500 bg-transparent hover:bg-pink-500 hover:text-white rounded-full px-8"
+                className="border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground rounded-lg px-8"
               >
                 <Link href="/contacto">
                   Cotizar ahora

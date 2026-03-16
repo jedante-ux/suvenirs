@@ -59,7 +59,7 @@ const emptyUser: UserFormData = {
 };
 
 export default function UsuariosPage() {
-  const { token, user: currentUser } = useAuth();
+  const { token, user: currentUser, isLoading: authLoading } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -90,10 +90,10 @@ export default function UsuariosPage() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (!authLoading) {
       fetchUsers();
     }
-  }, [token, search]);
+  }, [authLoading, search]);
 
   const openCreateDialog = () => {
     setEditingUser(null);
@@ -234,7 +234,7 @@ export default function UsuariosPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Usuarios</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Usuarios</h1>
           <p className="text-muted-foreground">Gestiona los usuarios del sistema</p>
         </div>
         <Button onClick={openCreateDialog}>
@@ -277,12 +277,11 @@ export default function UsuariosPage() {
                 <TableRow key={user.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        {user.role === 'admin' ? (
-                          <Shield className="h-4 w-4 text-primary" />
-                        ) : (
-                          <UserIcon className="h-4 w-4 text-muted-foreground" />
-                        )}
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${user.role === 'admin' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                        {user.role === 'admin'
+                          ? <Shield className="h-4 w-4" />
+                          : `${user.firstName?.charAt(0) ?? ''}${user.lastName?.charAt(0) ?? ''}`
+                        }
                       </div>
                       <span className="font-medium">{user.firstName} {user.lastName}</span>
                     </div>
@@ -311,7 +310,7 @@ export default function UsuariosPage() {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="text-red-500"
+                          className="hover:bg-destructive/10 hover:text-destructive"
                           onClick={() => openDeleteDialog(user)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -323,8 +322,11 @@ export default function UsuariosPage() {
               ))}
               {users.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    No se encontraron usuarios
+                  <TableCell colSpan={6} className="py-16">
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <UserIcon className="h-8 w-8 opacity-30" />
+                      <p className="text-sm">No se encontraron usuarios</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

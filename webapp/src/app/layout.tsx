@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased`}>
         <CartProvider>
           <ConditionalLayout>{children}</ConditionalLayout>
+          <Toaster richColors position="bottom-right" />
         </CartProvider>
       </body>
     </html>

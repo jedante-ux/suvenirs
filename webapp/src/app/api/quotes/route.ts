@@ -5,7 +5,7 @@ import { Prisma, QuoteStatus } from '@prisma/client'
 
 export async function POST(req: NextRequest) {
   try {
-    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source } = await req.json()
+    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source, shippingService } = await req.json()
 
     if (!items || items.length === 0) {
       return NextResponse.json({ success: false, error: 'At least one item is required' }, { status: 400 })
@@ -13,6 +13,14 @@ export async function POST(req: NextRequest) {
 
     const totalItems = items.length
     const totalUnits = items.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0)
+
+    // Fetch product prices from DB
+    const productIds = items.map((i: any) => i.productId)
+    const products = await prisma.product.findMany({
+      where: { productId: { in: productIds } },
+      select: { productId: true, price: true, salePrice: true },
+    })
+    const priceMap = new Map(products.map((p) => [p.productId, p.salePrice ?? p.price ?? 0]))
 
     const count = await prisma.quote.count()
     const now = new Date()
@@ -30,17 +38,19 @@ export async function POST(req: NextRequest) {
         customerPhone,
         customerCompany,
         notes,
+        shippingService: shippingService || null,
         source: (source?.toUpperCase() || 'WEB') as any,
         items: {
           create: items.map((item: any) => ({
             productId: item.productId,
             productName: item.productName,
             quantity: item.quantity,
+            unitPrice: priceMap.get(item.productId) ?? 0,
             description: item.description || '',
           })),
         },
       },
-      include: { items: true },
+      include: { items: true, stampingType: true },
     })
 
     return NextResponse.json({ success: true, data: quote }, { status: 201 })
@@ -68,7 +78,7 @@ export async function GET(req: NextRequest) {
     const [quotes, total] = await Promise.all([
       prisma.quote.findMany({
         where,
-        include: { items: true },
+        include: { items: true, stampingType: true },
         orderBy: { createdAt: order },
         skip,
         take: limit,

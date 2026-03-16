@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCart } from '@/context/CartContext';
+import { toast } from 'sonner';
 import {
   ShoppingCart,
   Package,
@@ -46,7 +47,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
 
-  const { addItem, openCart } = useCart();
+  const { addItem } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -98,6 +99,7 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     addItem(product, quantity);
+    toast.success('Producto agregado al carrito', { description: product.name });
     setAddedToCart(true);
 
     setTimeout(() => {
@@ -109,7 +111,6 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     addItem(product, quantity);
-    openCart();
   };
 
   const getCategoryName = (): string => {

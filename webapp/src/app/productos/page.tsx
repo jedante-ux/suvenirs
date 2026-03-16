@@ -14,6 +14,7 @@ import Pagination, { PaginationInfo } from '@/components/products/Pagination';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowUpDown, Search, FolderTree } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -218,13 +219,13 @@ function ProductosContent() {
       <section className="section bg-gradient-to-br from-primary to-secondary text-foreground overflow-hidden">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-foreground/10 rounded-full text-sm font-medium mb-6 text-foreground">
+            <span className="inline-block px-4 py-1 bg-white/20 text-white border border-white/30 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
               Catálogo
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
               Nuestros productos
             </h1>
-            <p className="text-xl text-foreground/80">
+            <p className="text-xl text-white/80">
               Explora nuestra colección de regalos corporativos diseñados para impresionar.
             </p>
           </div>
@@ -243,13 +244,13 @@ function ProductosContent() {
                   <Search className="h-4 w-4" />
                   Búsqueda
                 </label>
-                <input
+                <Input
                   type="text"
                   value={pendingSearch}
                   onChange={(e) => setPendingSearch(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleApplyFilters()}
                   placeholder="Buscar productos por nombre o descripción..."
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full"
                 />
               </div>
 

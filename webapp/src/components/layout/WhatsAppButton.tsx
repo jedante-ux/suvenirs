@@ -9,7 +9,7 @@ interface WhatsAppButtonProps {
 }
 
 export default function WhatsAppButton({
-  phoneNumber = '56912345678',
+  phoneNumber = '56931464930',
   message = 'Hola, me gustaría obtener más información sobre sus productos.'
 }: WhatsAppButtonProps) {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -30,7 +30,7 @@ export default function WhatsAppButton({
       </span>
 
       {/* Pulse animation */}
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-25" />
+      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-10" style={{ animationDuration: '2s' }} />
     </a>
   );
 }

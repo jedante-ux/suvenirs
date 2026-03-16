@@ -39,6 +39,9 @@ yarn-error.log*
 # credentials file (NEVER commit)
 .credentials.md
 
+# private company data (NEVER commit)
+COMPANY_PRIVATE.md
+
 # vercel
 .vercel
 

@@ -43,7 +43,7 @@ import {
 } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Pencil, Trash2, Loader2, Search, Star, Upload, Download, X, FolderTree, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Search, Star, Upload, Download, X, FolderTree, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Package } from 'lucide-react';
 import Image from 'next/image';
 
 const API_URL = '/api';
@@ -86,7 +86,7 @@ interface PaginationData {
 const ITEMS_PER_PAGE = 50;
 
 export default function ProductosPage() {
-  const { token } = useAuth();
+  const { token, isLoading: authLoading } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -152,11 +152,11 @@ export default function ProductosPage() {
       }
     };
 
-    if (token) {
+    if (!authLoading) {
       fetchProducts(1); // Reset to page 1 when filters change
       fetchCategories();
     }
-  }, [token, search, selectedCategories]);
+  }, [authLoading, search, selectedCategories]);
 
   // Pagination handlers
   const goToPage = (page: number) => {
@@ -387,7 +387,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Productos</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Productos</h1>
           <p className="text-muted-foreground">Gestiona el catálogo de productos</p>
         </div>
         <div className="flex gap-2">
@@ -582,7 +582,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                           ${product.price.toLocaleString('es-CL')}
                         </span>
                         {product.salePrice && (
-                          <div className="text-sm font-medium text-green-600">
+                          <div className="text-sm font-medium text-primary">
                             ${product.salePrice.toLocaleString('es-CL')}
                           </div>
                         )}
@@ -631,8 +631,12 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
               ))}
               {products.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                    No se encontraron productos
+                  <TableCell colSpan={9} className="py-16">
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <Package className="h-8 w-8 opacity-30" />
+                      <p className="text-sm">No se encontraron productos</p>
+                      <p className="text-xs">Prueba con otros filtros de búsqueda</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
@@ -644,7 +648,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
       {/* Pagination */}
       {pagination.totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground tabular-nums">
             Mostrando {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total} productos
           </p>
           <div className="flex items-center gap-2">
@@ -712,7 +716,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingProduct ? 'Editar Producto' : 'Nuevo Producto'}</DialogTitle>
             <DialogDescription>
@@ -906,7 +910,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
 
       {/* Import Dialog */}
       <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>Importar Productos</DialogTitle>
             <DialogDescription>

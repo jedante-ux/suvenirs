@@ -26,8 +26,8 @@ const contactInfo = [
   {
     icon: PhoneIcon,
     title: 'Teléfono',
-    content: '+56 9 1234 5678',
-    href: 'tel:+56912345678',
+    content: '+56 9 3146 4930',
+    href: 'tel:+56931464930',
   },
   {
     icon: LocationIcon,
@@ -75,7 +75,7 @@ export default function ContactoPage() {
       <section className="section bg-gradient-to-br from-primary to-accent text-white">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge variant="secondary" className="mb-6 bg-white/10 text-white border-0">
+            <Badge variant="secondary" className="mb-6 bg-white/20 text-white border border-white/30 backdrop-blur-sm">
               Contacto
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
@@ -101,9 +101,9 @@ export default function ContactoPage() {
 
               <div className="space-y-6">
                 {contactInfo.map((info, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <info.icon size={24} className="text-primary" />
+                  <div key={index} className="flex items-start gap-4 p-4 rounded-xl border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <info.icon size={20} className="text-primary" />
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">{info.title}</p>
@@ -141,8 +141,8 @@ export default function ContactoPage() {
                 <CardContent>
                   {status === 'success' ? (
                     <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-3xl text-emerald-600">✓</span>
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-3xl text-primary">✓</span>
                       </div>
                       <h3 className="text-xl font-semibold text-foreground mb-2">¡Mensaje enviado!</h3>
                       <p className="text-muted-foreground">Te contactaremos pronto.</p>

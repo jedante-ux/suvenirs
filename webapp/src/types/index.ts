@@ -74,24 +74,44 @@ export interface User {
   updatedAt: string;
 }
 
+export interface StampingType {
+  id: string;
+  code: string;
+  name: string;
+  price: number;
+  minUnits: number | null;
+  maxUnits: number | null;
+  isActive: boolean;
+}
+
 export interface QuoteItem {
+  id: string;
   productId: string;
   productName: string;
   quantity: number;
+  unitPrice: number;
   description: string;
 }
 
 export interface Quote {
   id: string;
   quoteNumber: string;
+  publicToken: string;
   items: QuoteItem[];
   totalItems: number;
   totalUnits: number;
+  quotedAmount: number;
+  finalAmount: number;
   customerName?: string;
   customerEmail?: string;
   customerPhone?: string;
   customerCompany?: string;
   notes?: string;
+  shippingService?: string | null;
+  shippingPrice: number;
+  stampingTypeId?: string | null;
+  stampingType?: StampingType | null;
+  stampingPrice: number;
   status: 'PENDING' | 'CONTACTED' | 'QUOTED' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
   source: 'WHATSAPP' | 'WEB' | 'MANUAL';
   createdAt: string;

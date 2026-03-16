@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FacebookIcon, InstagramIcon, TwitterIcon, LinkedInIcon, MailIcon, PhoneIcon, LocationIcon } from '../icons';
+import { Logo } from '@/components/ui/Logo';
 
 const footerLinks = {
   productos: [
@@ -38,7 +39,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">
-              <span className="text-3xl font-bold text-white">Suvenirs</span>
+              <Logo size="lg" variant="white" />
             </Link>
             <p className="mt-4 text-gray-300 max-w-md">
               Tu socio corporativo líder en grabados, regalos y reconocimientos.
@@ -51,9 +52,9 @@ export default function Footer() {
                 <MailIcon size={18} className="mr-3" />
                 contacto@suvenirs.cl
               </a>
-              <a href="tel:+56912345678" className="flex items-center text-gray-300 hover:text-white transition-colors">
+              <a href="tel:+56931464930" className="flex items-center text-gray-300 hover:text-white transition-colors">
                 <PhoneIcon size={18} className="mr-3" />
-                +56 9 1234 5678
+                +56 9 3146 4930
               </a>
               <div className="flex items-start text-gray-300">
                 <LocationIcon size={18} className="mr-3 mt-1 flex-shrink-0" />
@@ -100,16 +101,18 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-pink-500">Ayuda</h3>
             <ul className="space-y-3">
-              {footerLinks.ayuda.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+              <li key="Pagos y entregas">
+                <span className="text-gray-500 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
+              </li>
+              <li key="Política de devoluciones">
+                <span className="text-gray-500 cursor-not-allowed text-sm" title="Próximamente">Política de devoluciones</span>
+              </li>
+              <li key="Preguntas frecuentes">
+                <span className="text-gray-500 cursor-not-allowed text-sm" title="Próximamente">Preguntas frecuentes</span>
+              </li>
+              <li key="Términos y condiciones">
+                <span className="text-gray-500 cursor-not-allowed text-sm" title="Próximamente">Términos y condiciones</span>
+              </li>
             </ul>
           </div>
         </div>

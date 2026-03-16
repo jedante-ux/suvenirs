@@ -52,7 +52,7 @@ interface PaginationData {
 const ITEMS_PER_PAGE = 20;
 
 export default function BlogAdminPage() {
-  const { token } = useAuth();
+  const { token, isLoading: authLoading } = useAuth();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<PaginationData>({
@@ -93,10 +93,10 @@ export default function BlogAdminPage() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (!authLoading) {
       fetchPosts(1);
     }
-  }, [token, search]);
+  }, [authLoading, search]);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= pagination.totalPages) {
@@ -178,8 +178,8 @@ export default function BlogAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Newspaper className="h-6 w-6" />
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Newspaper className="h-6 w-6 text-primary" />
             Blog
           </h1>
           <p className="text-muted-foreground">Gestiona los artículos del blog</p>
@@ -234,36 +234,36 @@ export default function BlogAdminPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+        <Card className="border-t-2 border-t-primary/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Artículos
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{pagination.total}</p>
+            <p className="text-3xl font-bold tracking-tight">{pagination.total}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-t-2 border-t-emerald-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Publicados
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-3xl font-bold tracking-tight text-green-600">
               {posts.filter((p) => p.isPublished).length}
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-t-2 border-t-amber-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Borradores
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-yellow-600">
+            <p className="text-3xl font-bold tracking-tight text-yellow-600">
               {posts.filter((p) => !p.isPublished).length}
             </p>
           </CardContent>
@@ -301,12 +301,12 @@ export default function BlogAdminPage() {
                         {post.tags.length > 0 && (
                           <div className="flex gap-1 mt-1">
                             {post.tags.slice(0, 3).map((tag) => (
-                              <Badge key={tag} variant="outline" className="text-xs">
+                              <Badge key={tag} variant="outline" className="text-xs bg-secondary/50 border-primary/20 text-primary/70">
                                 {tag}
                               </Badge>
                             ))}
                             {post.tags.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="outline" className="text-xs bg-secondary/50 border-primary/20 text-primary/70">
                                 +{post.tags.length - 3}
                               </Badge>
                             )}
@@ -363,8 +363,11 @@ export default function BlogAdminPage() {
                 ))}
                 {posts.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                      No se encontraron artículos
+                    <TableCell colSpan={6} className="py-16">
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                        <Newspaper className="h-8 w-8 opacity-30" />
+                        <p className="text-sm">No se encontraron artículos</p>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
