@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { NextRequest, NextResponse } from 'next/server'
-import type { Prisma } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,7 +11,7 @@ export async function GET(req: NextRequest) {
     const tag = searchParams.get('tag') || ''
     const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc'
 
-    const where: Prisma.BlogPostWhereInput = { isPublished: true }
+    const where: Record<string, unknown> = { isPublished: true }
 
     if (search) {
       where.OR = [

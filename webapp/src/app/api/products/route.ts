@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { NextRequest, NextResponse } from 'next/server'
-import type { Prisma } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get('sort') || 'createdAt'
     const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc'
 
-    const where: Prisma.ProductWhereInput = { isActive: true }
+    const where: Record<string, unknown> = { isActive: true }
 
     if (search) {
       where.OR = [
@@ -54,7 +53,7 @@ export async function GET(req: NextRequest) {
     }
 
     const skip = (page - 1) * limit
-    const orderBy = { [sort]: order } as Prisma.ProductOrderByWithRelationInput
+    const orderBy = { [sort]: order } as Record<string, unknown>
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
