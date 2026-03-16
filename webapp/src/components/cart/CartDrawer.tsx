@@ -3,17 +3,17 @@
 import { useCart } from '@/context/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Package } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-function QuantityInput({ value, max, onUpdate }: { value: number; max: number; onUpdate: (n: number) => void }) {
+function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: number) => void }) {
   const [input, setInput] = useState(String(value));
 
   const commit = (raw: string) => {
     const n = parseInt(raw, 10);
-    if (!isNaN(n) && n >= 1 && n <= max) {
+    if (!isNaN(n) && n >= 1) {
       onUpdate(n);
       setInput(String(n));
     } else {
@@ -46,8 +46,7 @@ function QuantityInput({ value, max, onUpdate }: { value: number; max: number; o
         variant="outline"
         size="icon"
         className="h-8 w-8 flex-shrink-0 rounded-lg border-primary/30 hover:bg-primary/5 hover:border-primary/50"
-        onClick={() => { const n = value + 1; if (n <= max) { onUpdate(n); setInput(String(n)); } }}
-        disabled={value >= max}
+        onClick={() => { const n = value + 1; onUpdate(n); setInput(String(n)); }}
       >
         <Plus className="h-3 w-3" />
       </Button>
@@ -113,15 +112,9 @@ export default function CartDrawer() {
                       {item.product.productId}
                     </p>
                     <h4 className="font-medium text-sm leading-snug line-clamp-2">{item.product.name}</h4>
-                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                      <Package className="h-3 w-3 flex-shrink-0" />
-                      Stock: {item.product.quantity.toLocaleString()} unidades
-                    </p>
-
                     <div className="flex items-center justify-between mt-2.5">
                       <QuantityInput
                         value={item.quantity}
-                        max={item.product.quantity}
                         onUpdate={(n) => updateQuantity(item.product.id, n)}
                       />
                       <Button

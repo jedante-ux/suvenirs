@@ -45,11 +45,6 @@ export default function ProductCard({ product, index }: ProductCardProps) {
               Destacado
             </Badge>
           )}
-          {product.quantity === 0 && (
-            <Badge className="absolute top-6 right-6 bg-red-500">
-              Sin Stock
-            </Badge>
-          )}
         </div>
 
         <CardContent className="p-4">
@@ -71,7 +66,6 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           <Button
             className="flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] hover:shadow-md transition-all duration-200"
             onClick={handleAddToCart}
-            disabled={product.quantity === 0}
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Agregar

@@ -547,7 +547,6 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                 <TableHead>Nombre</TableHead>
                 <TableHead>Categoría</TableHead>
                 <TableHead className="text-right">Precio</TableHead>
-                <TableHead className="text-center">Stock</TableHead>
                 <TableHead className="text-center">Estado</TableHead>
                 <TableHead className="text-center">Destacado</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
@@ -590,11 +589,6 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                     ) : (
                       <span className="text-xs text-muted-foreground">Sin precio</span>
                     )}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant={product.quantity > 0 ? 'default' : 'destructive'}>
-                      {product.quantity}
-                    </Badge>
                   </TableCell>
                   <TableCell className="text-center">
                     <Badge variant={product.isActive ? 'default' : 'secondary'}>
@@ -832,27 +826,14 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="quantity">Stock</Label>
-                <Input
-                  id="quantity"
-                  type="number"
-                  min="0"
-                  value={formData.quantity}
-                  onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="image">URL Imagen</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="image">URL Imagen</Label>
+              <Input
+                id="image"
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                placeholder="https://..."
+              />
             </div>
 
             <div className="flex items-center justify-between">
@@ -939,7 +920,6 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                 <li>• <strong>productId</strong>: ID único del producto (ej: PROD-001)</li>
                 <li>• <strong>name</strong>: Nombre del producto</li>
                 <li>• <strong>description</strong>: Descripción</li>
-                <li>• <strong>quantity</strong>: Stock disponible</li>
                 <li>• <strong>image</strong>: URL de la imagen</li>
                 <li>• <strong>category</strong>: ID de categoría (ej: CAT-001)</li>
                 <li>• <strong>featured</strong>: true/false</li>

@@ -1050,9 +1050,6 @@ export default function CotizacionesPage() {
                       ) : (
                         <p className="text-xs text-muted-foreground">Sin precio</p>
                       )}
-                      {product.quantity === 0 && (
-                        <p className="text-xs text-destructive">Sin stock</p>
-                      )}
                     </div>
                   </button>
                 ))}

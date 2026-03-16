@@ -183,11 +183,6 @@ export default function ProductDetailPage() {
                     Destacado
                   </Badge>
                 )}
-                {product.quantity === 0 && (
-                  <Badge className="absolute top-4 right-4 bg-red-500">
-                    Sin Stock
-                  </Badge>
-                )}
               </div>
             </div>
 
@@ -221,32 +216,27 @@ export default function ProductDetailPage() {
               {/* Quantity Selector & Action Buttons */}
               <div className="space-y-4">
                 {/* Quantity Selector */}
-                {product.quantity > 0 && (
-                  <div className="flex items-center gap-3">
-                    <label className="text-sm font-medium">Cantidad:</label>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      disabled={quantity <= 1}
-                    >
-                      -
-                    </Button>
-                    <span className="w-12 text-center font-semibold text-lg">
-                      {quantity}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() =>
-                        setQuantity(Math.min(product.quantity, quantity + 1))
-                      }
-                      disabled={quantity >= product.quantity}
-                    >
-                      +
-                    </Button>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium">Cantidad:</label>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                  >
+                    -
+                  </Button>
+                  <span className="w-12 text-center font-semibold text-lg">
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setQuantity(quantity + 1)}
+                  >
+                    +
+                  </Button>
+                </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -254,7 +244,7 @@ export default function ProductDetailPage() {
                     size="lg"
                     className="flex-1 bg-pink-500 hover:bg-pink-600"
                     onClick={handleAddToCart}
-                    disabled={product.quantity === 0 || addedToCart}
+                    disabled={addedToCart}
                   >
                     {addedToCart ? (
                       <>
@@ -273,7 +263,6 @@ export default function ProductDetailPage() {
                     variant="outline"
                     className="flex-1 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white"
                     onClick={handleBuyNow}
-                    disabled={product.quantity === 0}
                   >
                     Cotizar ahora
                   </Button>

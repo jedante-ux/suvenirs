@@ -172,7 +172,6 @@ export default function FeaturedProducts() {
                   variant="secondary"
                   className="absolute bottom-2 right-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8"
                   onClick={() => handleAddToCart(product)}
-                  disabled={product.quantity === 0}
                 >
                   <ShoppingCart size={14} />
                 </Button>

@@ -23,7 +23,6 @@ interface ProductFiltersProps {
 const SORT_OPTIONS = [
   { value: 'createdAt', label: 'Fecha de creación' },
   { value: 'name', label: 'Nombre' },
-  { value: 'quantity', label: 'Stock disponible' },
 ];
 
 const ORDER_OPTIONS = [

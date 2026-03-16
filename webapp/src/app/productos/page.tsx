@@ -361,19 +361,6 @@ function ProductosContent() {
                         >
                           Nombre (Z-A)
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => setPendingFilters({ sort: 'quantity', order: 'desc' })}
-                          className={pendingFilters.sort === 'quantity' && pendingFilters.order === 'desc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
-                        >
-                          Stock (Mayor a menor)
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => setPendingFilters({ sort: 'quantity', order: 'asc' })}
-                          className={pendingFilters.sort === 'quantity' && pendingFilters.order === 'asc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
-                        >
-                          Stock (Menor a mayor)
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </Tooltip>

@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Package, FileText, Users, AlertTriangle, Star, Loader2, DollarSign, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Package, FileText, Users, Star, Loader2, DollarSign, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getStatusBadgeClass, getStatusLabel } from '@/lib/statusBadge';
 import { Button } from '@/components/ui/button';
 
@@ -201,20 +201,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Sin Stock</CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-destructive/10 flex items-center justify-center">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold tracking-tight text-destructive">{data?.products.outOfStock || 0}</div>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Productos agotados
-            </p>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Monthly Sales Card */}
