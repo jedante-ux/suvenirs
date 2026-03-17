@@ -163,26 +163,6 @@ export default function ContactoPage() {
                 </div>
               </div>
 
-              {/* Hours */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">Horario de atención</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-1.5 text-sm text-muted-foreground">
-                  <div className="flex justify-between">
-                    <span>Lunes a Viernes</span>
-                    <span className="font-medium text-foreground">9:00 – 18:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sábado</span>
-                    <span className="font-medium text-foreground">10:00 – 14:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Domingo</span>
-                    <span className="text-muted-foreground/60">Cerrado</span>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Contact form */}
