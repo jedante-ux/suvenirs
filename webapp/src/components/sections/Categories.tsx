@@ -27,6 +27,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,8 +75,6 @@ export default function Categories() {
   if (categories.length === 0) {
     return null;
   }
-
-  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>();
 
   return (
     <section className="section bg-gray-50">
