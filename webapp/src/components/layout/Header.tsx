@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
@@ -56,7 +56,20 @@ const socialLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [badgePop, setBadgePop] = useState(false);
+  const prevCountRef = useRef(0);
   const { openCart, getTotalItems } = useCart();
+  const totalItems = getTotalItems();
+
+  // Animate badge when count changes
+  useEffect(() => {
+    if (totalItems > prevCountRef.current && totalItems > 0) {
+      setBadgePop(true);
+      const timer = setTimeout(() => setBadgePop(false), 300);
+      return () => clearTimeout(timer);
+    }
+    prevCountRef.current = totalItems;
+  }, [totalItems]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,9 +159,14 @@ export default function Header() {
             {/* Cart */}
             <Button variant="ghost" size="icon" className="relative" onClick={openCart}>
               <CartIcon size={22} />
-              {getTotalItems() > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background">
-                  {getTotalItems()}
+              {totalItems > 0 && (
+                <Badge
+                  className={cn(
+                    "absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background transition-transform",
+                    badgePop && "animate-badge-pop"
+                  )}
+                >
+                  {totalItems}
                 </Badge>
               )}
             </Button>

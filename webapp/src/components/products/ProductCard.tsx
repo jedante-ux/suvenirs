@@ -7,8 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Star, Eye } from 'lucide-react';
+import { ShoppingCart, Star, Eye, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -18,10 +19,14 @@ interface ProductCardProps {
 export default function ProductCard({ product, index }: ProductCardProps) {
   const { addItem } = useCart();
 
+  const [justAdded, setJustAdded] = useState(false);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product, 1);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 600);
     toast.success('Producto agregado al carrito', {
       description: product.name,
     });
@@ -64,11 +69,20 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             Ver detalle
           </Button>
           <Button
-            className="flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] hover:shadow-md transition-all duration-200"
+            className={`flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] hover:shadow-md transition-all duration-200 ${justAdded ? 'bg-green-600 hover:bg-green-600' : ''}`}
             onClick={handleAddToCart}
           >
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Agregar
+            {justAdded ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Agregado
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Agregar
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

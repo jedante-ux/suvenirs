@@ -8,6 +8,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Category } from '@/types';
 import { getCategories } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
+import { useInView } from '@/hooks/useInView';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -74,11 +75,20 @@ export default function Categories() {
     return null;
   }
 
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>();
+
   return (
     <section className="section bg-gray-50">
-      <div className="container">
+      <div className="container" ref={sectionRef}>
         {/* Section header */}
-        <div className="text-center mb-12">
+        <div
+          className="text-center mb-12"
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+          }}
+        >
           <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
             Nuestras Categorías
           </Badge>
@@ -92,6 +102,14 @@ export default function Categories() {
         </div>
 
         {/* Categories slider */}
+        <div
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+            transitionDelay: '0.15s',
+          }}
+        >
         <Swiper
           modules={[Navigation, Autoplay]}
           spaceBetween={24}
@@ -115,7 +133,7 @@ export default function Categories() {
             <SwiperSlide key={category.id}>
               <Link
                 href={`/productos?category=${category.slug}`}
-                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 block h-64"
+                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 block h-64"
               >
                 {/* Background image */}
                 <div className="relative h-full overflow-hidden">
@@ -142,6 +160,7 @@ export default function Categories() {
             </SwiperSlide>
           ))}
         </Swiper>
+        </div>
       </div>
     </section>
   );

@@ -9,10 +9,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRightIcon, CartIcon } from '../icons';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
-import { Package, ShoppingCart, Star, Sparkles } from 'lucide-react';
+import { Package, ShoppingCart, Star, Sparkles, Check } from 'lucide-react';
 import { getProducts } from '@/lib/api';
 import { buildRecommendationQuery, hasSearchHistory, getRecentSearchTerms } from '@/lib/searchHistory';
 import { toast } from 'sonner';
+import { useInView } from '@/hooks/useInView';
 
 export default function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -78,51 +79,36 @@ export default function FeaturedProducts() {
     fetchProducts();
   }, []);
 
+  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>();
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
+
   const handleAddToCart = (product: Product) => {
     addItem(product, 1);
+    setAddedIds(prev => new Set(prev).add(product.id));
+    setTimeout(() => {
+      setAddedIds(prev => {
+        const next = new Set(prev);
+        next.delete(product.id);
+        return next;
+      });
+    }, 600);
     toast.success('Producto agregado al carrito', {
       description: product.name,
     });
   };
 
-  if (loading) {
-    return (
-      <section className="section">
-        <div className="container">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
-            <div>
-              <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
-                Nuestro catálogo
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Productos destacados
-              </h2>
-              <p className="text-muted-foreground max-w-xl">
-                Descubre los productos favoritos de nuestros clientes corporativos.
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) => (
-              <Card key={i} className="overflow-hidden animate-pulse">
-                <div className="aspect-square bg-muted" />
-                <CardContent className="p-3">
-                  <div className="h-3 bg-muted rounded mb-2 w-3/4" />
-                  <div className="h-2 bg-muted rounded w-full" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="section">
-      <div className="container">
+      <div className="container" ref={sectionRef}>
         {/* Section header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div
+          className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+          }}
+        >
           <div>
             <Badge variant="outline" className={`mb-4 ${isPersonalized ? 'text-pink-500 border-pink-500/20 bg-pink-500/5' : 'text-primary border-primary/20 bg-primary/5'}`}>
               {isPersonalized ? (
@@ -151,12 +137,39 @@ export default function FeaturedProducts() {
           </Button>
         </div>
 
-        {/* Products grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {products.map((product) => (
+        {/* Products grid with crossfade from skeleton */}
+        <div className="relative">
+          {/* Skeleton layer */}
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 transition-opacity duration-500"
+            style={{ opacity: loading ? 1 : 0, position: loading ? 'relative' : 'absolute', inset: 0, pointerEvents: loading ? 'auto' : 'none' }}
+          >
+            {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              <Card key={i} className="overflow-hidden animate-pulse">
+                <div className="aspect-square bg-muted" />
+                <CardContent className="p-3">
+                  <div className="h-3 bg-muted rounded mb-2 w-3/4" />
+                  <div className="h-2 bg-muted rounded w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Content layer */}
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 transition-opacity duration-500"
+            style={{ opacity: loading ? 0 : 1 }}
+          >
+          {products.map((product, index) => (
             <Card
               key={product.id}
-              className="group overflow-hidden hover:shadow-lg transition-all duration-300"
+              className="group overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              style={{
+                opacity: isInView && !loading ? 1 : 0,
+                transform: isInView && !loading ? 'translateY(0)' : 'translateY(20px)',
+                transition: 'opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
+                transitionDelay: isInView ? `${0.1 + index * 0.04}s` : '0s',
+              }}
             >
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-muted">
@@ -170,10 +183,10 @@ export default function FeaturedProducts() {
                 <Button
                   size="icon"
                   variant="secondary"
-                  className="absolute bottom-2 right-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8"
+                  className={`absolute bottom-2 right-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8 ${addedIds.has(product.id) ? 'bg-green-600 text-white opacity-100 translate-y-0' : ''}`}
                   onClick={() => handleAddToCart(product)}
                 >
-                  <ShoppingCart size={14} />
+                  {addedIds.has(product.id) ? <Check size={14} /> : <ShoppingCart size={14} />}
                 </Button>
               </div>
 
@@ -191,6 +204,7 @@ export default function FeaturedProducts() {
               </CardContent>
             </Card>
           ))}
+          </div>
         </div>
       </div>
     </section>
