@@ -28,7 +28,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   };
 
   return (
-    <Link href={`/productos/${product.slug}`}>
+    <Link href={`/productos/${product.slug || product.productId}`}>
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full cursor-pointer p-0 gap-0">
         <div className="relative aspect-square bg-muted/50 overflow-hidden rounded-t-xl">
           <div className="relative w-full h-full overflow-hidden rounded-lg">
