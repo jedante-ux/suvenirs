@@ -412,26 +412,10 @@ export default function CotizacionesPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button size="icon" variant="ghost" title="Ver detalles"
-                        onClick={() => { setSelectedQuote(quote); setDetailsOpen(true); }}>
-                        <Eye className="h-4 w-4" />
-                      </Button>
                       <Button size="icon" variant="ghost" title="Editar cotización"
                         onClick={() => openEdit(quote)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button size="icon" variant="ghost" title="Copiar enlace público"
-                        onClick={() => copyPublicLink(quote)}>
-                        {copiedId === quote.id
-                          ? <Check className="h-4 w-4 text-green-600" />
-                          : <Link2 className="h-4 w-4" />}
-                      </Button>
-                      {quote.customerPhone && (
-                        <Button size="icon" variant="ghost" className="text-green-600" title="WhatsApp"
-                          onClick={() => openWhatsApp(quote)}>
-                          <MessageCircle className="h-4 w-4" />
-                        </Button>
-                      )}
                       <Button size="icon" variant="ghost" className="text-red-500"
                         onClick={() => { setQuoteToDelete(quote); setDeleteDialogOpen(true); }}>
                         <Trash2 className="h-4 w-4" />
@@ -606,15 +590,29 @@ export default function CotizacionesPage() {
                 Modifica los datos del cliente, productos y valores.
               </DialogDescription>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
+            <div className="flex gap-2 flex-shrink-0 flex-wrap justify-end">
+              {selectedQuote && (
+                <>
+                  <Button variant="outline" size="sm" onClick={() => copyPublicLink(selectedQuote)}>
+                    {copiedId === selectedQuote.id ? <Check className="mr-2 h-4 w-4 text-green-600" /> : <Link2 className="mr-2 h-4 w-4" />}
+                    {copiedId === selectedQuote.id ? 'Copiado' : 'Enlace'}
+                  </Button>
+                  {(editForm.customerPhone || selectedQuote.customerPhone) && (
+                    <Button variant="outline" size="sm" className="text-green-600 border-green-200 hover:bg-green-50" onClick={() => openWhatsApp({ ...selectedQuote, customerPhone: editForm.customerPhone || selectedQuote.customerPhone, customerName: editForm.customerName || selectedQuote.customerName })}>
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      WhatsApp
+                    </Button>
+                  )}
+                </>
+              )}
               <Button variant="outline" size="sm" onClick={() => setEditOpen(false)}>Cancelar</Button>
               <Button variant="outline" size="sm" onClick={() => setPdfPreviewOpen(true)}>
                 <FileText className="mr-2 h-4 w-4" />
-                Vista previa PDF
+                PDF
               </Button>
               <Button size="sm" onClick={handleSaveEdit} disabled={saving}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Guardar cambios
+                Guardar
               </Button>
             </div>
           </div>
