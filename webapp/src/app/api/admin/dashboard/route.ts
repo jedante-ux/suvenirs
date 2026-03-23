@@ -27,7 +27,8 @@ export async function GET() {
         quotes: { total: totalQuotes, pending: pendingQuotes, recent: recentQuotes },
       },
     })
-  } catch {
-    return NextResponse.json({ success: false, error: 'Error fetching dashboard' }, { status: 500 })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return NextResponse.json({ success: false, error: msg }, { status: 500 })
   }
 }

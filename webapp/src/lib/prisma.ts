@@ -14,8 +14,8 @@ function createPrismaClient() {
 
   const adapter = new PrismaPg({
     connectionString,
-    max: 1,
-    idleTimeoutMillis: 10_000,
+    max: 5,
+    idleTimeoutMillis: 20_000,
     ssl: connectionString.includes('sslmode=require')
       ? { rejectUnauthorized: false }
       : undefined,

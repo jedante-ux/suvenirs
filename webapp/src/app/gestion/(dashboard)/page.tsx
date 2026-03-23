@@ -55,6 +55,7 @@ export default function DashboardPage() {
   const { token, isLoading: authLoading } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [salesData, setSalesData] = useState<MonthlySalesData | null>(null);
   const [salesLoading, setSalesLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -70,9 +71,12 @@ export default function DashboardPage() {
         const result = await res.json();
         if (result.success) {
           setData(result.data);
+        } else {
+          setError(result.error || 'Error cargando dashboard');
         }
-      } catch (error) {
-        console.error('Error fetching dashboard:', error);
+      } catch (err) {
+        console.error('Error fetching dashboard:', err);
+        setError('Error de conexión');
       } finally {
         setLoading(false);
       }
@@ -143,6 +147,17 @@ export default function DashboardPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <p className="text-destructive font-medium">{error}</p>
+        <Button variant="outline" onClick={() => { setError(null); setLoading(true); window.location.reload(); }}>
+          Reintentar
+        </Button>
       </div>
     );
   }
