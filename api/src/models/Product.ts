@@ -11,6 +11,7 @@ export interface IProduct extends Document {
   salePrice?: number;
   currency: string;
   image: string;
+  proveedor: string;
   featured: boolean;
   isActive: boolean;
   createdAt: Date;
@@ -78,6 +79,12 @@ const productSchema = new Schema<IProduct>(
       type: String,
       default: '/placeholder-product.jpg',
     },
+    proveedor: {
+      type: String,
+      default: '',
+      trim: true,
+      lowercase: true,
+    },
     featured: {
       type: Boolean,
       default: false,
@@ -106,6 +113,7 @@ productSchema.index({ isActive: 1 });
 productSchema.index({ featured: 1 });
 productSchema.index({ category: 1 });
 productSchema.index({ createdAt: -1 });
+productSchema.index({ proveedor: 1 });
 
 // Pre-save middleware to generate slug
 productSchema.pre('save', function (next) {

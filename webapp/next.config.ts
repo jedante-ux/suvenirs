@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         hostname: 'imblasco.cl',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'promoimport.cl',
+        pathname: '/**',
+      },
     ],
   },
 };

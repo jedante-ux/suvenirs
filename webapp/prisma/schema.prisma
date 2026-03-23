@@ -63,6 +63,7 @@ model Product {
   salePrice   Float?
   currency    String    @default("CLP")
   image       String    @default("/placeholder-product.jpg")
+  proveedor   String    @default("")
   featured    Boolean   @default(false)
   isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
