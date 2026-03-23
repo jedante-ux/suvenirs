@@ -10,132 +10,214 @@ import { Product } from '@/types';
 import { getProducts } from '@/lib/api';
 import { Truck, Gift } from 'lucide-react';
 
-// ── Rotating words for the H1 ──
+// ── Rotating words config ──
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
 const WORD_INTERVAL = 3500;
 
 // ── Grid tile swap config ──
 const GRID_SIZE = 9;
-const SWAP_INTERVAL = 3000;
-const SWAP_DURATION = 400;
+const SWAP_INTERVAL = 2800;
+const SWAP_ANIM_MS = 600;
 
+// ── Rotating word with dual-layer crossfade ──
 function RotatingWord() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [nextIndex, setNextIndex] = useState(1);
+  const [phase, setPhase] = useState<'idle' | 'exiting' | 'entering'>('idle');
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsAnimating(true);
+      const next = (currentIndex + 1) % ROTATING_WORDS.length;
+      setNextIndex(next);
+      setPhase('exiting');
+
+      // Midpoint: swap active word
       setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
-        setIsAnimating(false);
-      }, 300);
+        setPhase('entering');
+        setCurrentIndex(next);
+      }, 350);
+
+      // Done
+      setTimeout(() => {
+        setPhase('idle');
+      }, 700);
     }, WORD_INTERVAL);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
 
   return (
-    <span className="inline-block relative overflow-hidden align-bottom">
+    <span
+      className="inline-flex relative overflow-hidden align-bottom"
+      style={{ minWidth: '5ch' }}
+    >
+      {/* Current word — exits upward */}
       <span
-        className="inline-block bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent transition-all duration-300"
+        className="inline-block bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent whitespace-nowrap"
         style={{
-          transform: isAnimating ? 'translateY(-110%)' : 'translateY(0)',
-          opacity: isAnimating ? 0 : 1,
-          transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          transform:
+            phase === 'exiting' || phase === 'entering'
+              ? 'translateY(-115%) scale(0.95)'
+              : 'translateY(0) scale(1)',
+          opacity: phase === 'exiting' || phase === 'entering' ? 0 : 1,
+          filter: phase === 'exiting' ? 'blur(2px)' : 'blur(0px)',
+          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease',
         }}
       >
         {ROTATING_WORDS[currentIndex]}
+      </span>
+
+      {/* Next word — enters from below */}
+      <span
+        className="absolute left-0 top-0 inline-block bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent whitespace-nowrap"
+        style={{
+          transform:
+            phase === 'entering'
+              ? 'translateY(0) scale(1)'
+              : phase === 'exiting'
+                ? 'translateY(110%) scale(0.95)'
+                : 'translateY(110%) scale(0.95)',
+          opacity: phase === 'entering' ? 1 : 0,
+          filter: phase === 'exiting' ? 'blur(2px)' : 'blur(0px)',
+          transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease',
+        }}
+      >
+        {ROTATING_WORDS[nextIndex]}
       </span>
     </span>
   );
 }
 
+// ── Preload image utility ──
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve) => {
+    if (!src) { resolve(); return; }
+    const img = new window.Image();
+    img.onload = () => resolve();
+    img.onerror = () => resolve(); // Don't block on error
+    img.src = src;
+  });
+}
+
+// ── Grid tile state ──
 interface GridTile {
   product: Product;
-  isSwapping: boolean;
-  isEntering: boolean;
+  animState: 'idle' | 'flip-out' | 'flip-in';
 }
 
 function useAsyncGridSwap(allProducts: Product[]) {
   const [tiles, setTiles] = useState<GridTile[]>([]);
-  const swapQueueRef = useRef(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const busyRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const usedIndicesRef = useRef<number[]>([]);
 
-  // Initialize tiles when products load
+  // Initialize tiles
   useEffect(() => {
     if (allProducts.length >= GRID_SIZE) {
       setTiles(
         allProducts.slice(0, GRID_SIZE).map((product) => ({
           product,
-          isSwapping: false,
-          isEntering: false,
+          animState: 'idle' as const,
         }))
       );
+      // Reset used indices tracking
+      usedIndicesRef.current = [];
     }
   }, [allProducts]);
 
-  const swapRandomTile = useCallback(() => {
-    if (swapQueueRef.current || allProducts.length <= GRID_SIZE) return;
-    swapQueueRef.current = true;
+  const swapNextTile = useCallback(async () => {
+    if (busyRef.current || allProducts.length <= GRID_SIZE) return;
+    busyRef.current = true;
 
-    const tileIndex = Math.floor(Math.random() * GRID_SIZE);
+    // Pick a random tile that hasn't been swapped recently
+    let tileIndex: number;
+    if (usedIndicesRef.current.length >= GRID_SIZE) {
+      usedIndicesRef.current = []; // Reset when all have been used
+    }
+    const available = Array.from({ length: GRID_SIZE }, (_, i) => i)
+      .filter((i) => !usedIndicesRef.current.includes(i));
+    tileIndex = available[Math.floor(Math.random() * available.length)];
+    usedIndicesRef.current.push(tileIndex);
 
-    // Phase 1: exit current tile
+    // Pick a new product not currently shown
+    const currentIds = new Set(tiles.map((t) => t.product.id));
+    const pool = allProducts.filter((p) => !currentIds.has(p.id));
+    if (pool.length === 0) { busyRef.current = false; return; }
+    const newProduct = pool[Math.floor(Math.random() * pool.length)];
+
+    // Preload the new image BEFORE starting animation
+    await preloadImage(newProduct.image || '/placeholder-product.jpg');
+
+    // Phase 1: flip out (card flips away)
     setTiles((prev) =>
       prev.map((tile, i) =>
-        i === tileIndex ? { ...tile, isSwapping: true } : tile
+        i === tileIndex ? { ...tile, animState: 'flip-out' } : tile
       )
     );
 
-    // Phase 2: swap product and enter
-    setTimeout(() => {
-      setTiles((prev) => {
-        const currentIds = new Set(prev.map((t) => t.product.id));
-        const available = allProducts.filter((p) => !currentIds.has(p.id));
-        if (available.length === 0) {
-          swapQueueRef.current = false;
-          return prev.map((tile, i) =>
-            i === tileIndex ? { ...tile, isSwapping: false } : tile
-          );
-        }
-        const newProduct = available[Math.floor(Math.random() * available.length)];
-        return prev.map((tile, i) =>
-          i === tileIndex
-            ? { product: newProduct, isSwapping: false, isEntering: true }
-            : tile
-        );
-      });
+    // Phase 2: swap product + flip in
+    await new Promise((r) => setTimeout(r, SWAP_ANIM_MS / 2));
+    setTiles((prev) =>
+      prev.map((tile, i) =>
+        i === tileIndex
+          ? { product: newProduct, animState: 'flip-in' }
+          : tile
+      )
+    );
 
-      // Phase 3: clear entering state
-      setTimeout(() => {
-        setTiles((prev) =>
-          prev.map((tile, i) =>
-            i === tileIndex ? { ...tile, isEntering: false } : tile
-          )
-        );
-        swapQueueRef.current = false;
-      }, SWAP_DURATION);
-    }, SWAP_DURATION / 2);
-  }, [allProducts]);
+    // Phase 3: settle
+    await new Promise((r) => setTimeout(r, SWAP_ANIM_MS / 2));
+    setTiles((prev) =>
+      prev.map((tile, i) =>
+        i === tileIndex ? { ...tile, animState: 'idle' } : tile
+      )
+    );
+    busyRef.current = false;
+  }, [allProducts, tiles]);
 
-  // Start swap interval
+  // Start swap loop
   useEffect(() => {
     if (tiles.length === 0) return;
 
-    // Initial delay before first swap
     const startDelay = setTimeout(() => {
-      swapRandomTile();
-      timerRef.current = setInterval(swapRandomTile, SWAP_INTERVAL);
-    }, 2000);
+      swapNextTile();
+      timerRef.current = setInterval(swapNextTile, SWAP_INTERVAL);
+    }, 2500);
 
     return () => {
       clearTimeout(startDelay);
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [tiles.length, swapRandomTile]);
+  }, [tiles.length, swapNextTile]);
 
   return tiles;
+}
+
+// ── Tile animation styles ──
+function getTileStyle(animState: GridTile['animState']) {
+  const base = `transform ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+
+  switch (animState) {
+    case 'flip-out':
+      return {
+        transform: 'perspective(600px) rotateY(90deg) scale(0.9)',
+        opacity: 0,
+        transition: base,
+      };
+    case 'flip-in':
+      return {
+        transform: 'perspective(600px) rotateY(-30deg) scale(0.95)',
+        opacity: 0.7,
+        transition: base,
+      };
+    case 'idle':
+    default:
+      return {
+        transform: 'perspective(600px) rotateY(0deg) scale(1)',
+        opacity: 1,
+        transition: base,
+      };
+  }
 }
 
 export default function Hero() {
@@ -150,14 +232,12 @@ export default function Hero() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Fetch more products for the swap pool
-        const response = await getProducts({ limit: 25, random: true });
+        const response = await getProducts({ limit: 30, random: true });
         setAllProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -173,15 +253,16 @@ export default function Hero() {
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
-          {/* Left column - Text content */}
+          {/* Left column */}
           <div className="text-center lg:text-left">
+            {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
               style={{
                 opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                transitionDelay: '0.1s',
+                transform: mounted ? 'translateY(0)' : 'translateY(24px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                transitionDelay: '0.15s',
               }}
             >
               <Badge
@@ -197,37 +278,40 @@ export default function Hero() {
               </Badge>
             </div>
 
+            {/* H1 with rotating word */}
             <h1
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-black leading-tight mb-4"
               style={{
                 opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(24px)',
-                transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-                transitionDelay: '0.2s',
+                transform: mounted ? 'translateY(0)' : 'translateY(28px)',
+                transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
+                transitionDelay: '0.25s',
               }}
             >
               Regalos <RotatingWord /> que Inspiran
             </h1>
 
+            {/* Subtitle */}
             <p
               className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0"
               style={{
                 opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                transitionDelay: '0.35s',
+                transform: mounted ? 'translateY(0)' : 'translateY(24px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                transitionDelay: '0.4s',
               }}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
             </p>
 
+            {/* CTAs */}
             <div
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 w-full"
               style={{
                 opacity: mounted ? 1 : 0,
-                transform: mounted ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                transitionDelay: '0.45s',
+                transform: mounted ? 'translateY(0)' : 'translateY(24px)',
+                transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                transitionDelay: '0.55s',
               }}
             >
               <Button
@@ -253,34 +337,26 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right column - Product grid */}
+          {/* Right column — Product grid */}
           <div
             className="relative block"
             style={{
-              perspective: '1500px',
+              perspective: '1200px',
               opacity: mounted ? 1 : 0,
-              transform: mounted ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(20px)',
-              transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
-              transitionDelay: '0.3s',
+              transform: mounted ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(24px)',
+              transition: 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1)',
+              transitionDelay: '0.35s',
             }}
           >
-            <div
-              className="grid grid-cols-3 grid-rows-3 gap-2 lg:gap-3 w-full max-w-sm lg:max-w-lg mx-auto"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
+            <div className="grid grid-cols-3 grid-rows-3 gap-2.5 lg:gap-3 w-full max-w-sm lg:max-w-lg mx-auto">
               {tiles.map((tile, index) => (
                 <Link
                   key={`tile-${index}`}
                   href={`/productos/${tile.product.slug || tile.product.productId}`}
-                  className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                  className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:scale-[1.04] transition-[box-shadow] duration-300"
                   style={{
-                    transform: tile.isSwapping
-                      ? 'scale(0.85)'
-                      : tile.isEntering
-                        ? 'scale(1)'
-                        : 'scale(1)',
-                    opacity: tile.isSwapping ? 0 : 1,
-                    transition: `transform ${SWAP_DURATION / 2}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${SWAP_DURATION / 2}ms cubic-bezier(0.16, 1, 0.3, 1)`,
+                    ...getTileStyle(tile.animState),
+                    transformOrigin: 'center center',
                   }}
                 >
                   <Image
@@ -298,7 +374,7 @@ export default function Hero() {
                   </div>
                 </Link>
               ))}
-              {/* Placeholder boxes while loading */}
+              {/* Placeholders while loading */}
               {tiles.length === 0 &&
                 Array.from({ length: GRID_SIZE }).map((_, index) => (
                   <div
@@ -306,8 +382,8 @@ export default function Hero() {
                     className="aspect-square rounded-2xl bg-muted animate-pulse"
                     style={{
                       opacity: mounted ? 1 : 0,
-                      transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                      transitionDelay: `${0.3 + index * 0.06}s`,
+                      transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                      transitionDelay: `${0.35 + index * 0.07}s`,
                     }}
                   />
                 ))}
