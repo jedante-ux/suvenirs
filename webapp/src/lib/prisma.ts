@@ -4,11 +4,18 @@ import { PrismaPg } from '@prisma/adapter-pg'
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL!
+  let connectionString = process.env.DATABASE_URL!
+
+  // Switch to transaction mode pooler (port 6543) for serverless compatibility
+  // Session mode (5432) exhausts connections with MaxClientsInSessionMode
+  if (connectionString.includes('pooler.supabase.com:5432')) {
+    connectionString = connectionString.replace(':5432', ':6543')
+  }
+
   const adapter = new PrismaPg({
     connectionString,
-    max: 2,
-    idleTimeoutMillis: 30_000,
+    max: 1,
+    idleTimeoutMillis: 10_000,
     ssl: connectionString.includes('sslmode=require')
       ? { rejectUnauthorized: false }
       : undefined,
