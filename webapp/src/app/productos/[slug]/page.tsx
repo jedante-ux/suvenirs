@@ -1,27 +1,16 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProductBySlug, getProducts } from '@/lib/api';
-import { Product, Category } from '@/types';
-import { Button } from '@/components/ui/button';
+import { prisma } from '@/lib/prisma';
+import { Product } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { useCart } from '@/context/CartContext';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
-  ShoppingCart,
   Package,
-  ArrowLeft,
-  Check,
-  Share2,
-  Heart,
   Truck,
   Shield,
   RefreshCw,
-  Loader2,
   Ruler,
   Layers,
   Circle,
@@ -33,397 +22,358 @@ import {
   ArrowUpDown,
   type LucideIcon,
 } from 'lucide-react';
-import { addSearchToHistory } from '@/lib/searchHistory';
 import { parseProductDescription } from '@/lib/utils';
+import ProductActions from './ProductDetailClient';
 
-export default function ProductDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const slug = params.slug as string;
+// --- Data fetching ---
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [notFoundState, setNotFoundState] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
+async function getProduct(slug: string) {
+  let product = await prisma.product.findFirst({
+    where: { slug, isActive: true },
+    include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+  });
+  if (!product) {
+    product = await prisma.product.findFirst({
+      where: { productId: slug, isActive: true },
+      include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+    });
+  }
+  return product;
+}
 
-  const { addItem } = useCart();
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const productData = await getProductBySlug(slug);
-
-        if (!productData) {
-          setNotFoundState(true);
-          return;
-        }
-
-        setProduct(productData);
-
-        // Save to search history for recommendations
-        addSearchToHistory(productData.name);
-
-        // Fetch related products (same category or random)
-        const categorySlug = typeof productData.category === 'object'
-          ? (productData.category as Category).slug
-          : undefined;
-
-        if (categorySlug) {
-          const related = await getProducts({
-            category: categorySlug,
-            limit: 4,
-          });
-          // Filter out current product
-          setRelatedProducts(
-            related.data.filter((p) => p.id !== productData.id).slice(0, 4)
-          );
-        } else {
-          const related = await getProducts({ limit: 5, random: true });
-          setRelatedProducts(
-            related.data.filter((p) => p.id !== productData.id).slice(0, 4)
-          );
-        }
-      } catch (error) {
-        console.error('Error fetching product:', error);
-        setNotFoundState(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [slug]);
-
-  const handleAddToCart = () => {
-    if (!product) return;
-
-    addItem(product, quantity);
-    toast.success('Producto agregado al carrito', { description: product.name });
-    setAddedToCart(true);
-
-    setTimeout(() => {
-      setAddedToCart(false);
-    }, 2000);
-  };
-
-  const handleBuyNow = () => {
-    if (!product) return;
-
-    addItem(product, quantity);
-    router.push('/resumen-pedido');
-  };
-
-  const getCategoryName = (): string => {
-    if (!product?.category) return 'Sin categoría';
-    if (typeof product.category === 'object') {
-      return (product.category as Category).name;
+async function getRelatedProducts(product: { id: string; category: { slug: string } | null }) {
+  const categorySlug = product.category?.slug;
+  if (categorySlug) {
+    const cat = await prisma.category.findFirst({ where: { slug: categorySlug }, select: { id: true } });
+    if (cat) {
+      const products = await prisma.product.findMany({
+        where: { categoryId: cat.id, isActive: true, id: { not: product.id } },
+        include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+        take: 4,
+      });
+      return products;
     }
-    return 'Sin categoría';
-  };
+  }
+  const count = await prisma.product.count({ where: { isActive: true, id: { not: product.id } } });
+  const skip = Math.max(0, Math.floor(Math.random() * Math.max(0, count - 4)));
+  return prisma.product.findMany({
+    where: { isActive: true, id: { not: product.id } },
+    include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+    take: 4,
+    skip,
+  });
+}
 
-  const getSpecIcon = (label: string): LucideIcon => {
-    const lowerLabel = label.toLowerCase();
-    if (lowerLabel.includes('tamaño') || lowerLabel.includes('dimensi')) return Ruler;
-    if (lowerLabel.includes('material')) return Layers;
-    if (lowerLabel.includes('argolla') || lowerLabel.includes('diámetro')) return Circle;
-    if (lowerLabel.includes('presentación')) return Gift;
-    if (lowerLabel.includes('embalaje') || lowerLabel.includes('caja')) return Box;
-    if (lowerLabel.includes('peso')) return Scale;
-    if (lowerLabel.includes('código')) return Hash;
-    if (lowerLabel.includes('placa')) return Square;
-    if (lowerLabel.includes('altura')) return ArrowUpDown;
-    return Package;
-  };
+// --- SEO: generateMetadata ---
 
-  if (loading) {
-    return (
-      <div className="min-h-screen pt-20 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+type PageProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+
+  if (!product) {
+    return { title: 'Producto no encontrado | Suvenirs' };
   }
 
-  if (notFoundState || !product) {
-    return (
-      <div className="min-h-screen pt-20">
-        <div className="container py-16 text-center">
-          <h1 className="text-4xl font-bold mb-4">Producto no encontrado</h1>
-          <p className="text-muted-foreground mb-8">
-            El producto que buscas no existe o ha sido eliminado.
-          </p>
-          <Button asChild>
-            <Link href="/productos">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Volver a productos
-            </Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  const categoryName = product.category?.name || 'Regalos Corporativos';
+  const description = `${product.name} — ${categoryName}. Regalo corporativo personalizable con envío a todo Chile. Solicita tu cotización en Suvenirs.`;
+  const imageUrl = product.image && product.image !== '/placeholder-product.jpg'
+    ? product.image
+    : undefined;
+
+  return {
+    title: `${product.name} | Suvenirs`,
+    description,
+    keywords: `${product.name}, ${categoryName}, regalos corporativos, personalizable, chile, cotización`,
+    openGraph: {
+      title: `${product.name} | Suvenirs`,
+      description,
+      type: 'website',
+      locale: 'es_CL',
+      siteName: 'Suvenirs',
+      ...(imageUrl && { images: [{ url: imageUrl, width: 800, height: 800, alt: product.name }] }),
+    },
+    twitter: {
+      card: imageUrl ? 'summary_large_image' : 'summary',
+      title: `${product.name} | Suvenirs`,
+      description,
+      ...(imageUrl && { images: [imageUrl] }),
+    },
+    alternates: {
+      canonical: `https://suvenirs.vercel.app/productos/${product.slug || product.productId}`,
+    },
+  };
+}
+
+// --- Helpers ---
+
+function getSpecIcon(label: string): LucideIcon {
+  const l = label.toLowerCase();
+  if (l.includes('tamaño') || l.includes('dimensi')) return Ruler;
+  if (l.includes('material')) return Layers;
+  if (l.includes('argolla') || l.includes('diámetro')) return Circle;
+  if (l.includes('presentación')) return Gift;
+  if (l.includes('embalaje') || l.includes('caja')) return Box;
+  if (l.includes('peso')) return Scale;
+  if (l.includes('código')) return Hash;
+  if (l.includes('placa')) return Square;
+  if (l.includes('altura')) return ArrowUpDown;
+  return Package;
+}
+
+function toClientProduct(p: any): Product {
+  return {
+    id: p.id,
+    productId: p.productId,
+    name: p.name,
+    slug: p.slug,
+    description: p.description,
+    categoryId: p.categoryId ?? undefined,
+    category: p.category ?? undefined,
+    quantity: p.quantity,
+    price: p.price ?? undefined,
+    salePrice: p.salePrice ?? undefined,
+    currency: p.currency,
+    image: p.image,
+    featured: p.featured,
+    isActive: p.isActive,
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
+  };
+}
+
+// --- Page ---
+
+export default async function ProductDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+
+  if (!product) notFound();
+
+  const relatedProducts = await getRelatedProducts(product);
+  const parsed = parseProductDescription(product.description || '');
+  const categoryName = product.category?.name || 'Sin categoría';
+  const clientProduct = toClientProduct(product);
+
+  // JSON-LD structured data
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: parsed.description || product.description,
+    image: product.image && product.image !== '/placeholder-product.jpg' ? product.image : undefined,
+    sku: product.productId,
+    brand: { '@type': 'Brand', name: 'Suvenirs' },
+    category: categoryName,
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Suvenirs' },
+    },
+  };
+
+  // BreadcrumbList structured data
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://suvenirs.vercel.app/' },
+      { '@type': 'ListItem', position: 2, name: 'Productos', item: 'https://suvenirs.vercel.app/productos' },
+      { '@type': 'ListItem', position: 3, name: product.name },
+    ],
+  };
 
   return (
-    <div className="min-h-screen pt-20">
-      {/* Product Detail */}
-      <section className="py-12">
-        <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Product Image */}
-            <div className="space-y-4">
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted">
-                <Image
-                  src={product.image || '/placeholder-product.jpg'}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {product.featured && (
-                  <Badge className="absolute top-4 left-4 bg-pink-500">
-                    Destacado
-                  </Badge>
-                )}
-              </div>
-            </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
-            {/* Product Info */}
-            <div className="space-y-6">
-              {/* Breadcrumb */}
-              <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Link href="/" className="hover:text-foreground transition-colors">
-                  Inicio
-                </Link>
-                <span>/</span>
-                <Link href="/productos" className="hover:text-foreground transition-colors">
-                  Productos
-                </Link>
-                <span>/</span>
-                <span className="text-foreground">{product.name}</span>
-              </nav>
-
-              {/* Category */}
-              <div>
-                <Badge variant="outline" className="text-primary border-primary/20">
-                  {getCategoryName()}
-                </Badge>
-              </div>
-
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-                {product.name}
-              </h1>
-
-              {/* Quantity Selector & Action Buttons */}
-              <div className="space-y-4">
-                {/* Quantity Selector */}
-                <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium">Cantidad:</label>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    disabled={quantity <= 1}
-                  >
-                    -
-                  </Button>
-                  <span className="w-12 text-center font-semibold text-lg">
-                    {quantity}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    +
-                  </Button>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    size="lg"
-                    className="flex-1 bg-pink-500 hover:bg-pink-600"
-                    onClick={handleAddToCart}
-                    disabled={addedToCart}
-                  >
-                    {addedToCart ? (
-                      <>
-                        <Check className="mr-2 h-5 w-5" />
-                        Agregado
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="mr-2 h-5 w-5" />
-                        Agregar al carrito
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="flex-1 border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white"
-                    onClick={handleBuyNow}
-                  >
-                    Cotizar ahora
-                  </Button>
-                </div>
-              </div>
-
-              {/* Product ID */}
-              <p className="text-sm text-muted-foreground font-mono">
-                SKU: {product.productId}
-              </p>
-
-              {/* Description */}
-              {(() => {
-                const parsed = parseProductDescription(product.description || '');
-                return (
-                  <>
-                    {/* Main Description */}
-                    <div className="prose prose-gray max-w-none">
-                      <p className="text-muted-foreground text-[13px] leading-relaxed whitespace-pre-line">
-                        {parsed.description}
-                      </p>
-                    </div>
-
-                    {/* Specifications Table */}
-                    {parsed.specs.length > 0 && (
-                      <div className="mt-6">
-                        <h3 className="text-lg font-semibold mb-4">Especificaciones</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {parsed.specs.map((spec, index) => {
-                            const IconComponent = getSpecIcon(spec.label);
-                            return (
-                              <div
-                                key={index}
-                                className="flex items-center gap-3 py-2 px-3 bg-muted/50 rounded-lg"
-                              >
-                                <div className="p-1.5 rounded-md bg-primary/10 flex-shrink-0">
-                                  <IconComponent className="h-4 w-4 text-primary" />
-                                </div>
-                                <div className="flex flex-col min-w-0 flex-1">
-                                  <span className="text-xs text-muted-foreground">{spec.label}</span>
-                                  <span className="text-sm font-medium truncate">{spec.value}</span>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Recommendations */}
-                    {parsed.recommendations.length > 0 && (
-                      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-3 text-blue-800">Recomendaciones</h3>
-                        <ol className="list-decimal list-inside space-y-2">
-                          {parsed.recommendations.map((rec, index) => (
-                            <li key={index} className="text-sm text-blue-700">
-                              {rec}
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
-
-              {/* Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t">
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="p-2 rounded-full bg-primary/10">
-                    <Truck className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-muted-foreground">Envío a todo Chile</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="p-2 rounded-full bg-primary/10">
-                    <Shield className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-muted-foreground">Calidad garantizada</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="p-2 rounded-full bg-primary/10">
-                    <RefreshCw className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-muted-foreground">Personalización</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
-        <section className="py-12 bg-[#1F1F1F]">
+      <div className="min-h-screen pt-20">
+        {/* Product Detail */}
+        <section className="py-12">
           <div className="container">
-            <h2 className="text-2xl font-bold mb-8 text-white">Productos relacionados</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {relatedProducts.map((relatedProduct) => (
-                <Link
-                  key={relatedProduct.id}
-                  href={`/productos/${relatedProduct.slug || relatedProduct.productId}`}
-                >
-                  <div
-                    className="group rounded-2xl bg-white/5 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] overflow-hidden"
-                    style={{
-                      boxShadow: `
-                        inset 2px -2px 4px 0 rgba(255, 255, 255, 0.5),
-                        inset -2px 2px 4px 0 rgba(255, 255, 255, 0.1),
-                        inset 1px -1px 2px 0 rgba(255, 255, 255, 0.3)
-                      `,
-                    }}
-                  >
-                    <div className="p-3">
-                      <div className="relative aspect-square overflow-hidden rounded-[16px] bg-white/10">
-                        <Image
-                          src={relatedProduct.image || '/placeholder-product.jpg'}
-                          alt={relatedProduct.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    </div>
-                    <div className="px-3 pb-3">
-                      <h3 className="font-bold text-sm text-white mb-1 group-hover:text-pink-500 transition-colors line-clamp-1">
-                        {relatedProduct.name}
-                      </h3>
-                      <p className="text-xs text-gray-400 line-clamp-1">
-                        {relatedProduct.description}
-                      </p>
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Product Image */}
+              <div className="space-y-4">
+                <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted">
+                  <Image
+                    src={product.image || '/placeholder-product.jpg'}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  {product.featured && (
+                    <Badge className="absolute top-4 left-4 bg-pink-500">
+                      Destacado
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="space-y-6">
+                {/* Breadcrumb */}
+                <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Link href="/" className="hover:text-foreground transition-colors">Inicio</Link>
+                  <span>/</span>
+                  <Link href="/productos" className="hover:text-foreground transition-colors">Productos</Link>
+                  <span>/</span>
+                  <span className="text-foreground">{product.name}</span>
+                </nav>
+
+                {/* Category */}
+                <div>
+                  <Badge variant="outline" className="text-primary border-primary/20">
+                    {categoryName}
+                  </Badge>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                  {product.name}
+                </h1>
+
+                {/* Interactive: quantity + cart buttons */}
+                <ProductActions product={clientProduct} />
+
+                {/* SKU */}
+                <p className="text-sm text-muted-foreground font-mono">
+                  SKU: {product.productId}
+                </p>
+
+                {/* Description */}
+                {parsed.description && (
+                  <div className="prose prose-gray max-w-none">
+                    <p className="text-muted-foreground text-[13px] leading-relaxed whitespace-pre-line">
+                      {parsed.description}
+                    </p>
+                  </div>
+                )}
+
+                {/* Specifications */}
+                {parsed.specs.length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Especificaciones</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {parsed.specs.map((spec, index) => {
+                        const IconComponent = getSpecIcon(spec.label);
+                        return (
+                          <div key={index} className="flex items-center gap-3 py-2 px-3 bg-muted/50 rounded-lg">
+                            <div className="p-1.5 rounded-md bg-primary/10 flex-shrink-0">
+                              <IconComponent className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="flex flex-col min-w-0 flex-1">
+                              <span className="text-xs text-muted-foreground">{spec.label}</span>
+                              <span className="text-sm font-medium truncate">{spec.value}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                </Link>
-              ))}
+                )}
+
+                {/* Recommendations */}
+                {parsed.recommendations.length > 0 && (
+                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-3 text-blue-800">Recomendaciones</h3>
+                    <ol className="list-decimal list-inside space-y-2">
+                      {parsed.recommendations.map((rec, index) => (
+                        <li key={index} className="text-sm text-blue-700">{rec}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                {/* Features */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t">
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <Truck className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-muted-foreground">Envío a todo Chile</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <Shield className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-muted-foreground">Calidad garantizada</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <RefreshCw className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-muted-foreground">Personalización</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-      )}
 
-      {/* CTA Section */}
-      <section className="py-12">
-        <div className="container">
-          <div className="bg-[#1F1F1F] rounded-2xl p-8 md:p-12 text-center text-white">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              ¿Necesitas una cotización personalizada?
-            </h2>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Contáctanos para obtener precios especiales por volumen y opciones de personalización.
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-pink-500 hover:bg-pink-600"
-            >
-              <Link href="/contacto">Solicitar cotización</Link>
-            </Button>
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <section className="py-12 bg-[#1F1F1F]">
+            <div className="container">
+              <h2 className="text-2xl font-bold mb-8 text-white">Productos relacionados</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {relatedProducts.map((rp) => (
+                  <Link key={rp.id} href={`/productos/${rp.slug || rp.productId}`}>
+                    <div
+                      className="group rounded-2xl bg-white/5 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] overflow-hidden"
+                      style={{
+                        boxShadow: `
+                          inset 2px -2px 4px 0 rgba(255, 255, 255, 0.5),
+                          inset -2px 2px 4px 0 rgba(255, 255, 255, 0.1),
+                          inset 1px -1px 2px 0 rgba(255, 255, 255, 0.3)
+                        `,
+                      }}
+                    >
+                      <div className="p-3">
+                        <div className="relative aspect-square overflow-hidden rounded-[16px] bg-white/10">
+                          <Image
+                            src={rp.image || '/placeholder-product.jpg'}
+                            alt={rp.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                      </div>
+                      <div className="px-3 pb-3">
+                        <h3 className="font-bold text-sm text-white mb-1 group-hover:text-pink-500 transition-colors line-clamp-1">
+                          {rp.name}
+                        </h3>
+                        <p className="text-xs text-gray-400 line-clamp-1">
+                          {rp.description}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* CTA Section */}
+        <section className="py-12">
+          <div className="container">
+            <div className="bg-[#1F1F1F] rounded-2xl p-8 md:p-12 text-center text-white">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                ¿Necesitas una cotización personalizada?
+              </h2>
+              <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+                Contáctanos para obtener precios especiales por volumen y opciones de personalización.
+              </p>
+              <Button asChild size="lg" className="bg-pink-500 hover:bg-pink-600">
+                <Link href="/contacto">Solicitar cotización</Link>
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }
