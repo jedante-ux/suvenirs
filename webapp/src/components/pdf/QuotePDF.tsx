@@ -336,7 +336,7 @@ export function QuotePDF({
         {/* ── HEADER ── */}
         <View style={s.header}>
           <View style={s.logoBlock}>
-            <Image style={s.logoImage} src="/logossuvenirs_suvenirs logo final transparente.png" />
+            <Image style={s.logoImage} src="/logo-suvenirs.png" />
             <Text style={s.companyInfo}>
               {company.name}{'\n'}
               RUT: {company.rut}{'\n'}
