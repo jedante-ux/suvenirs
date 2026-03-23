@@ -290,6 +290,7 @@ function ProductosContent() {
                           onClick={(e) => {
                             e.preventDefault();
                             setPendingCategories([]);
+                            setSelectedCategories([]);
                           }}
                           className="text-destructive focus:text-destructive"
                         >

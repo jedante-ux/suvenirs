@@ -44,20 +44,15 @@ export default function ResumenPedidoPage() {
   const [customerPhone, setCustomerPhone] = useState('');
 
   const generateWhatsAppMessage = () => {
-    let message = '¡Hola! Me gustaría solicitar una cotización para los siguientes productos:\n\n';
+    let message = '¡Hola! Me gustaría cotizar los siguientes productos:\n\n';
 
     state.items.forEach((item, index) => {
-      message += `${index + 1}. *${item.product.name}*\n`;
-      message += `   ID: ${item.product.productId}\n`;
-      message += `   Cantidad: ${item.quantity} unidades\n`;
-      message += `   Descripción: ${formatDescription(item.product.description)}\n\n`;
+      message += `${index + 1}. ${item.product.name} (SKU: ${item.product.productId}) — ${item.quantity} uds.\n`;
     });
 
-    message += `---\n`;
-    message += `*Total de productos:* ${state.items.length}\n`;
-    message += `*Total de unidades:* ${getTotalItems()}\n`;
+    message += `\n📦 Total: ${state.items.length} producto${state.items.length !== 1 ? 's' : ''}, ${getTotalItems()} unidades\n`;
     if (shippingEnabled) {
-      message += `*Servicio de despacho:* ${shippingZone === 'santiago' ? 'Santiago' : 'Regiones'}\n`;
+      message += `🚚 Despacho: ${shippingZone === 'santiago' ? 'Santiago' : 'Regiones'}\n`;
     }
     message += `\nQuedo atento/a a su respuesta. ¡Gracias!`;
 
@@ -307,16 +302,27 @@ export default function ResumenPedidoPage() {
                 Tu solicitud fue registrada exitosamente. WhatsApp se abrió en una nueva ventana con el detalle de tu pedido para que puedas enviarlo directamente a nuestro equipo.
               </p>
             </div>
-            <Button
-              className="w-full mt-2"
-              size="lg"
-              onClick={() => {
-                setPhoneModalOpen(false);
-                if (quoteToken) router.push(`/cotizacion/${quoteToken}`);
-              }}
-            >
-              Ver detalle de cotización
-            </Button>
+            {quoteToken ? (
+              <Button
+                className="w-full mt-2"
+                size="lg"
+                onClick={() => {
+                  setPhoneModalOpen(false);
+                  router.push(`/cotizacion/${quoteToken}`);
+                }}
+              >
+                Ver detalle de cotización
+              </Button>
+            ) : (
+              <Button
+                className="w-full mt-2"
+                variant="outline"
+                size="lg"
+                onClick={() => setPhoneModalOpen(false)}
+              >
+                Cerrar
+              </Button>
+            )}
           </div>
         )}
 

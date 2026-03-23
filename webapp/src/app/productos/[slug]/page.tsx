@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProductBySlug, getProducts } from '@/lib/api';
@@ -38,6 +38,7 @@ import { parseProductDescription } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -111,6 +112,7 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     addItem(product, quantity);
+    router.push('/resumen-pedido');
   };
 
   const getCategoryName = (): string => {

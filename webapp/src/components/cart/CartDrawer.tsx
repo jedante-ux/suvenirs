@@ -35,7 +35,6 @@ function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: numbe
       <input
         type="number"
         min={1}
-        max={max}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onBlur={(e) => commit(e.target.value)}
@@ -73,7 +72,7 @@ export default function CartDrawer() {
             Carrito
             {getTotalItems() > 0 && (
               <span className="ml-1 px-2 py-0.5 text-xs font-semibold bg-primary/10 text-primary rounded-full">
-                {getTotalItems()} {getTotalItems() === 1 ? 'item' : 'items'}
+                {getTotalItems()} {getTotalItems() === 1 ? 'unidad' : 'unidades'}
               </span>
             )}
           </SheetTitle>
@@ -138,7 +137,7 @@ export default function CartDrawer() {
           <div className="flex-shrink-0 px-6 pt-4 pb-6 border-t bg-background space-y-3">
             {/* Total */}
             <div className="flex items-center justify-between px-4 py-3 bg-primary/5 border border-primary/10 rounded-xl">
-              <span className="text-sm font-medium text-foreground">Total de items</span>
+              <span className="text-sm font-medium text-foreground">Total de unidades</span>
               <span className="text-xl font-bold text-primary tabular-nums">{getTotalItems()}</span>
             </div>
 
@@ -154,7 +153,11 @@ export default function CartDrawer() {
             <Button
               variant="outline"
               className="w-full rounded-xl border-destructive/30 text-destructive hover:bg-destructive/5 hover:border-destructive/50"
-              onClick={clearCart}
+              onClick={() => {
+                if (window.confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+                  clearCart();
+                }
+              }}
             >
               Vaciar Carrito
             </Button>
