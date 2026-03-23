@@ -47,6 +47,7 @@ const sourceLabels: Record<string, string> = {
   WHATSAPP: 'WhatsApp',
   WEB: 'Web',
   MANUAL: 'Manual',
+  KIT: 'Kit',
 };
 
 interface EditForm {

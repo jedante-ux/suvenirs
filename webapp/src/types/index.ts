@@ -74,6 +74,28 @@ export interface User {
   updatedAt: string;
 }
 
+export interface KitItem {
+  id: string;
+  kitId: string;
+  productId: string;
+  product: Product;
+  order: number;
+}
+
+export interface Kit {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  tiers: number[];
+  isActive: boolean;
+  order: number;
+  items: KitItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface StampingType {
   id: string;
   code: string;
@@ -113,7 +135,9 @@ export interface Quote {
   stampingType?: StampingType | null;
   stampingPrice: number;
   status: 'PENDING' | 'CONTACTED' | 'QUOTED' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
-  source: 'WHATSAPP' | 'WEB' | 'MANUAL';
+  source: 'WHATSAPP' | 'WEB' | 'MANUAL' | 'KIT';
+  kitId?: string | null;
+  kit?: { name: string; slug: string } | null;
   createdAt: string;
   updatedAt: string;
 }

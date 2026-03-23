@@ -69,6 +69,8 @@ model Product {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  kitItems KitItem[]
+
   @@map("products")
 }
 
@@ -90,6 +92,8 @@ model Quote {
   stampingTypeId   String?       @db.Uuid
   stampingType     StampingType? @relation(fields: [stampingTypeId], references: [id])
   stampingPrice    Float         @default(0)
+  kitId            String?       @db.Uuid
+  kit              Kit?          @relation(fields: [kitId], references: [id], onDelete: SetNull)
   status           QuoteStatus   @default(PENDING)
   source           QuoteSource   @default(WEB)
   createdAt        DateTime      @default(now())
@@ -142,6 +146,37 @@ enum QuoteSource {
   WHATSAPP
   WEB
   MANUAL
+  KIT
+}
+
+model Kit {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  tiers       Int[]     @default([50, 100, 200])
+  isActive    Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items  KitItem[]
+  quotes Quote[]
+
+  @@map("kits")
+}
+
+model KitItem {
+  id        String  @id @default(uuid()) @db.Uuid
+  kitId     String  @db.Uuid
+  kit       Kit     @relation(fields: [kitId], references: [id], onDelete: Cascade)
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id])
+  order     Int     @default(0)
+
+  @@unique([kitId, productId])
+  @@map("kit_items")
 }
 
 model BlogPost {

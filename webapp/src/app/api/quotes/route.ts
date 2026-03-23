@@ -5,7 +5,7 @@ import { Prisma, QuoteStatus } from '@prisma/client'
 
 export async function POST(req: NextRequest) {
   try {
-    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source, shippingService } = await req.json()
+    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source, shippingService, kitId } = await req.json()
 
     if (!items || items.length === 0) {
       return NextResponse.json({ success: false, error: 'At least one item is required' }, { status: 400 })
@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         customerCompany,
         notes,
         shippingService: shippingService || null,
+        kitId: kitId || null,
         source: (source?.toUpperCase() || 'WEB') as any,
         items: {
           create: items.map((item: any) => ({
@@ -78,7 +79,7 @@ export async function GET(req: NextRequest) {
     const [quotes, total] = await Promise.all([
       prisma.quote.findMany({
         where,
-        include: { items: true, stampingType: true },
+        include: { items: true, stampingType: true, kit: { select: { name: true, slug: true } } },
         orderBy: { createdAt: order },
         skip,
         take: limit,

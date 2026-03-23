@@ -38,6 +38,7 @@ const navLinks = [
     submenu: [
       { name: 'Todos los productos', href: '/productos', description: 'Explora todo nuestro catálogo' },
       { name: 'Categorías', href: '/categorias', description: 'Navega por categorías' },
+      { name: 'Kits Corporativos', href: '/kits', description: 'Combos pre-armados para empresas' },
     ],
   },
   { name: 'Blog', href: '/blog' },

@@ -27,7 +27,7 @@ const promos = [
     subtitle: null,
     extraDiscount: null,
     brands: ['WELCOME', 'EXECUTIVE', 'PREMIUM'],
-    href: '/productos/kits',
+    href: '/kits',
     accentColor: 'text-pink-500',
   },
   {

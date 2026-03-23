@@ -12,6 +12,7 @@ import {
   Hash,
   Info,
   FileText,
+  Boxes,
 } from 'lucide-react'
 import { company } from '@/config/company'
 import { getStatusBadgeClass, getStatusLabel } from '@/lib/statusBadge'
@@ -41,6 +42,7 @@ interface Quote {
   notes?: string
   status: string
   source: string
+  kit?: { name: string; slug: string } | null
   items: QuoteItem[]
   createdAt: string
 }
@@ -137,6 +139,12 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
               <Calendar className="h-3.5 w-3.5 text-pink-400" />
               Emitida el {formattedDate}
             </span>
+            {quote.kit && (
+              <span className="flex items-center gap-1.5 bg-pink-50 text-pink-600 px-3 py-0.5 rounded-full text-xs font-medium">
+                <Boxes className="h-3 w-3" />
+                Kit: {quote.kit.name}
+              </span>
+            )}
           </div>
         </div>
 

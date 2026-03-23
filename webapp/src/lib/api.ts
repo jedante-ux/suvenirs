@@ -1,4 +1,4 @@
-import { Product, Category, PaginatedResponse, ApiResponse } from '@/types'
+import { Product, Category, Kit, PaginatedResponse, ApiResponse } from '@/types'
 
 function getApiUrl() {
   if (typeof window === 'undefined') {
@@ -59,5 +59,19 @@ export async function getCategories(): Promise<Category[]> {
   const res = await fetch(`${getApiUrl()}/api/categories`, { cache: 'no-store' })
   if (!res.ok) throw new Error('Failed to fetch categories')
   const data: ApiResponse<Category[]> = await res.json()
+  return data.data
+}
+
+export async function getKits(): Promise<Kit[]> {
+  const res = await fetch(`${getApiUrl()}/api/kits`, { cache: 'no-store' })
+  if (!res.ok) throw new Error('Failed to fetch kits')
+  const data: ApiResponse<Kit[]> = await res.json()
+  return data.data
+}
+
+export async function getKitBySlug(slug: string): Promise<Kit | null> {
+  const res = await fetch(`${getApiUrl()}/api/kits/slug/${slug}`, { cache: 'no-store' })
+  if (!res.ok) return null
+  const data: ApiResponse<Kit> = await res.json()
   return data.data
 }
