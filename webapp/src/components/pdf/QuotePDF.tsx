@@ -5,6 +5,7 @@ import {
   Page,
   Text,
   View,
+  Image,
   StyleSheet,
   Font,
 } from '@react-pdf/renderer';
@@ -43,11 +44,10 @@ const s = StyleSheet.create({
     flexDirection: 'column',
     gap: 2,
   },
-  logoText: {
-    fontSize: 22,
-    fontFamily: 'Helvetica-Bold',
-    color: PRIMARY,
-    letterSpacing: 1,
+  logoImage: {
+    width: 140,
+    height: 'auto',
+    objectFit: 'contain',
   },
   companyInfo: {
     fontSize: 8,
@@ -336,7 +336,7 @@ export function QuotePDF({
         {/* ── HEADER ── */}
         <View style={s.header}>
           <View style={s.logoBlock}>
-            <Text style={s.logoText}>Suvenirs</Text>
+            <Image style={s.logoImage} src="/logossuvenirs_suvenirs logo final transparente.png" />
             <Text style={s.companyInfo}>
               {company.name}{'\n'}
               RUT: {company.rut}{'\n'}

@@ -16,7 +16,7 @@ export function Logo({ size = 'md', variant = 'default' }: LogoProps) {
 
   return (
     <Image
-      src="/logo.png"
+      src="/logossuvenirs_suvenirs logo final transparente.png"
       alt="Suvenirs Regalos Corporativos"
       width={width}
       height={height}
