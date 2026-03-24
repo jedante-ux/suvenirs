@@ -137,14 +137,10 @@ export default function FeaturedProducts() {
           </Button>
         </div>
 
-        {/* Products grid with crossfade from skeleton */}
-        <div className="relative">
-          {/* Skeleton layer */}
-          <div
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 transition-opacity duration-500"
-            style={{ opacity: loading ? 1 : 0, position: loading ? 'relative' : 'absolute', inset: 0, pointerEvents: loading ? 'auto' : 'none' }}
-          >
-            {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+        {/* Products grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {loading ? (
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
               <Card key={i} className="overflow-hidden animate-pulse">
                 <div className="aspect-square bg-muted" />
                 <CardContent className="p-3">
@@ -152,21 +148,15 @@ export default function FeaturedProducts() {
                   <div className="h-2 bg-muted rounded w-full" />
                 </CardContent>
               </Card>
-            ))}
-          </div>
-
-          {/* Content layer */}
-          <div
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 transition-opacity duration-500"
-            style={{ opacity: loading ? 0 : 1 }}
-          >
-          {products.map((product, index) => (
+            ))
+          ) : (
+          products.map((product, index) => (
             <Card
               key={product.id}
               className="group overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               style={{
-                opacity: isInView && !loading ? 1 : 0,
-                transform: isInView && !loading ? 'translateY(0)' : 'translateY(20px)',
+                opacity: isInView ? 1 : 0,
+                transform: isInView ? 'translateY(0)' : 'translateY(20px)',
                 transition: 'opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
                 transitionDelay: isInView ? `${0.1 + index * 0.04}s` : '0s',
               }}
@@ -203,8 +193,8 @@ export default function FeaturedProducts() {
                 </p>
               </CardContent>
             </Card>
-          ))}
-          </div>
+          ))
+          )}
         </div>
       </div>
     </section>

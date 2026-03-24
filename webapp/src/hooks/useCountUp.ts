@@ -25,7 +25,9 @@ export function useCountUp(end: number, isActive: boolean, duration = 1200) {
 
       // Ease-out quart curve
       const eased = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.round(eased * end));
+      // Preserve decimal precision for non-integer values (e.g. 4.9)
+      const raw = eased * end;
+      setCount(Number.isInteger(end) ? Math.round(raw) : Math.round(raw * 10) / 10);
 
       if (progress < 1) {
         rafId = requestAnimationFrame(step);
