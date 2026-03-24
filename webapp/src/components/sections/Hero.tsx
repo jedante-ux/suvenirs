@@ -263,7 +263,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #FFB6D1 0%, #FFD4E4 30%, #FFF0F5 60%, #ffffff 100%)' }}>
+    <section className="relative pt-16 md:pt-20 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #FE248A22 0%, #FE248A10 40%, #FE248A05 70%, #ffffff 100%)' }}>
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
