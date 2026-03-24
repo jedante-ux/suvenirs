@@ -69,7 +69,7 @@ export default function CategoriasPage() {
                 placeholder="Buscar categorías..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-white/95 border-0 shadow-lg"
+                className="pl-10 bg-white/95 border-0"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function CategoriasPage() {
                   key={category.id}
                   href={`/productos?categoria=${category.slug}`}
                 >
-                  <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.03] h-full cursor-pointer p-0 gap-0 border-0 shadow-md">
+                  <Card className="group overflow-hidden transition-all duration-300 hover:scale-[1.03] h-full cursor-pointer p-0 gap-0 border border-border/60">
                     <div className="relative aspect-square bg-[#f5f5f5] p-3 rounded-t-xl overflow-hidden">
                       <div className="relative w-full h-full overflow-hidden rounded-lg">
                         {category.image ? (

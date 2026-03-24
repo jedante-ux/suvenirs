@@ -87,7 +87,7 @@ export default function NosotrosPage() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-[#2D2B3D] text-white p-6 rounded-2xl shadow-xl">
+              <div className="absolute -bottom-6 -right-6 bg-[#2D2B3D] text-white p-6 rounded-2xl">
                 <p className="text-4xl font-bold">5+</p>
                 <p className="text-white/80">Años de experiencia</p>
               </div>
@@ -151,7 +151,7 @@ export default function NosotrosPage() {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow text-center"
+                className="bg-white rounded-2xl p-8 border border-border/60 text-center"
               >
                 <div className="w-16 h-16 bg-[#2D2B3D]/10 rounded-xl flex items-center justify-center text-3xl mx-auto mb-4">
                   {value.icon}

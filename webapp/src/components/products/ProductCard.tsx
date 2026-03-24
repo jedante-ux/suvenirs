@@ -34,7 +34,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
   return (
     <Link href={`/productos/${product.slug || product.productId}`}>
-      <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full cursor-pointer p-0 gap-0">
+      <Card className="group overflow-hidden transition-all duration-300 hover:scale-[1.02] h-full cursor-pointer p-0 gap-0">
         <div className="relative aspect-square bg-muted/50 overflow-hidden rounded-t-xl">
           <div className="relative w-full h-full overflow-hidden rounded-lg">
             <Image
@@ -69,7 +69,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             Ver detalle
           </Button>
           <Button
-            className={`flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] hover:shadow-md transition-all duration-200 ${justAdded ? 'bg-green-600 hover:bg-green-600' : ''}`}
+            className={`flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] transition-all duration-200 ${justAdded ? 'bg-green-600 hover:bg-green-600' : ''}`}
             onClick={handleAddToCart}
           >
             {justAdded ? (

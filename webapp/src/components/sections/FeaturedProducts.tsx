@@ -153,11 +153,11 @@ export default function FeaturedProducts() {
           products.map((product, index) => (
             <Card
               key={product.id}
-              className="group overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group overflow-hidden hover:-translate-y-1 transition-all duration-300"
               style={{
                 opacity: isInView ? 1 : 0,
                 transform: isInView ? 'translateY(0)' : 'translateY(16px)',
-                transition: 'opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
+                transition: 'opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
                 transitionDelay: isInView ? `${Math.min(index * 0.03, 0.3)}s` : '0s',
               }}
             >
@@ -174,7 +174,7 @@ export default function FeaturedProducts() {
                 <Button
                   size="icon"
                   variant="secondary"
-                  className={`absolute bottom-2 right-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8 ${addedIds.has(product.id) ? 'bg-green-600 text-white opacity-100 translate-y-0' : ''}`}
+                  className={`absolute bottom-2 right-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8 ${addedIds.has(product.id) ? 'bg-green-600 text-white opacity-100 translate-y-0' : ''}`}
                   onClick={() => handleAddToCart(product)}
                 >
                   {addedIds.has(product.id) ? <Check size={14} /> : <ShoppingCart size={14} />}

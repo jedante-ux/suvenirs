@@ -57,7 +57,7 @@ export default function Testimonials() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow"
+              className="bg-white rounded-2xl p-8 border border-border/60"
             >
               {/* Rating */}
               <div className="flex items-center gap-1 mb-4">

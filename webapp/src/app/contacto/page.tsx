@@ -189,7 +189,7 @@ export default function ContactoPage() {
 
             {/* Right — form */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-2xl border border-border/60 shadow-xl p-8">
+              <div className="bg-white rounded-2xl border border-border/60 p-8">
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold text-foreground mb-1">Envíanos un mensaje</h2>
                   <p className="text-sm text-muted-foreground">

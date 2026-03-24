@@ -322,14 +322,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {relatedProducts.map((rp) => (
                   <Link key={rp.id} href={`/productos/${rp.slug || rp.productId}`}>
                     <div
-                      className="group rounded-2xl bg-white/5 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] overflow-hidden"
-                      style={{
-                        boxShadow: `
-                          inset 2px -2px 4px 0 rgba(255, 255, 255, 0.5),
-                          inset -2px 2px 4px 0 rgba(255, 255, 255, 0.1),
-                          inset 1px -1px 2px 0 rgba(255, 255, 255, 0.3)
-                        `,
-                      }}
+                      className="group rounded-2xl bg-white/5 backdrop-blur-md transition-all duration-300 hover:bg-white/10 border border-white/10 hover:border-white/25 overflow-hidden"
                     >
                       <div className="p-3">
                         <div className="relative aspect-square overflow-hidden rounded-[16px] bg-white/10">

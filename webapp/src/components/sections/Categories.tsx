@@ -114,7 +114,7 @@ export default function Categories() {
             <SwiperSlide key={category.id} className="!w-[300px]">
               <Link
                 href={`/productos?category=${category.slug}`}
-                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 block h-64"
+                className="group relative overflow-hidden rounded-2xl hover:-translate-y-1 transition-all duration-500 block h-64"
               >
                 {/* Background image */}
                 <div className="relative h-full overflow-hidden">

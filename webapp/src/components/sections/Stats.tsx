@@ -33,7 +33,7 @@ const StatCard = React.memo(function StatCard({
         transitionDelay: `${index * 0.12}s`,
       }}
     >
-      <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(211,220,42,0.15)] border border-white/10 hover:border-[#D3DC2A]/30">
+      <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md transition-all duration-300 hover:bg-white/10 border border-white/10 hover:border-[#D3DC2A]/40">
         <div className="flex justify-center mb-3">
           <div
             className={`w-12 h-12 rounded-2xl bg-[#D3DC2A]/15 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}

@@ -74,7 +74,7 @@ export default function PromoCards() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {promos.map((promo) => (
             <Link key={promo.id} href={promo.href} className="group">
-              <Card className="overflow-hidden bg-gradient-to-b from-muted/50 to-background border-0 shadow-sm hover:shadow-xl transition-all duration-300 h-full">
+              <Card className="overflow-hidden bg-gradient-to-b from-muted/50 to-background border border-border/60 hover:border-border transition-all duration-300 h-full">
                 {/* Image container */}
                 <div className="relative aspect-[4/5] overflow-hidden bg-muted rounded-t-xl mx-3 mt-3">
                   <Image

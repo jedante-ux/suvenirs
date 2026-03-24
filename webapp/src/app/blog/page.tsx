@@ -181,7 +181,7 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
-                  <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full cursor-pointer p-0 gap-0">
+                  <Card className="group overflow-hidden transition-all duration-300 hover:scale-[1.02] h-full cursor-pointer p-0 gap-0">
                     {/* Cover Image */}
                     <div className="relative aspect-video bg-[#f5f5f5]">
                       {post.coverImage ? (

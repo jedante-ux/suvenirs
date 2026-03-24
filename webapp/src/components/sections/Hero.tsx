@@ -366,7 +366,7 @@ export default function Hero() {
                 <Link
                   key={`tile-${index}`}
                   href={`/productos/${tile.product.slug || tile.product.productId}`}
-                  className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:scale-[1.04] transition-[box-shadow] duration-300"
+                  className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300"
                   style={{
                     ...TILE_STYLES[tile.animState],
                     transformOrigin: 'center center',
