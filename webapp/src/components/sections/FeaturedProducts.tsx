@@ -110,7 +110,7 @@ export default function FeaturedProducts() {
           }}
         >
           <div>
-            <Badge variant="outline" className={`mb-4 ${isPersonalized ? 'text-pink-500 border-pink-500/20 bg-pink-500/5' : 'text-primary border-primary/20 bg-primary/5'}`}>
+            <Badge variant="outline" className={`mb-4 ${isPersonalized ? 'text-accent-foreground border-accent/30 bg-accent/10 font-bold' : 'text-primary border-primary/20 bg-primary/5'}`}>
               {isPersonalized ? (
                 <>
                   <Sparkles size={12} className="mr-1" />

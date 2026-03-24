@@ -33,17 +33,17 @@ const StatCard = React.memo(function StatCard({
         transitionDelay: `${index * 0.12}s`,
       }}
     >
-      <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] border border-white/10 hover:border-white/20">
+      <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(211,220,42,0.15)] border border-white/10 hover:border-[#D3DC2A]/30">
         <div className="flex justify-center mb-3">
           <div
-            className={`w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}
+            className={`w-12 h-12 rounded-2xl bg-[#D3DC2A]/15 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}
             aria-hidden="true"
           >
-            <Icon className="h-6 w-6 text-white/80" />
+            <Icon className="h-6 w-6 text-[#D3DC2A]" />
           </div>
         </div>
         <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 tabular-nums">
-          {Number.isInteger(value) ? count.toLocaleString() : count}{suffix}
+          {Number.isInteger(value) ? count.toLocaleString() : count}<span className="text-[#D3DC2A]">{suffix}</span>
         </p>
         <p className="text-white/80 text-sm md:text-base group-hover:text-white transition-colors duration-300">
           {label}
@@ -63,7 +63,8 @@ export default function Stats() {
   const { ref, isInView } = useInView<HTMLDivElement>({ threshold: 0.3 });
 
   return (
-    <section className="py-12 md:py-16 bg-[#1F1F1F]">
+    <section className="py-12 md:py-16 bg-[#1F1F1F] relative">
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-[#D3DC2A] to-secondary" />
       <div className="container">
         <div ref={ref} className="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
           {stats.map((stat, index) => (

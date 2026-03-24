@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent">
+      <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent whitespace-nowrap"
+        className="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -265,12 +265,18 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 bg-white overflow-hidden">
-      {/* Ambient pink gradient */}
+    <section className="relative pt-16 md:pt-20 bg-background overflow-hidden">
+      {/* Ambient gradients */}
       <div
         className="absolute top-0 right-0 w-[60%] h-[80%] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 80% 20%, rgba(233, 30, 145, 0.06) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse at 80% 20%, rgba(225, 20, 108, 0.07) 0%, transparent 60%)',
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-[40%] h-[40%] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 20% 80%, rgba(211, 220, 42, 0.06) 0%, transparent 60%)',
         }}
       />
 
@@ -290,7 +296,7 @@ export default function Hero() {
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-primary text-primary-foreground border-0">
+              <Badge className="px-4 py-2 bg-accent text-accent-foreground border-0 font-bold">
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
