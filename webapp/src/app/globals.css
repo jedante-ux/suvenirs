@@ -24,8 +24,8 @@
   --secondary: oklch(0.90 0.05 345);
   --secondary-foreground: oklch(0.145 0 0);
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: oklch(0.97 0.005 340);
+  --muted-foreground: oklch(0.45 0.01 340);
 
   /* Accent - Baby Pink #FADADD */
   --accent: oklch(0.92 0.04 350);
@@ -34,8 +34,8 @@
   /* Destructive - Red for errors */
   --destructive: oklch(0.65 0.22 10);
 
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: oklch(0.922 0.005 340);
+  --input: oklch(0.922 0.005 340);
   --ring: oklch(0.90 0.05 345);
 
   /* Chart colors */
