@@ -267,7 +267,7 @@ export default function Hero() {
   return (
     <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
       {/* Animated gradient background */}
-      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #FF76A8, #D3DC2A, #FF76A8, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #F47920, #D3DC2A, #F47920, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
       {/* Noise/grain overlay for texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
@@ -302,7 +302,9 @@ export default function Hero() {
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
               style={{ ...entranceStyle(0.2), textShadow: '0 2px 12px rgba(0,0,0,0.15)' }}
             >
-              Regalos <RotatingWord /> que Inspiran
+              Regalos<br />
+              <RotatingWord /><br />
+              que Inspiran
             </h1>
 
             {/* Subtitle */}
