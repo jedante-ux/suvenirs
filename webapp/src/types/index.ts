@@ -113,6 +113,8 @@ export interface QuoteItem {
   quantity: number;
   unitPrice: number;
   description: string;
+  outOfStock: boolean;
+  replacesItemId: string | null;
 }
 
 export interface Quote {
