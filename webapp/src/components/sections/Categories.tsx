@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
+import type { SwiperRef } from 'swiper/react';
+import { EffectCoverflow, Autoplay } from 'swiper/modules';
 import { Category } from '@/types';
 import { getCategories } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -26,6 +26,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const swiperRef = useRef<SwiperRef>(null);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -92,7 +93,8 @@ export default function Categories() {
 
         {/* Categories slider */}
         <Swiper
-          modules={[EffectCoverflow, Pagination, Autoplay]}
+          ref={swiperRef}
+          modules={[EffectCoverflow, Autoplay]}
           effect="coverflow"
           grabCursor
           centeredSlides
@@ -105,7 +107,6 @@ export default function Categories() {
             modifier: 1,
             slideShadows: true,
           }}
-          pagination={{ clickable: true }}
           autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           className="categories-swiper"
         >
@@ -141,6 +142,24 @@ export default function Categories() {
             </SwiperSlide>
           ))}
         </Swiper>
+
+        {/* Custom 3-dot navigation */}
+        <div className="flex items-center justify-center gap-3 mt-8">
+          <button
+            onClick={() => swiperRef.current?.swiper.slidePrev()}
+            className="w-2.5 h-2.5 rounded-full bg-primary/30 hover:bg-primary/50 transition-all duration-300"
+            aria-label="Anterior"
+          />
+          <button
+            className="w-3.5 h-3.5 rounded-full bg-primary transition-all duration-300"
+            aria-label="Actual"
+          />
+          <button
+            onClick={() => swiperRef.current?.swiper.slideNext()}
+            className="w-2.5 h-2.5 rounded-full bg-primary/30 hover:bg-primary/50 transition-all duration-300"
+            aria-label="Siguiente"
+          />
+        </div>
       </div>
     </section>
   );
