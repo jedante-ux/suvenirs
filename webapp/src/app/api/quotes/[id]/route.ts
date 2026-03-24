@@ -24,8 +24,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params
     const { items, ...fields } = await req.json()
 
-    const totalItems = items?.length ?? undefined
-    const totalUnits = items?.reduce((s: number, i: { quantity: number }) => s + i.quantity, 0) ?? undefined
+    const activeItems = items?.filter((i: { outOfStock?: boolean }) => !i.outOfStock) ?? [];
+    const totalItems = items ? activeItems.length : undefined;
+    const totalUnits = items ? activeItems.reduce((s: number, i: { quantity: number }) => s + i.quantity, 0) : undefined;
 
     const quote = await prisma.$transaction(async (tx) => {
       if (items) {
@@ -38,12 +39,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
           ...(totalItems !== undefined && { totalItems, totalUnits }),
           ...(items && {
             items: {
-              create: items.map((item: { productId: string; productName: string; quantity: number; unitPrice?: number; description?: string }) => ({
+              create: items.map((item: { productId: string; productName: string; quantity: number; unitPrice?: number; description?: string; outOfStock?: boolean; replacesItemId?: string | null }) => ({
                 productId: item.productId,
                 productName: item.productName,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice ?? 0,
                 description: item.description || '',
+                outOfStock: item.outOfStock ?? false,
+                replacesItemId: item.replacesItemId ?? null,
               })),
             },
           }),
