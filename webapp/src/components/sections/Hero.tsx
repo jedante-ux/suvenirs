@@ -265,18 +265,45 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 bg-background overflow-hidden">
-      {/* Ambient gradients */}
+    <section className="relative pt-16 md:pt-20 bg-white overflow-hidden">
+      {/* Animated pastel gradient background — Apple style */}
+      <div className="absolute inset-0 pointer-events-none hero-gradient-bg" aria-hidden="true">
+        {/* Pink blob */}
+        <div
+          className="absolute w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full opacity-[0.12]"
+          style={{
+            background: 'radial-gradient(circle, #E1146C 0%, transparent 70%)',
+            top: '-10%',
+            right: '-5%',
+            animation: 'heroBlob1 12s ease-in-out infinite',
+          }}
+        />
+        {/* Lime blob */}
+        <div
+          className="absolute w-[50vw] h-[50vw] md:w-[35vw] md:h-[35vw] rounded-full opacity-[0.10]"
+          style={{
+            background: 'radial-gradient(circle, #D3DC2A 0%, transparent 70%)',
+            bottom: '5%',
+            left: '-8%',
+            animation: 'heroBlob2 14s ease-in-out infinite',
+          }}
+        />
+        {/* Secondary pink blob */}
+        <div
+          className="absolute w-[45vw] h-[45vw] md:w-[30vw] md:h-[30vw] rounded-full opacity-[0.08]"
+          style={{
+            background: 'radial-gradient(circle, #FF76A8 0%, transparent 70%)',
+            top: '30%',
+            left: '20%',
+            animation: 'heroBlob3 16s ease-in-out infinite',
+          }}
+        />
+      </div>
+      {/* Fade to white at bottom */}
       <div
-        className="absolute top-0 right-0 w-[60%] h-[80%] pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-[30%] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 80% 20%, rgba(225, 20, 108, 0.07) 0%, transparent 60%)',
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[40%] h-[40%] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at 20% 80%, rgba(211, 220, 42, 0.06) 0%, transparent 60%)',
+          background: 'linear-gradient(to bottom, transparent 0%, white 100%)',
         }}
       />
 
