@@ -310,11 +310,12 @@ export function QuotePDF({
   shippingService,
   shippingPrice = 0,
 }: QuotePDFProps) {
-  const totalUnits = items.reduce((s, i) => s + i.quantity, 0);
+  const activeItems = items.filter(i => !i.outOfStock);
+  const totalUnits = activeItems.reduce((s, i) => s + i.quantity, 0);
   const stampingPerUnit = totalUnits > 0 ? stampingPrice / totalUnits : 0;
 
   // Client-facing unit prices: (product cost + stamping per unit) × 1.5 markup
-  const productSubtotal = items.reduce(
+  const productSubtotal = activeItems.reduce(
     (s, i) => s + Math.round((i.unitPrice + stampingPerUnit) * 1.5) * i.quantity,
     0,
   );
@@ -422,7 +423,7 @@ export function QuotePDF({
             </View>
 
             {/* Product rows */}
-            {items.map((item, i) => {
+            {activeItems.map((item, i) => {
               const clientUnitPrice = Math.round((item.unitPrice + stampingPerUnit) * 1.5);
               const lineTotal = clientUnitPrice * item.quantity;
               return (
