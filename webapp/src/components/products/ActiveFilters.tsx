@@ -31,19 +31,19 @@ export default function ActiveFilters({ filters, onClearAll }: ActiveFiltersProp
         <Badge
           key={`${filter.type}-${index}`}
           variant="secondary"
-          className="gap-1.5 pl-3 pr-2 py-1 text-[13px]"
+          className="gap-1.5 pl-3 pr-2 py-1 text-[13px] bg-accent/20 text-accent-foreground border border-accent/40"
         >
-          <span className="font-bold text-white">
+          <span className="font-bold text-accent-foreground">
             {filter.type === 'search' && 'Búsqueda:'}
             {filter.type === 'category' && 'Categoría:'}
             {filter.type === 'sort' && 'Orden:'}
           </span>
-          <span className="text-white">{filter.label}</span>
+          <span className="text-accent-foreground/80">{filter.label}</span>
           <button
             onClick={filter.onRemove}
-            className="ml-1 rounded-sm hover:bg-white/20 transition-colors"
+            className="ml-1 rounded-sm hover:bg-accent/30 transition-colors"
           >
-            <X className="h-3 w-3 text-white" />
+            <X className="h-3 w-3 text-accent-foreground" />
             <span className="sr-only">Eliminar filtro {filter.label}</span>
           </button>
         </Badge>
@@ -53,7 +53,7 @@ export default function ActiveFilters({ filters, onClearAll }: ActiveFiltersProp
         variant="ghost"
         size="sm"
         onClick={onClearAll}
-        className="h-6 gap-1.5 text-[13px] ml-auto"
+        className="h-6 gap-1.5 text-[13px] ml-auto text-accent-foreground hover:text-accent-foreground/80"
       >
         <FilterX className="h-3 w-3" />
         Limpiar todos

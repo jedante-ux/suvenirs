@@ -13,7 +13,7 @@ import ActiveFilters, { ActiveFilter } from '@/components/products/ActiveFilters
 import Pagination, { PaginationInfo } from '@/components/products/Pagination';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowUpDown, Search, FolderTree } from 'lucide-react';
+import { Loader2, ArrowUpDown, Search, FolderTree, PackageOpen, MessageSquareQuote } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -216,10 +216,13 @@ function ProductosContent() {
   return (
     <div className="pt-20">
       {/* Hero section */}
-      <section className="section bg-gradient-to-br from-primary to-secondary text-foreground overflow-hidden">
-        <div className="container">
+      <section className="section bg-gradient-to-br from-primary to-secondary text-foreground overflow-hidden relative">
+        {/* Subtle lime glow accent */}
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-accent/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-accent/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-white/20 text-white border border-white/30 backdrop-blur-sm rounded-full text-sm font-medium mb-6">
+            <span className="inline-block px-4 py-1 bg-accent text-accent-foreground border border-accent/60 backdrop-blur-sm rounded-full text-sm font-bold mb-6">
               Catálogo
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
@@ -228,6 +231,11 @@ function ProductosContent() {
             <p className="text-xl text-white/80">
               Explora nuestra colección de regalos corporativos diseñados para impresionar.
             </p>
+            {!isLoading && pagination.total > 0 && (
+              <span className="inline-block mt-6 px-4 py-1.5 bg-white/20 text-white backdrop-blur-sm rounded-full text-sm font-medium border border-white/20">
+                <span className="font-bold text-accent">{pagination.total}</span> productos disponibles
+              </span>
+            )}
           </div>
         </div>
       </section>
@@ -339,26 +347,26 @@ function ProductosContent() {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => setPendingFilters({ sort: 'createdAt', order: 'desc' })}
-                          className={pendingFilters.sort === 'createdAt' && pendingFilters.order === 'desc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
+                          className={pendingFilters.sort === 'createdAt' && pendingFilters.order === 'desc' ? 'bg-accent/20 text-accent-foreground font-semibold' : ''}
                         >
                           Fecha de creación (Recientes primero)
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setPendingFilters({ sort: 'createdAt', order: 'asc' })}
-                          className={pendingFilters.sort === 'createdAt' && pendingFilters.order === 'asc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
+                          className={pendingFilters.sort === 'createdAt' && pendingFilters.order === 'asc' ? 'bg-accent/20 text-accent-foreground font-semibold' : ''}
                         >
                           Fecha de creación (Antiguos primero)
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => setPendingFilters({ sort: 'name', order: 'asc' })}
-                          className={pendingFilters.sort === 'name' && pendingFilters.order === 'asc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
+                          className={pendingFilters.sort === 'name' && pendingFilters.order === 'asc' ? 'bg-accent/20 text-accent-foreground font-semibold' : ''}
                         >
                           Nombre (A-Z)
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setPendingFilters({ sort: 'name', order: 'desc' })}
-                          className={pendingFilters.sort === 'name' && pendingFilters.order === 'desc' ? 'bg-primary text-white hover:bg-primary/90 focus:bg-primary focus:text-white' : ''}
+                          className={pendingFilters.sort === 'name' && pendingFilters.order === 'desc' ? 'bg-accent/20 text-accent-foreground font-semibold' : ''}
                         >
                           Nombre (Z-A)
                         </DropdownMenuItem>
@@ -398,7 +406,8 @@ function ProductosContent() {
                 'Cargando productos...'
               ) : (
                 <>
-                  Mostrando {products.length} de {pagination.total} producto
+                  Mostrando <span className="font-bold text-accent-foreground">{products.length}</span> de{' '}
+                  <span className="font-bold text-accent-foreground">{pagination.total}</span> producto
                   {pagination.total !== 1 ? 's' : ''}
                 </>
               )}
@@ -417,11 +426,17 @@ function ProductosContent() {
 
           {/* Empty state with search */}
           {!isLoading && products.length === 0 && search && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">
-                No se encontraron productos que coincidan con "{search}"
+            <div className="text-center py-16 px-4">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/15 mb-6">
+                <PackageOpen className="h-10 w-10 text-accent-foreground" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Sin resultados</h3>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                No se encontraron productos que coincidan con{' '}
+                <span className="font-semibold text-primary">"{search}"</span>.
+                Intenta con otros términos o explora nuestras categorías.
               </p>
-              <Button variant="outline" onClick={() => handleSearchChange('')}>
+              <Button variant="outline" onClick={() => handleSearchChange('')} className="border-accent/40 hover:bg-accent/10">
                 Limpiar búsqueda
               </Button>
             </div>
@@ -440,18 +455,28 @@ function ProductosContent() {
       </section>
 
       {/* CTA section */}
-      <section className="section bg-muted/50">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section className="section relative overflow-hidden bg-gradient-to-br from-muted via-muted/80 to-accent/10">
+        {/* Decorative accents */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-secondary" />
+        <div className="absolute -top-32 -right-32 w-64 h-64 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="container text-center relative z-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/20 mb-6">
+            <MessageSquareQuote className="h-8 w-8 text-accent-foreground" />
+          </div>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             ¿No encuentras lo que buscas?
           </h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-muted-foreground mb-10 max-w-2xl mx-auto text-lg">
             Podemos crear productos personalizados según tus necesidades específicas.
             Contáctanos para una cotización a medida.
           </p>
-          <div>
-            <Button asChild size="lg">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg" className="text-base px-8">
               <Link href="/contacto">Solicitar cotización personalizada</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="text-base px-8 border-accent bg-accent/10 hover:bg-accent/20 text-accent-foreground">
+              <Link href="/kits-corporativos">Ver kits corporativos</Link>
             </Button>
           </div>
         </div>
