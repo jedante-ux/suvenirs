@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -58,6 +59,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [badgePop, setBadgePop] = useState(false);
   const prevCountRef = useRef(0);
+  const pathname = usePathname();
   const { openCart, getTotalItems } = useCart();
   const totalItems = getTotalItems();
 
@@ -101,7 +103,12 @@ export default function Header() {
                 <NavigationMenuItem key={link.name}>
                   {link.submenu ? (
                     <>
-                      <NavigationMenuTrigger className="bg-transparent">
+                      <NavigationMenuTrigger
+                        className={cn(
+                          'bg-transparent border-b-2 border-transparent hover:border-accent transition-colors',
+                          link.submenu?.some(sub => pathname === sub.href) && 'border-accent'
+                        )}
+                      >
                         {link.name}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -128,7 +135,14 @@ export default function Header() {
                     </>
                   ) : (
                     <NavigationMenuLink asChild>
-                      <Link href={link.href} className={navigationMenuTriggerStyle()}>
+                      <Link
+                        href={link.href}
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          'border-b-2 border-transparent hover:border-accent transition-colors',
+                          pathname === link.href && 'border-accent text-accent-foreground'
+                        )}
+                      >
                         {link.name}
                       </Link>
                     </NavigationMenuLink>
@@ -162,7 +176,7 @@ export default function Header() {
               {totalItems > 0 && (
                 <Badge
                   className={cn(
-                    "absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background transition-transform",
+                    "absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background transition-transform bg-accent text-accent-foreground hover:bg-accent/90",
                     badgePop && "animate-badge-pop"
                   )}
                 >

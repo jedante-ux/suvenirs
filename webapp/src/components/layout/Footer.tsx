@@ -32,7 +32,9 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1F1F1F] text-white py-[75px]">
+    <footer className="bg-[#1F1F1F] text-white">
+      <div className="h-[3px] bg-gradient-to-r from-primary via-accent to-secondary" />
+      <div className="py-[75px]">
       {/* Main footer content */}
       <div className="container pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
@@ -65,7 +67,7 @@ export default function Footer() {
 
           {/* Products column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-pink-500">Productos</h3>
+            <h3 className="text-lg font-semibold mb-4 text-accent">Productos</h3>
             <ul className="space-y-3">
               {footerLinks.productos.map((link) => (
                 <li key={link.name}>
@@ -82,7 +84,7 @@ export default function Footer() {
 
           {/* Company column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-pink-500">Empresa</h3>
+            <h3 className="text-lg font-semibold mb-4 text-accent">Empresa</h3>
             <ul className="space-y-3">
               {footerLinks.empresa.map((link) => (
                 <li key={link.name}>
@@ -99,7 +101,7 @@ export default function Footer() {
 
           {/* Help column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-pink-500">Ayuda</h3>
+            <h3 className="text-lg font-semibold mb-4 text-accent">Ayuda</h3>
             <ul className="space-y-3">
               <li key="Pagos y entregas">
                 <span className="text-gray-500 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
@@ -134,7 +136,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:bg-white/20 hover:text-white transition-all"
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:bg-accent hover:text-accent-foreground transition-all"
                   aria-label={social.name}
                 >
                   <social.icon size={18} />
@@ -143,6 +145,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </footer>
   );
