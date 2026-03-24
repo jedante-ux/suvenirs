@@ -60,7 +60,10 @@ export default function Footer() {
               </a>
               <div className="flex items-start text-gray-300">
                 <LocationIcon size={18} className="mr-3 mt-1 flex-shrink-0" />
-                <span>Santiago, Chile</span>
+                <div className="flex flex-col">
+                  <span>Av. Irarrázaval 2401 Of. 607</span>
+                  <span className="text-gray-400 text-sm">Ñuñoa, Región Metropolitana</span>
+                </div>
               </div>
             </div>
           </div>
