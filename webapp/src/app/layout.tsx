@@ -30,6 +30,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-CL">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.addEventListener('error', function(e) {
+            if (e.message && (
+              e.message.includes('Loading chunk') ||
+              e.message.includes('Failed to fetch dynamically imported module') ||
+              e.message.includes('Importing a module script failed') ||
+              e.message.includes('ChunkLoadError')
+            )) {
+              window.location.reload();
+            }
+          });
+        `}} />
+      </head>
       <body className={`${poppins.variable} antialiased`}>
         <CartProvider>
           <ConditionalLayout>{children}</ConditionalLayout>
