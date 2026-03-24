@@ -57,7 +57,7 @@ export default function NosotrosPage() {
   return (
     <div className="pt-20">
       {/* Hero section */}
-      <section className="section bg-gradient-to-br from-[#673de6] to-[#2f1c6a] text-white">
+      <section className="section bg-gradient-to-br from-[#2D2B3D] to-[#1a1828] text-white">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-white/10 rounded-full text-sm font-medium mb-6">
@@ -87,17 +87,17 @@ export default function NosotrosPage() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-[#673de6] text-white p-6 rounded-2xl shadow-xl">
+              <div className="absolute -bottom-6 -right-6 bg-[#2D2B3D] text-white p-6 rounded-2xl shadow-xl">
                 <p className="text-4xl font-bold">5+</p>
                 <p className="text-white/80">Años de experiencia</p>
               </div>
             </div>
 
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 De un sueño a una realidad
               </h2>
-              <div className="space-y-4 text-gray-600">
+              <div className="space-y-4 text-muted-foreground">
                 <p>
                   Suvenirs nació de la pasión por crear conexiones significativas a través de
                   regalos personalizados. Lo que comenzó como un pequeño emprendimiento en
@@ -116,18 +116,18 @@ export default function NosotrosPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-gray-200">
+              <div className="grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
                 <div>
-                  <p className="text-3xl font-bold text-[#673de6]">500+</p>
-                  <p className="text-gray-500 text-sm">Clientes activos</p>
+                  <p className="text-3xl font-bold text-[#2D2B3D]">500+</p>
+                  <p className="text-muted-foreground text-sm">Clientes activos</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-[#673de6]">10k+</p>
-                  <p className="text-gray-500 text-sm">Productos entregados</p>
+                  <p className="text-3xl font-bold text-[#2D2B3D]">10k+</p>
+                  <p className="text-muted-foreground text-sm">Productos entregados</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-[#673de6]">99%</p>
-                  <p className="text-gray-500 text-sm">Satisfacción</p>
+                  <p className="text-3xl font-bold text-[#2D2B3D]">99%</p>
+                  <p className="text-muted-foreground text-sm">Satisfacción</p>
                 </div>
               </div>
             </div>
@@ -136,13 +136,13 @@ export default function NosotrosPage() {
       </section>
 
       {/* Values section */}
-      <section className="section bg-gray-50">
+      <section className="section bg-muted">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Nuestros valores
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Estos principios guían cada decisión que tomamos y cada producto que creamos.
             </p>
           </div>
@@ -153,11 +153,11 @@ export default function NosotrosPage() {
                 key={index}
                 className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow text-center"
               >
-                <div className="w-16 h-16 bg-[#673de6]/10 rounded-xl flex items-center justify-center text-3xl mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#2D2B3D]/10 rounded-xl flex items-center justify-center text-3xl mx-auto mb-4">
                   {value.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{value.title}</h3>
+                <p className="text-muted-foreground">{value.description}</p>
               </div>
             ))}
           </div>
@@ -168,10 +168,10 @@ export default function NosotrosPage() {
       <section className="section">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Conoce a nuestro equipo
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Profesionales apasionados que trabajan día a día para hacer realidad tus ideas.
             </p>
           </div>
@@ -187,8 +187,8 @@ export default function NosotrosPage() {
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                <p className="text-gray-500">{member.role}</p>
+                <h3 className="text-lg font-semibold text-foreground">{member.name}</h3>
+                <p className="text-muted-foreground">{member.role}</p>
               </div>
             ))}
           </div>
@@ -196,7 +196,7 @@ export default function NosotrosPage() {
       </section>
 
       {/* CTA section */}
-      <section className="section bg-[#673de6] text-white">
+      <section className="section bg-[#2D2B3D] text-white">
         <div className="container text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             ¿Listo para crear algo especial?
