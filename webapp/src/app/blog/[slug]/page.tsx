@@ -86,7 +86,7 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-muted">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -94,7 +94,7 @@ export default function BlogPostPage() {
 
   if (error || !post) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-[100px]">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-muted py-[100px]">
         <Newspaper className="h-16 w-16 text-muted-foreground/50 mb-4" />
         <h1 className="text-2xl font-bold mb-2">Artículo no encontrado</h1>
         <p className="text-muted-foreground mb-6">
@@ -111,7 +111,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       {/* Hero with cover image */}
       <div className="relative">
         {post.coverImage ? (

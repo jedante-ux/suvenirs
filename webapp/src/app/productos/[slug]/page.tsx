@@ -345,7 +345,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                         <h3 className="font-bold text-sm text-white mb-1 group-hover:text-pink-500 transition-colors line-clamp-1">
                           {rp.name}
                         </h3>
-                        <p className="text-xs text-gray-400 line-clamp-1">
+                        <p className="text-xs text-muted-foreground/70 line-clamp-1">
                           {rp.description}
                         </p>
                       </div>
@@ -364,7 +364,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
                 ¿Necesitas una cotización personalizada?
               </h2>
-              <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+              <p className="text-muted-foreground/50 mb-6 max-w-2xl mx-auto">
                 Contáctanos para obtener precios especiales por volumen y opciones de personalización.
               </p>
               <Button asChild size="lg" className="bg-pink-500 hover:bg-pink-600">

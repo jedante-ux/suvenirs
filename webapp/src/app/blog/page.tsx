@@ -106,7 +106,7 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-[100px]">
+    <div className="min-h-screen bg-muted py-[100px]">
       {/* Header */}
       <div className="container mb-8">
         <div className="flex items-center gap-3 mb-2">
