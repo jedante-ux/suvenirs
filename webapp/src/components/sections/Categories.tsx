@@ -8,8 +8,6 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Category } from '@/types';
 import { getCategories } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
-import { useInView } from '@/hooks/useInView';
-
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -27,8 +25,6 @@ function shuffleArray<T>(array: T[]): T[] {
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const { ref: sectionRef, isInView } = useInView<HTMLDivElement>();
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -78,16 +74,9 @@ export default function Categories() {
 
   return (
     <section className="section bg-gray-50">
-      <div className="container" ref={sectionRef}>
+      <div className="container">
         {/* Section header */}
-        <div
-          className="text-center mb-12"
-          style={{
-            opacity: isInView ? 1 : 0,
-            transform: isInView ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-          }}
-        >
+        <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
             Nuestras Categorías
           </Badge>
@@ -101,14 +90,6 @@ export default function Categories() {
         </div>
 
         {/* Categories slider */}
-        <div
-          style={{
-            opacity: isInView ? 1 : 0,
-            transform: isInView ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
-            transitionDelay: '0.15s',
-          }}
-        >
         <Swiper
           modules={[Navigation, Autoplay]}
           spaceBetween={24}
@@ -159,7 +140,6 @@ export default function Categories() {
             </SwiperSlide>
           ))}
         </Swiper>
-        </div>
       </div>
     </section>
   );
