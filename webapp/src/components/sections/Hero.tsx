@@ -265,13 +265,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #E91E91, #F47920, #D3DC2A, #F47920, #E91E91, #F47920, #D3DC2A, #F47920, #E91E91)', backgroundSize: '800% 100%', animation: 'heroColorShift 20s linear infinite', willChange: 'background-position' }} />
-      {/* Noise/grain overlay for texture */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
-      {/* Fade to white at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-[25%] pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 0%, white 100%)' }} />
+    <section className="relative pt-16 md:pt-20 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #FFB6D1 0%, #FFD4E4 30%, #FFF0F5 60%, #ffffff 100%)' }}>
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
