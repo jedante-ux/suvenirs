@@ -236,14 +236,11 @@ body {
 
 /* ── Hero animated linear gradient color shift ── */
 @keyframes heroColorShift {
-  0% {
+  from {
     background-position: 0% 50%;
   }
-  50% {
+  to {
     background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
   }
 }
 

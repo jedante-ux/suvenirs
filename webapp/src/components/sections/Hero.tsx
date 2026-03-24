@@ -267,7 +267,7 @@ export default function Hero() {
   return (
     <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
       {/* Animated gradient background */}
-      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #E91E91 0%, #F47920 25%, #D3DC2A 50%, #F47920 75%, #E91E91 100%)', backgroundSize: '300% 100%', animation: 'heroColorShift 12s ease-in-out infinite', willChange: 'background-position' }} />
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #E91E91, #F47920, #D3DC2A, #F47920, #E91E91, #F47920, #D3DC2A, #F47920, #E91E91)', backgroundSize: '800% 100%', animation: 'heroColorShift 20s linear infinite', willChange: 'background-position' }} />
       {/* Noise/grain overlay for texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
@@ -323,7 +323,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-[#2D2B3D] text-white hover:bg-[#2D2B3D]/90 rounded-xl px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
+                className="w-full sm:w-auto bg-[#2D2B3D] text-white hover:bg-[#2D2B3D]/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
               >
                 <Link href="/productos">
                   Ver colección
@@ -334,7 +334,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-[#2D2B3D]/40 text-[#2D2B3D] bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-xl px-8 transition-all duration-300 font-semibold"
+                className="w-full sm:w-auto border-2 border-[#2D2B3D]/40 text-[#2D2B3D] bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full px-8 transition-all duration-300 font-semibold"
               >
                 <Link href="/contacto">
                   Cotizar ahora
