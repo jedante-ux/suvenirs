@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-white/90 underline decoration-white/30 decoration-2 underline-offset-4">
+      <span className="text-[#2D2B3D] font-extrabold">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-white/90 underline decoration-white/30 decoration-2 underline-offset-4 whitespace-nowrap"
+        className="inline-block text-[#2D2B3D] font-extrabold whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -267,7 +267,7 @@ export default function Hero() {
   return (
     <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
       {/* Animated gradient background */}
-      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #FF76A8, #D3DC2A, #E3E2D7, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #FF76A8, #D3DC2A, #FF76A8, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
       {/* Noise/grain overlay for texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
@@ -276,7 +276,9 @@ export default function Hero() {
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
           {/* Left column */}
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left relative">
+            {/* Readability overlay */}
+            <div className="absolute -inset-6 rounded-3xl bg-white/20 backdrop-blur-[2px] -z-10 hidden lg:block" />
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
@@ -297,8 +299,8 @@ export default function Hero() {
 
             {/* H1 */}
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-sm"
-              style={entranceStyle(0.2)}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
+              style={{ ...entranceStyle(0.2), textShadow: '0 2px 12px rgba(0,0,0,0.15)' }}
             >
               Regalos <RotatingWord /> que Inspiran
             </h1>
