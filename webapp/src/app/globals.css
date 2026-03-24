@@ -234,22 +234,16 @@ body {
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Hero animated gradient background ── */
-@keyframes heroGradientShift {
+/* ── Hero animated conic gradient rotation ── */
+@keyframes heroRotate {
   0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 100% 25%;
+    transform: scale(1.8) rotate(0deg);
   }
   50% {
-    background-position: 100% 50%;
-  }
-  75% {
-    background-position: 0% 75%;
+    transform: scale(1.8) rotate(180deg);
   }
   100% {
-    background-position: 0% 50%;
+    transform: scale(1.8) rotate(360deg);
   }
 }
 
