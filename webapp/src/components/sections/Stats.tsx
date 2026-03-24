@@ -1,10 +1,11 @@
 'use client';
 
+import React from 'react';
 import { Users, Package, Star } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
 import { useCountUp } from '@/hooks/useCountUp';
 
-function StatCard({
+const StatCard = React.memo(function StatCard({
   icon: Icon,
   value,
   suffix,
@@ -20,7 +21,7 @@ function StatCard({
   isInView: boolean;
 }) {
   const count = useCountUp(value, isInView);
-  const isDone = count === (Number.isInteger(value) ? value : value);
+  const isDone = count === value;
 
   return (
     <div
@@ -34,7 +35,10 @@ function StatCard({
     >
       <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md shadow-lg transition-all duration-300 hover:bg-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] border border-white/10 hover:border-white/20">
         <div className="flex justify-center mb-3">
-          <div className={`w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}>
+          <div
+            className={`w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}
+            aria-hidden="true"
+          >
             <Icon className="h-6 w-6 text-white/80" />
           </div>
         </div>
@@ -47,7 +51,7 @@ function StatCard({
       </div>
     </div>
   );
-}
+});
 
 const stats = [
   { icon: Users, value: 500, suffix: '+', label: 'Clientes' },

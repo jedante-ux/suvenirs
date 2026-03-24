@@ -156,9 +156,9 @@ export default function FeaturedProducts() {
               className="group overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               style={{
                 opacity: isInView ? 1 : 0,
-                transform: isInView ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
-                transitionDelay: isInView ? `${0.1 + index * 0.04}s` : '0s',
+                transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+                transition: 'opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease',
+                transitionDelay: isInView ? `${Math.min(index * 0.03, 0.3)}s` : '0s',
               }}
             >
               {/* Image */}
@@ -167,6 +167,7 @@ export default function FeaturedProducts() {
                   src={product.image || '/placeholder-product.jpg'}
                   alt={product.name}
                   fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Quick add button */}

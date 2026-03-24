@@ -35,6 +35,7 @@ function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: numbe
       <input
         type="number"
         min={1}
+        aria-label="Cantidad"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onBlur={(e) => commit(e.target.value)}
@@ -96,8 +97,8 @@ export default function CartDrawer() {
               {state.items.map((item, index) => (
                 <div
                   key={item.product.id}
-                  className="flex gap-3 p-3 bg-muted/40 rounded-xl border border-border/50 animate-cart-item-in"
-                  style={{ animationDelay: `${index * 0.06}s`, opacity: 0 }}
+                  className={`flex gap-3 p-3 bg-muted/40 rounded-xl border border-border/50 ${index < 5 ? 'animate-cart-item-in' : ''}`}
+                  style={index < 5 ? { animationDelay: `${index * 0.05}s`, opacity: 0 } : undefined}
                 >
                   {/* Image */}
                   <div className="relative w-18 h-18 min-w-[72px] min-h-[72px] bg-white rounded-lg overflow-hidden border border-border/30 flex-shrink-0">
@@ -105,6 +106,7 @@ export default function CartDrawer() {
                       src={item.product.image || '/placeholder-product.jpg'}
                       alt={item.product.name}
                       fill
+                      sizes="72px"
                       className="object-cover"
                     />
                   </div>
