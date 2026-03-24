@@ -12,10 +12,11 @@ import {
 import { company } from '@/config/company';
 import { QuoteItem, StampingType } from '@/types';
 
-Font.register({
-  family: 'Helvetica',
-  fonts: [],
-});
+const LOGO_URL = typeof window !== 'undefined'
+  ? `${window.location.origin}/logo-suvenirs.png`
+  : '/logo-suvenirs.png';
+
+// Helvetica is built-in to react-pdf, no registration needed
 
 const PRIMARY = '#FE248A';
 const DARK = '#1F1F1F';
@@ -337,7 +338,7 @@ export function QuotePDF({
         {/* ── HEADER ── */}
         <View style={s.header}>
           <View style={s.logoBlock}>
-            <Image style={s.logoImage} src="/logo-suvenirs.png" />
+            <Image style={s.logoImage} src={LOGO_URL} />
             <Text style={s.companyInfo}>
               {company.name}{'\n'}
               RUT: {company.rut}{'\n'}
