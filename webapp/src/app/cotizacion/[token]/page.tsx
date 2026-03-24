@@ -103,7 +103,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <Image
-            src="/logo.png"
+            src="/logo-suvenirs.png"
             alt="Suvenirs"
             width={120}
             height={32}
