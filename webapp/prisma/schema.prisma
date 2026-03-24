@@ -121,14 +121,16 @@ model StampingType {
 }
 
 model QuoteItem {
-  id          String @id @default(uuid()) @db.Uuid
-  quoteId     String @db.Uuid
-  quote       Quote  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  productId   String
-  productName String
-  quantity    Int
-  unitPrice   Float  @default(0)
-  description String @default("")
+  id             String     @id @default(uuid()) @db.Uuid
+  quoteId        String     @db.Uuid
+  quote          Quote      @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId      String
+  productName    String
+  quantity       Int
+  unitPrice      Float      @default(0)
+  description    String     @default("")
+  outOfStock     Boolean    @default(false)
+  replacesItemId String?    @db.Uuid
 
   @@map("quote_items")
 }
