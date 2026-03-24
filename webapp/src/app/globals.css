@@ -432,13 +432,40 @@ body {
   display: none;
 }
 
-/* Swiper customization for categories */
+/* Swiper customization for categories — Coverflow 3D */
 .categories-swiper {
-  padding: 0;
+  padding: 20px 0 48px;
+  overflow: visible;
 }
 
-.categories-swiper .swiper-button-next,
-.categories-swiper .swiper-button-prev {
-  display: none;
+.categories-swiper .swiper-wrapper {
+  align-items: center;
+}
+
+.categories-swiper .swiper-slide {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.categories-swiper .swiper-slide:not(.swiper-slide-active) {
+  opacity: 0.7;
+}
+
+.categories-swiper .swiper-slide-active {
+  opacity: 1;
+}
+
+/* Pagination dots */
+.categories-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: oklch(0.61 0.24 340 / 0.3);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.categories-swiper .swiper-pagination-bullet-active {
+  width: 24px;
+  border-radius: 4px;
+  background: oklch(0.61 0.24 340);
 }
 

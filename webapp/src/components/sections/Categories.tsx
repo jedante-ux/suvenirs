@@ -4,13 +4,14 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
 import { Category } from '@/types';
 import { getCategories } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/navigation';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -91,26 +92,25 @@ export default function Categories() {
 
         {/* Categories slider */}
         <Swiper
-          modules={[Navigation, Autoplay]}
-          spaceBetween={24}
-          slidesPerView={1}
-          navigation
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-            },
-            768: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
+          modules={[EffectCoverflow, Pagination, Autoplay]}
+          effect="coverflow"
+          grabCursor
+          centeredSlides
+          slidesPerView="auto"
+          loop={categories.length > 3}
+          coverflowEffect={{
+            rotate: 35,
+            stretch: 0,
+            depth: 200,
+            modifier: 1,
+            slideShadows: true,
           }}
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           className="categories-swiper"
         >
           {categories.map((category) => (
-            <SwiperSlide key={category.id}>
+            <SwiperSlide key={category.id} className="!w-[300px]">
               <Link
                 href={`/productos?category=${category.slug}`}
                 className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 block h-64"
