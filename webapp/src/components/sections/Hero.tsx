@@ -267,7 +267,7 @@ export default function Hero() {
   return (
     <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
       {/* Animated gradient background */}
-      <div className="absolute -inset-[50%]" aria-hidden="true" style={{ background: 'conic-gradient(from 0deg, #E91E91, #F47920, #D3DC2A, #F47920, #E91E91)', animation: 'heroRotate 25s linear infinite', filter: 'blur(80px)', willChange: 'transform' }} />
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(90deg, #E91E91 0%, #F47920 25%, #D3DC2A 50%, #F47920 75%, #E91E91 100%)', backgroundSize: '300% 100%', animation: 'heroColorShift 12s ease-in-out infinite', willChange: 'background-position' }} />
       {/* Noise/grain overlay for texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
