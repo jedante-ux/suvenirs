@@ -17,11 +17,11 @@ Font.register({
   fonts: [],
 });
 
-const PRIMARY = '#E91E91';
+const PRIMARY = '#E1146C';
 const DARK = '#1F1F1F';
 const GRAY = '#666666';
-const LIGHT_GRAY = '#F5F5F5';
-const BORDER = '#E0E0E0';
+const LIGHT_GRAY = '#E3E2D7';
+const BORDER = '#D6D5CA';
 
 const s = StyleSheet.create({
   page: {
