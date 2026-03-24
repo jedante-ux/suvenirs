@@ -85,7 +85,7 @@ function AccordionItem({
         <span className="flex-1 min-w-0">
           <span
             className="block text-lg md:text-xl font-semibold tracking-[-0.01em] transition-colors duration-300"
-            style={{ color: isOpen ? '#E1146C' : 'inherit' }}
+            style={{ color: isOpen ? '#FE248A' : 'inherit' }}
           >
             {item.question}
           </span>

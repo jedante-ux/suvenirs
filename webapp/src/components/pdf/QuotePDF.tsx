@@ -17,7 +17,7 @@ Font.register({
   fonts: [],
 });
 
-const PRIMARY = '#E1146C';
+const PRIMARY = '#FE248A';
 const DARK = '#1F1F1F';
 const GRAY = '#666666';
 const LIGHT_GRAY = '#E3E2D7';
