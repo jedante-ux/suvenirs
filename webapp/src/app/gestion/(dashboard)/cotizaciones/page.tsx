@@ -187,6 +187,18 @@ export default function CotizacionesPage() {
     try {
       const items = editForm.items.filter(i => i.quantity > 0);
       const activeItems = items.filter(i => !i.outOfStock);
+
+      // Generate stable UUIDs and remap replacesItemId references
+      const idMap = new Map<string, string>();
+      items.forEach(item => {
+        idMap.set(item.id, crypto.randomUUID());
+      });
+      const remappedItems = items.map(item => ({
+        ...item,
+        id: idMap.get(item.id) || item.id,
+        replacesItemId: item.replacesItemId ? (idMap.get(item.replacesItemId) || item.replacesItemId) : null,
+      }));
+
       const res = await fetch(`/api/quotes/${selectedQuote.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -217,7 +229,7 @@ export default function CotizacionesPage() {
             const ganancia = Math.round(sumaUnitarios * 0.5);
             return Math.round((neto + ganancia) * 1.19) + shippingVal;
           })(),
-          items,
+          items: remappedItems,
         }),
       });
       const result = await res.json();
@@ -336,7 +348,9 @@ export default function CotizacionesPage() {
   };
 
   const removeItem = (index: number) => {
-    setEditForm({ ...editForm, items: editForm.items.filter((_, i) => i !== index) });
+    const item = editForm.items[index];
+    const items = editForm.items.filter((i, idx) => idx !== index && i.replacesItemId !== item.id);
+    setEditForm({ ...editForm, items });
   };
 
   const toggleOutOfStock = (index: number) => {
@@ -1180,7 +1194,7 @@ export default function CotizacionesPage() {
                   <button
                     key={product.id}
                     className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left"
-                    onClick={() => { setSelectedProduct(product); setSelectedQty(1); }}
+                    onClick={() => { setSelectedProduct(product); if (!replacingItemId) setSelectedQty(1); }}
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wide">{product.productId}</p>

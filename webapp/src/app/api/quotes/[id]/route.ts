@@ -39,7 +39,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
           ...(totalItems !== undefined && { totalItems, totalUnits }),
           ...(items && {
             items: {
-              create: items.map((item: { productId: string; productName: string; quantity: number; unitPrice?: number; description?: string; outOfStock?: boolean; replacesItemId?: string | null }) => ({
+              create: items.map((item: { id?: string; productId: string; productName: string; quantity: number; unitPrice?: number; description?: string; outOfStock?: boolean; replacesItemId?: string | null }) => ({
+                ...(item.id && { id: item.id }),
                 productId: item.productId,
                 productName: item.productName,
                 quantity: item.quantity,
