@@ -6,10 +6,10 @@
 :root {
   --radius: 0.625rem;
 
-  /* Suvenirs Brand Colors — "Legally Blonde" palette */
-  /* Primary: #E1146C | Secondary: #FF76A8 | Accent: #D3DC2A | Cream: #E3E2D7 */
+  /* Suvenirs Brand Colors — "House of Jefas" palette */
+  /* Primary: #E1146C (amor) | Secondary: #F47920 (jefas) | Accent: #D3DC2A (vitalidad) | Soft Pink: #FFD4E0 (balance) */
 
-  --background: oklch(0.99 0.003 90);
+  --background: oklch(0.99 0.01 350);
   --foreground: oklch(0.18 0.02 340);
 
   --card: oklch(1 0 0);
@@ -18,49 +18,49 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 340);
 
-  /* Primary — Hot Pink Magenta #E1146C */
+  /* Primary — Hot Pink Magenta #E1146C (amor) */
   --primary: oklch(0.55 0.25 350);
   --primary-foreground: oklch(1 0 0);
 
-  /* Secondary — Medium Pink #FF76A8 */
-  --secondary: oklch(0.72 0.14 355);
-  --secondary-foreground: oklch(0.18 0.02 340);
+  /* Secondary — Vibrant Orange #F47920 (jefas) */
+  --secondary: oklch(0.70 0.18 55);
+  --secondary-foreground: oklch(1 0 0);
 
-  /* Muted — Warm Cream #E3E2D7 */
-  --muted: oklch(0.91 0.01 90);
+  /* Muted — Soft Pink #FFD4E0 (balance) */
+  --muted: oklch(0.92 0.03 350);
   --muted-foreground: oklch(0.45 0.02 340);
 
-  /* Accent — Lime Chartreuse #D3DC2A */
+  /* Accent — Lime Chartreuse #D3DC2A (vitalidad) */
   --accent: oklch(0.85 0.18 110);
   --accent-foreground: oklch(0.25 0.05 110);
 
   /* Destructive — Red for errors */
   --destructive: oklch(0.55 0.22 25);
 
-  --border: oklch(0.90 0.01 85);
-  --input: oklch(0.90 0.01 85);
-  --ring: oklch(0.72 0.14 355);
+  --border: oklch(0.92 0.02 350);
+  --input: oklch(0.92 0.02 350);
+  --ring: oklch(0.70 0.18 55);
 
   /* Chart colors */
   --chart-1: oklch(0.55 0.25 350);
-  --chart-2: oklch(0.72 0.14 355);
+  --chart-2: oklch(0.70 0.18 55);
   --chart-3: oklch(0.85 0.18 110);
   --chart-4: oklch(0.7 0.15 165);
-  --chart-5: oklch(0.91 0.01 90);
+  --chart-5: oklch(0.92 0.03 350);
 
   /* Sidebar */
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.18 0.02 340);
   --sidebar-primary: oklch(0.55 0.25 350);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.01 90);
+  --sidebar-accent: oklch(0.96 0.02 350);
   --sidebar-accent-foreground: oklch(0.55 0.25 350);
-  --sidebar-border: oklch(0.92 0.01 85);
+  --sidebar-border: oklch(0.93 0.02 350);
   --sidebar-ring: oklch(0.55 0.25 350);
 
   /* Legacy color variables for custom components */
   --color-primary: #E1146C;
-  --color-primary-light: #FF76A8;
+  --color-primary-light: #F47920;
   --color-primary-dark: #B8105A;
   --color-meteorite: #E1146C;
   --color-fuchsia: #E1146C;
@@ -69,7 +69,8 @@
   --color-success: #00b090;
   --color-azure: #357df9;
   --color-lime: #D3DC2A;
-  --color-cream: #E3E2D7;
+  --color-orange: #F47920;
+  --color-soft-pink: #FFD4E0;
   --color-white: #ffffff;
   --color-black: #000000;
 }
@@ -83,8 +84,8 @@
   --popover-foreground: oklch(0.985 0.005 90);
   --primary: oklch(0.60 0.25 350);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.72 0.14 355);
-  --secondary-foreground: oklch(0.18 0.02 340);
+  --secondary: oklch(0.75 0.16 55);
+  --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.27 0.01 340);
   --muted-foreground: oklch(0.70 0.01 90);
   --accent: oklch(0.82 0.16 110);
@@ -94,10 +95,10 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.60 0.25 350);
   --chart-1: oklch(0.60 0.25 350);
-  --chart-2: oklch(0.72 0.14 355);
+  --chart-2: oklch(0.75 0.16 55);
   --chart-3: oklch(0.82 0.16 110);
   --chart-4: oklch(0.7 0.15 165);
-  --chart-5: oklch(0.91 0.01 90);
+  --chart-5: oklch(0.92 0.03 350);
   --sidebar: oklch(0.21 0.01 340);
   --sidebar-foreground: oklch(0.985 0.005 90);
   --sidebar-primary: oklch(0.60 0.25 350);
@@ -220,7 +221,7 @@ body {
 
 /* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, #E1146C 0%, #FF76A8 100%);
+  background: linear-gradient(135deg, #E1146C 0%, #F47920 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
