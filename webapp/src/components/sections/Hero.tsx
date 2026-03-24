@@ -14,8 +14,8 @@ import { Truck, Gift } from 'lucide-react';
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
 const WORD_INTERVAL = 3500;
 const GRID_SIZE = 9;
-const SWAP_INTERVAL = 2800;
-const SWAP_ANIM_MS = 600;
+const SWAP_INTERVAL = 3500;
+const SWAP_ANIM_MS = 800;
 
 // ── Detect reduced motion once ──
 function prefersReducedMotion() {
@@ -126,23 +126,20 @@ function useAsyncGridSwap(allProducts: Product[]) {
     const tileIndex = available[Math.floor(Math.random() * available.length)];
     usedIndicesRef.current.push(tileIndex);
 
-    // Pick new product
-    let currentIds: Set<string>;
+    // Pick new product — read current tiles via ref to avoid stale closure
+    const pickedRef = { value: null as Product | null };
     setTiles((prev) => {
-      currentIds = new Set(prev.map((t) => t.product.id));
+      const currentTileIds = new Set(prev.map((t) => t.product.id));
+      const validPool = allProducts.filter((p) => !currentTileIds.has(p.id));
+      if (validPool.length > 0) {
+        pickedRef.value = validPool[Math.floor(Math.random() * validPool.length)];
+      }
       return prev;
     });
-    // Read tiles synchronously for pool filtering
-    const pool = allProducts.filter((p) => {
-      // Use a fresh read
-      return true; // Will be filtered below
-    });
-
-    // Get current tile IDs from ref-safe approach
-    const currentTileIds = new Set(tiles.map((t) => t.product.id));
-    const validPool = allProducts.filter((p) => !currentTileIds.has(p.id));
-    if (validPool.length === 0) { busyRef.current = false; return; }
-    const newProduct = validPool[Math.floor(Math.random() * validPool.length)];
+    // Wait a tick for setState callback to execute
+    await new Promise((r) => setTimeout(r, 0));
+    const newProduct = pickedRef.value;
+    if (!newProduct) { busyRef.current = false; return; }
 
     // Preload image before animating
     await preloadImage(newProduct.image || '/placeholder-product.jpg');
@@ -181,7 +178,8 @@ function useAsyncGridSwap(allProducts: Product[]) {
       )
     );
     busyRef.current = false;
-  }, [allProducts, tiles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allProducts]);
 
   useEffect(() => {
     if (tiles.length === 0) return;
@@ -200,22 +198,22 @@ function useAsyncGridSwap(allProducts: Product[]) {
   return tiles;
 }
 
-// ── Tile styles (memoizable) ──
-const TILE_TRANSITION = `transform ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+// ── Tile styles — simple crossfade instead of 3D flip to avoid flicker ──
+const TILE_TRANSITION = `opacity ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1)`;
 
 const TILE_STYLES: Record<GridTile['animState'], React.CSSProperties> = {
   'flip-out': {
-    transform: 'perspective(600px) rotateY(90deg) scale(0.9)',
+    transform: 'scale(0.95)',
     opacity: 0,
     transition: TILE_TRANSITION,
   },
   'flip-in': {
-    transform: 'perspective(600px) rotateY(-30deg) scale(0.95)',
-    opacity: 0.7,
+    transform: 'scale(1.02)',
+    opacity: 0.5,
     transition: TILE_TRANSITION,
   },
   idle: {
-    transform: 'perspective(600px) rotateY(0deg) scale(1)',
+    transform: 'scale(1)',
     opacity: 1,
     transition: TILE_TRANSITION,
   },
@@ -272,7 +270,7 @@ export default function Hero() {
           {/* Left column */}
           <div className="text-center lg:text-left relative">
             {/* Readability overlay */}
-            <div className="absolute -inset-6 rounded-3xl bg-white/30 backdrop-blur-[3px] -z-10 hidden lg:block" />
+            <div className="absolute -inset-6 rounded-3xl bg-white/25 -z-10 hidden lg:block" />
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
@@ -341,7 +339,6 @@ export default function Hero() {
           <div
             className="relative block"
             style={{
-              perspective: '1200px',
               ...(reduced
                 ? { opacity: 1 }
                 : {
