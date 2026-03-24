@@ -1156,7 +1156,7 @@ export default function CotizacionesPage() {
 
       {/* Add Product Dialog */}
       <Dialog open={addProductOpen} onOpenChange={(o) => { if (!o) resetAddProduct(); else setAddProductOpen(true); }}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Agregar producto</DialogTitle>
             <DialogDescription>
