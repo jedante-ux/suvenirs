@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useInView } from '@/hooks/useInView';
 import Link from 'next/link';
 
@@ -55,54 +55,75 @@ function AccordionItem({
   index: number;
   isInView: boolean;
 }) {
-  const contentRef = useRef<HTMLDivElement>(null);
+  const num = String(index + 1).padStart(2, '0');
 
   return (
     <div
-      className="border-b border-foreground/[0.08] last:border-b-0"
+      className="group"
       style={{
         opacity: isInView ? 1 : 0,
-        transform: isInView ? 'translateY(0)' : 'translateY(16px)',
+        transform: isInView ? 'translateY(0)' : 'translateY(20px)',
         transition:
-          'opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-        transitionDelay: `${index * 0.07}s`,
+          'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+        transitionDelay: `${index * 0.08}s`,
       }}
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-6 md:py-7 text-left group cursor-pointer"
+        className="w-full flex items-start gap-5 md:gap-7 py-7 md:py-8 text-left cursor-pointer border-b border-foreground/[0.06] transition-colors duration-300 hover:border-[#D3DC2A]/40"
         aria-expanded={isOpen}
       >
-        <span className="text-base md:text-lg font-medium text-foreground pr-8 transition-colors duration-300 group-hover:text-primary">
-          {item.question}
-        </span>
+        {/* Number */}
         <span
-          className="relative flex-shrink-0 w-8 h-8 flex items-center justify-center"
+          className="text-sm font-semibold tabular-nums flex-shrink-0 mt-0.5 transition-colors duration-300"
+          style={{ color: isOpen ? '#D3DC2A' : 'rgba(0,0,0,0.2)' }}
+        >
+          {num}
+        </span>
+
+        {/* Question */}
+        <span className="flex-1 min-w-0">
+          <span
+            className="block text-lg md:text-xl font-semibold tracking-[-0.01em] transition-colors duration-300"
+            style={{ color: isOpen ? '#E1146C' : 'inherit' }}
+          >
+            {item.question}
+          </span>
+        </span>
+
+        {/* Toggle icon */}
+        <span
+          className="relative flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
+          style={{
+            backgroundColor: isOpen ? '#D3DC2A' : 'rgba(211,220,42,0.12)',
+          }}
           aria-hidden="true"
         >
-          {/* Horizontal line */}
-          <span className="absolute w-4 h-[2px] bg-[#D3DC2A] rounded-full transition-transform duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]" />
-          {/* Vertical line — rotates to 0 when open */}
           <span
-            className="absolute w-4 h-[2px] bg-[#D3DC2A] rounded-full transition-transform duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            className="absolute w-4 h-[2px] rounded-full transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            style={{ backgroundColor: isOpen ? '#1F1F1F' : '#D3DC2A' }}
+          />
+          <span
+            className="absolute w-4 h-[2px] rounded-full transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
             style={{
+              backgroundColor: isOpen ? '#1F1F1F' : '#D3DC2A',
               transform: isOpen ? 'rotate(0deg)' : 'rotate(90deg)',
             }}
           />
         </span>
       </button>
 
-      {/* Expandable answer — uses grid-template-rows for smooth height animation */}
+      {/* Expandable answer */}
       <div
-        className="grid transition-[grid-template-rows] duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
-        style={{
-          gridTemplateRows: isOpen ? '1fr' : '0fr',
-        }}
+        className="grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+        style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
       >
-        <div className="overflow-hidden" ref={contentRef}>
-          <p className="pb-7 text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
-            {item.answer}
-          </p>
+        <div className="overflow-hidden">
+          <div className="pl-[calc(0.875rem+1.25rem)] md:pl-[calc(0.875rem+1.75rem)] pb-8 pt-2">
+            <p className="text-muted-foreground text-base md:text-[1.0625rem] leading-[1.7] max-w-xl">
+              {item.answer}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -120,25 +141,40 @@ export default function FAQ() {
   return (
     <section
       ref={ref}
-      className="py-20 lg:py-28 relative"
+      className="py-24 lg:py-32 relative overflow-hidden"
       style={{ backgroundColor: '#FAFAF7' }}
     >
-      <div className="container">
-        {/* Header */}
+      {/* Decorative gradient line at top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D3DC2A]/50 to-transparent" />
+
+      {/* Subtle ambient glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(211,220,42,0.04) 0%, transparent 70%)',
+        }}
+      />
+
+      <div className="container relative">
+        {/* Header — left-aligned for asymmetry */}
         <div
-          className="text-center mb-14 md:mb-18"
+          className="max-w-3xl mx-auto mb-16 md:mb-20"
           style={{
             opacity: isInView ? 1 : 0,
-            transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+            transform: isInView ? 'translateY(0)' : 'translateY(24px)',
             transition:
-              'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+              'opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold text-foreground tracking-tight">
-            Preguntas Frecuentes
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.2em] text-[#D3DC2A] mb-4">
+            Resuelve tus dudas
+          </span>
+          <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-foreground tracking-tight leading-[1.1]">
+            Preguntas{' '}
+            <span className="text-primary">Frecuentes</span>
           </h2>
-          <p className="mt-4 text-muted-foreground text-base md:text-lg max-w-lg mx-auto">
-            Todo lo que necesitas saber para empezar tu próximo proyecto con nosotros.
+          <p className="mt-5 text-muted-foreground text-lg md:text-xl max-w-md leading-relaxed">
+            Todo lo que necesitas saber antes de empezar.
           </p>
         </div>
 
@@ -158,33 +194,40 @@ export default function FAQ() {
 
         {/* CTA */}
         <div
-          className="text-center mt-14 md:mt-18"
+          className="max-w-3xl mx-auto mt-16 md:mt-20"
           style={{
             opacity: isInView ? 1 : 0,
             transform: isInView ? 'translateY(0)' : 'translateY(16px)',
             transition:
               'opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1)',
-            transitionDelay: '0.5s',
+            transitionDelay: '0.55s',
           }}
         >
-          <p className="text-muted-foreground mb-5 text-sm md:text-base">
-            ¿Tienes otra pregunta?
-          </p>
-          <Link
-            href="/contacto"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-300 group"
-          >
-            Contáctanos
-            <svg
-              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-8 p-7 md:p-8 rounded-2xl bg-foreground/[0.03] border border-foreground/[0.05]">
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground text-base">
+                ¿No encuentras lo que buscas?
+              </p>
+              <p className="text-muted-foreground text-sm mt-1">
+                Nuestro equipo responde en menos de 24 horas.
+              </p>
+            </div>
+            <Link
+              href="/contacto"
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-primary text-white text-sm font-semibold transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 group flex-shrink-0"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+              Contáctanos
+              <svg
+                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:translate-x-0.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
