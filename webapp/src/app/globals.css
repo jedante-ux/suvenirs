@@ -233,6 +233,25 @@ body {
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ── Hero animated gradient background ── */
+@keyframes heroGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 25%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 0% 75%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* ── Hero animated gradient blobs — Apple-style pastel drift ── */
 @keyframes heroBlob1 {
   0%, 100% {

@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+      <span className="text-white/90 underline decoration-white/30 decoration-2 underline-offset-4">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap"
+        className="inline-block text-white/90 underline decoration-white/30 decoration-2 underline-offset-4 whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -265,50 +265,13 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 bg-white overflow-hidden">
-      {/* Animated pastel gradient background — Apple style */}
-      <div className="absolute inset-0 pointer-events-none hero-gradient-bg" aria-hidden="true">
-        {/* Pink blob */}
-        <div
-          className="absolute w-[80vw] h-[80vw] md:w-[55vw] md:h-[55vw] rounded-full opacity-[0.35]"
-          style={{
-            background: 'radial-gradient(circle, #E1146C 0%, transparent 70%)',
-            top: '-15%',
-            right: '-10%',
-            animation: 'heroBlob1 12s ease-in-out infinite',
-            filter: 'blur(40px)',
-          }}
-        />
-        {/* Lime blob */}
-        <div
-          className="absolute w-[70vw] h-[70vw] md:w-[45vw] md:h-[45vw] rounded-full opacity-[0.28]"
-          style={{
-            background: 'radial-gradient(circle, #D3DC2A 0%, transparent 70%)',
-            bottom: '0%',
-            left: '-12%',
-            animation: 'heroBlob2 14s ease-in-out infinite',
-            filter: 'blur(40px)',
-          }}
-        />
-        {/* Secondary pink blob */}
-        <div
-          className="absolute w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full opacity-[0.22]"
-          style={{
-            background: 'radial-gradient(circle, #FF76A8 0%, transparent 70%)',
-            top: '25%',
-            left: '15%',
-            animation: 'heroBlob3 16s ease-in-out infinite',
-            filter: 'blur(50px)',
-          }}
-        />
-      </div>
+    <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #FF76A8, #D3DC2A, #E3E2D7, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
+      {/* Noise/grain overlay for texture */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[30%] pointer-events-none"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 0%, white 100%)',
-        }}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-[25%] pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 0%, white 100%)' }} />
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
@@ -321,12 +284,12 @@ export default function Hero() {
             >
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-primary/10 backdrop-blur-sm text-primary border border-primary/20"
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-accent text-accent-foreground border-0 font-bold">
+              <Badge className="px-4 py-2 bg-white/25 backdrop-blur-sm text-white border border-white/30 font-bold">
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -334,7 +297,7 @@ export default function Hero() {
 
             {/* H1 */}
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-black leading-tight mb-4"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-sm"
               style={entranceStyle(0.2)}
             >
               Regalos <RotatingWord /> que Inspiran
@@ -342,7 +305,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-white/85 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
@@ -356,7 +319,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-primary text-white hover:bg-primary/90 rounded-xl px-8 group hero-cta-shimmer relative overflow-hidden"
+                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-xl px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
               >
                 <Link href="/productos">
                   Ver colección
@@ -367,7 +330,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground rounded-xl px-8 transition-all duration-300"
+                className="w-full sm:w-auto border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl px-8 transition-all duration-300"
               >
                 <Link href="/contacto">
                   Cotizar ahora
