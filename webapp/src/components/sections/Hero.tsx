@@ -270,32 +270,35 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none hero-gradient-bg" aria-hidden="true">
         {/* Pink blob */}
         <div
-          className="absolute w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full opacity-[0.12]"
+          className="absolute w-[80vw] h-[80vw] md:w-[55vw] md:h-[55vw] rounded-full opacity-[0.35]"
           style={{
             background: 'radial-gradient(circle, #E1146C 0%, transparent 70%)',
-            top: '-10%',
-            right: '-5%',
+            top: '-15%',
+            right: '-10%',
             animation: 'heroBlob1 12s ease-in-out infinite',
+            filter: 'blur(40px)',
           }}
         />
         {/* Lime blob */}
         <div
-          className="absolute w-[50vw] h-[50vw] md:w-[35vw] md:h-[35vw] rounded-full opacity-[0.10]"
+          className="absolute w-[70vw] h-[70vw] md:w-[45vw] md:h-[45vw] rounded-full opacity-[0.28]"
           style={{
             background: 'radial-gradient(circle, #D3DC2A 0%, transparent 70%)',
-            bottom: '5%',
-            left: '-8%',
+            bottom: '0%',
+            left: '-12%',
             animation: 'heroBlob2 14s ease-in-out infinite',
+            filter: 'blur(40px)',
           }}
         />
         {/* Secondary pink blob */}
         <div
-          className="absolute w-[45vw] h-[45vw] md:w-[30vw] md:h-[30vw] rounded-full opacity-[0.08]"
+          className="absolute w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full opacity-[0.22]"
           style={{
             background: 'radial-gradient(circle, #FF76A8 0%, transparent 70%)',
-            top: '30%',
-            left: '20%',
+            top: '25%',
+            left: '15%',
             animation: 'heroBlob3 16s ease-in-out infinite',
+            filter: 'blur(50px)',
           }}
         />
       </div>
