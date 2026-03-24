@@ -19,13 +19,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async () => {
     try {
       const supabase = createClient()
-      const { data: { user: authUser } } = await supabase.auth.getUser()
+
+      // Timeout to prevent hanging on stale tokens after deploys
+      const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000))
+      const authPromise = supabase.auth.getUser().then(r => r.data.user).catch(() => null)
+      const authUser = await Promise.race([authPromise, timeout])
+
       if (authUser) {
-        const res = await fetch('/api/auth/me', { cache: 'no-store' })
-        const data = await res.json()
-        if (data.success) {
-          setUser(data.data)
-        } else {
+        const controller = new AbortController()
+        const fetchTimeout = setTimeout(() => controller.abort(), 5000)
+        try {
+          const res = await fetch('/api/auth/me', { cache: 'no-store', signal: controller.signal })
+          clearTimeout(fetchTimeout)
+          const data = await res.json()
+          if (data.success) {
+            setUser(data.data)
+          } else {
+            setUser(null)
+          }
+        } catch {
+          clearTimeout(fetchTimeout)
           setUser(null)
         }
       } else {
@@ -44,6 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Get initial session
     checkAuth()
 
+    // Failsafe: if loading hangs for 8s (stale tokens, network issues), force stop
+    const failsafe = setTimeout(() => {
+      setIsLoading(false)
+    }, 8000)
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === 'SIGNED_IN') {
@@ -54,7 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      clearTimeout(failsafe)
+      subscription.unsubscribe()
+    }
   }, [])
 
   const login = async (email: string, password: string) => {
