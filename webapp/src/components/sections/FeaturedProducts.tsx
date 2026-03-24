@@ -5,11 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRightIcon, CartIcon } from '../icons';
+import { ArrowRightIcon } from '../icons';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
-import { Package, ShoppingCart, Star, Sparkles, Check } from 'lucide-react';
+import { ShoppingCart, Sparkles, Check } from 'lucide-react';
 import { getProducts } from '@/lib/api';
 import { buildRecommendationQuery, hasSearchHistory, getRecentSearchTerms } from '@/lib/searchHistory';
 import { toast } from 'sonner';
@@ -138,22 +137,23 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Products grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {loading ? (
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-              <Card key={i} className="overflow-hidden animate-pulse">
+              <div key={i} className="rounded-2xl overflow-hidden animate-pulse border border-border/60 bg-card">
                 <div className="aspect-square bg-muted" />
-                <CardContent className="p-3">
+                <div className="p-3.5">
                   <div className="h-3 bg-muted rounded mb-2 w-3/4" />
                   <div className="h-2 bg-muted rounded w-full" />
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))
           ) : (
           products.map((product, index) => (
-            <Card
+            <Link
+              href={`/productos/${product.slug || product.id}`}
               key={product.id}
-              className="group overflow-hidden hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex flex-col rounded-2xl border border-secondary/25 bg-card overflow-hidden hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
               style={{
                 opacity: isInView ? 1 : 0,
                 transform: isInView ? 'translateY(0)' : 'translateY(16px)',
@@ -162,7 +162,7 @@ export default function FeaturedProducts() {
               }}
             >
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden bg-muted">
+              <div className="relative aspect-square overflow-hidden bg-muted/50">
                 <Image
                   src={product.image || '/placeholder-product.jpg'}
                   alt={product.name}
@@ -170,30 +170,29 @@ export default function FeaturedProducts() {
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 {/* Quick add button */}
                 <Button
                   size="icon"
                   variant="secondary"
                   className={`absolute bottom-2 right-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all h-8 w-8 ${addedIds.has(product.id) ? 'bg-green-600 text-white opacity-100 translate-y-0' : ''}`}
-                  onClick={() => handleAddToCart(product)}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(product); }}
                 >
                   {addedIds.has(product.id) ? <Check size={14} /> : <ShoppingCart size={14} />}
                 </Button>
               </div>
 
               {/* Content */}
-              <CardContent className="p-3">
-                {/* Title */}
-                <h3 className="font-medium text-sm text-foreground mb-1 group-hover:text-primary transition-colors line-clamp-1">
+              <div className="p-3.5 flex flex-col gap-1">
+                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {product.name}
                 </h3>
-
-                {/* Description */}
                 <p className="text-xs text-muted-foreground line-clamp-1">
                   {product.description}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
           ))
           )}
         </div>
