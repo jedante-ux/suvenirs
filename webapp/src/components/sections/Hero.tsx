@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#2D2B3D] font-extrabold">
+      <span className="text-[#2D2B3D] font-extrabold underline decoration-[#2D2B3D]/30 decoration-4 underline-offset-4">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#2D2B3D] font-extrabold whitespace-nowrap"
+        className="inline-block text-[#2D2B3D] font-extrabold underline decoration-[#2D2B3D]/30 decoration-4 underline-offset-4 whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -267,7 +267,7 @@ export default function Hero() {
   return (
     <section className="relative pt-16 md:pt-20 overflow-hidden hero-animated-bg">
       {/* Animated gradient background */}
-      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #F47920, #D3DC2A, #F47920, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 10s ease infinite' }} />
+      <div className="absolute inset-0" aria-hidden="true" style={{ background: 'linear-gradient(-45deg, #E1146C, #F47920, #D3DC2A, #F47920, #E1146C)', backgroundSize: '400% 400%', animation: 'heroGradientShift 20s ease infinite' }} />
       {/* Noise/grain overlay for texture */}
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")', backgroundRepeat: 'repeat' }} />
       {/* Fade to white at bottom */}
@@ -278,7 +278,7 @@ export default function Hero() {
           {/* Left column */}
           <div className="text-center lg:text-left relative">
             {/* Readability overlay */}
-            <div className="absolute -inset-6 rounded-3xl bg-white/20 backdrop-blur-[2px] -z-10 hidden lg:block" />
+            <div className="absolute -inset-6 rounded-3xl bg-white/30 backdrop-blur-[3px] -z-10 hidden lg:block" />
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
@@ -286,12 +286,12 @@ export default function Hero() {
             >
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                className="px-4 py-2 bg-[#2D2B3D]/80 backdrop-blur-sm text-white border border-[#2D2B3D]/20"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-white/25 backdrop-blur-sm text-white border border-white/30 font-bold">
+              <Badge className="px-4 py-2 bg-[#2D2B3D]/80 backdrop-blur-sm text-white border border-[#2D2B3D]/20 font-bold">
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -299,8 +299,8 @@ export default function Hero() {
 
             {/* H1 */}
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
-              style={{ ...entranceStyle(0.2), textShadow: '0 2px 12px rgba(0,0,0,0.15)' }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2D2B3D] leading-tight mb-4"
+              style={entranceStyle(0.2)}
             >
               Regalos<br />
               <RotatingWord /><br />
@@ -309,7 +309,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-white/85 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-[#2D2B3D]/75 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
@@ -323,7 +323,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-xl px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
+                className="w-full sm:w-auto bg-[#2D2B3D] text-white hover:bg-[#2D2B3D]/90 rounded-xl px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
               >
                 <Link href="/productos">
                   Ver colección
@@ -334,7 +334,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-white/50 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl px-8 transition-all duration-300"
+                className="w-full sm:w-auto border-2 border-[#2D2B3D]/40 text-[#2D2B3D] bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-xl px-8 transition-all duration-300 font-semibold"
               >
                 <Link href="/contacto">
                   Cotizar ahora
