@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#2D2B3D] font-extrabold underline decoration-[#2D2B3D]/30 decoration-4 underline-offset-4">
+      <span className="text-[#FE248A] font-extrabold">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#2D2B3D] font-extrabold underline decoration-[#2D2B3D]/30 decoration-4 underline-offset-4 whitespace-nowrap"
+        className="inline-block text-[#FE248A] font-extrabold whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -278,12 +278,12 @@ export default function Hero() {
             >
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-[#2D2B3D]/80 backdrop-blur-sm text-white border border-[#2D2B3D]/20"
+                className="px-4 py-2 bg-[#FE248A]/10 text-[#FE248A] border border-[#FE248A]/20 font-medium animate-fadeIn"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-[#2D2B3D]/80 backdrop-blur-sm text-white border border-[#2D2B3D]/20 font-bold">
+              <Badge className="px-4 py-2 bg-[#F47920]/10 text-[#F47920] border border-[#F47920]/20 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -315,7 +315,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-[#2D2B3D] text-white hover:bg-[#2D2B3D]/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold"
+                className="w-full sm:w-auto bg-[#FE248A] text-white hover:bg-[#FE248A]/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
               >
                 <Link href="/productos">
                   Ver colección
@@ -326,7 +326,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-[#2D2B3D]/40 text-[#2D2B3D] bg-white/30 backdrop-blur-sm hover:bg-white/50 rounded-full px-8 transition-all duration-300 font-semibold"
+                className="w-full sm:w-auto border-2 border-[#F47920]/40 text-[#F47920] bg-[#F47920]/5 hover:bg-[#F47920]/10 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
               >
                 <Link href="/contacto">
                   Cotizar ahora
