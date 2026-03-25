@@ -133,51 +133,43 @@ export default function Header() {
                   Productos
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-[680px] p-5">
-                    {/* Quick links row */}
-                    <div className="flex gap-2 mb-4 pb-4 border-b border-border/60">
+                  <div className="w-[420px] p-4">
+                    {/* Quick links */}
+                    <div className="flex gap-2 mb-3 pb-3 border-b border-border/60">
                       <NavigationMenuLink asChild>
                         <Link href="/productos" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
-                          <Grid3X3 className="h-4 w-4" />
-                          Todos los productos
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/categorias" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
-                          <Package className="h-4 w-4" />
-                          Ver categorías
+                          <Grid3X3 className="h-4 w-4" /> Todos los productos
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/kits" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
-                          <Boxes className="h-4 w-4" />
-                          Kits Corporativos
+                          <Boxes className="h-4 w-4" /> Kits Corporativos
                         </Link>
                       </NavigationMenuLink>
                     </div>
-                    {/* Categories grid */}
-                    <div className="grid grid-cols-4 gap-1">
+                    {/* Categories list */}
+                    <div className="flex flex-col max-h-[360px] overflow-y-auto">
                       {categories.map((cat) => {
                         const Icon = getCategoryIcon(cat.name);
                         return (
                           <NavigationMenuLink key={cat.id} asChild>
                             <Link
                               href={`/productos?category=${cat.slug}`}
-                              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm hover:bg-muted transition-colors group"
+                              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors group"
                             >
                               <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                              <span className="truncate text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
+                              <span className="text-muted-foreground group-hover:text-foreground transition-colors flex-1">{cat.name}</span>
+                              <span className="text-xs text-muted-foreground/60">{cat.productCount}</span>
                             </Link>
                           </NavigationMenuLink>
                         );
                       })}
                     </div>
-                    {/* Footer link */}
-                    <div className="mt-4 pt-4 border-t border-border/60">
+                    {/* Footer */}
+                    <div className="mt-3 pt-3 border-t border-border/60">
                       <NavigationMenuLink asChild>
                         <Link href="/categorias" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-                          Ver todas las categorías
-                          <ArrowRight className="h-3.5 w-3.5" />
+                          Ver todas las categorías <ArrowRight className="h-3.5 w-3.5" />
                         </Link>
                       </NavigationMenuLink>
                     </div>
