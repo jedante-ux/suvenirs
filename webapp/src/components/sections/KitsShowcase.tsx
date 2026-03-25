@@ -26,18 +26,18 @@ export default function KitsShowcase() {
   if (!loading && kits.length === 0) return null;
 
   return (
-    <section className="section" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #D63384 50%, #FE248A 100%)' }}>
+    <section className="section" style={{ background: 'linear-gradient(135deg, #D3DC2A 0%, #B8C820 50%, #D3DC2A 100%)' }}>
       <div className="container" ref={ref}>
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 backdrop-blur-sm">
+          <Badge variant="outline" className="mb-4 bg-[#2D2B3D]/10 text-[#2D2B3D] border-[#2D2B3D]/20">
             <Boxes className="h-3.5 w-3.5 mr-1.5" />
             Kits Corporativos
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2D2B3D] mb-4">
             Packs listos para sorprender
           </h2>
-          <p className="text-white/75 max-w-2xl mx-auto">
+          <p className="text-[#2D2B3D]/70 max-w-2xl mx-auto">
             Kits pre-armados con los mejores productos personalizables. Ideales para onboarding, eventos y regalos corporativos.
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function KitsShowcase() {
               <Link
                 key={kit.id}
                 href={`/kits`}
-                className="group block rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden hover:bg-white/15 transition-all duration-300 hover:scale-[1.02]"
+                className="group block rounded-2xl bg-white border border-border/60 overflow-hidden hover:scale-[1.02] transition-all duration-300"
                 style={{
                   opacity: isInView ? 1 : 0,
                   transform: isInView ? 'translateY(0)' : 'translateY(20px)',
@@ -62,7 +62,7 @@ export default function KitsShowcase() {
                 }}
               >
                 {/* Product images row */}
-                <div className="flex h-32 gap-0.5 bg-white/5">
+                <div className="flex h-32 gap-0.5 bg-muted">
                   {kit.items.slice(0, 4).map((item) => (
                     <div key={item.id} className="relative flex-1 overflow-hidden">
                       <SafeImage
@@ -79,19 +79,19 @@ export default function KitsShowcase() {
                 {/* Kit info */}
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white group-hover:text-white/90">
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                       {kit.name}
                     </h3>
-                    <Gift className="h-5 w-5 text-white/50 flex-shrink-0 mt-0.5" />
+                    <Gift className="h-5 w-5 text-primary/40 flex-shrink-0 mt-0.5" />
                   </div>
-                  <p className="text-white/60 text-sm line-clamp-2 mb-3">
+                  <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
                     {kit.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-white/50">
+                    <span className="text-xs text-muted-foreground/70">
                       {kit.items.length} productos · desde {Math.min(...kit.tiers)} unidades
                     </span>
-                    <ArrowRight className="h-4 w-4 text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                   </div>
                 </div>
               </Link>
@@ -101,7 +101,7 @@ export default function KitsShowcase() {
 
         {/* CTA */}
         <div className="text-center mt-10">
-          <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 rounded-full px-8 font-bold transition-transform hover:scale-[1.03]">
+          <Button asChild size="lg" className="bg-[#2D2B3D] text-white hover:bg-[#2D2B3D]/90 rounded-full px-8 font-bold transition-transform hover:scale-[1.03]">
             <Link href="/kits">
               Ver todos los kits
               <ArrowRightIcon size={18} className="ml-2" />

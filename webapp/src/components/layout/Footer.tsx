@@ -32,8 +32,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-muted text-foreground">
-      <div className="h-[3px] bg-gradient-to-r from-primary via-accent to-secondary" />
+    <footer className="text-white" style={{ background: '#FE248A' }}>
       <div className="py-[75px]">
       {/* Main footer content */}
       <div className="container pb-12">
@@ -41,28 +40,28 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">
-              <Logo size="lg" />
+              <Logo size="lg" variant="white" />
             </Link>
-            <p className="mt-4 text-muted-foreground max-w-md">
+            <p className="mt-4 text-white/70 max-w-md">
               Tu socio corporativo líder en grabados, regalos y reconocimientos.
               Transformamos tus ideas en regalos personalizados únicos.
             </p>
 
             {/* Contact info */}
             <div className="mt-6 space-y-3">
-              <a href="mailto:contacto@suvenirs.cl" className="flex items-center text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:contacto@suvenirs.cl" className="flex items-center text-white/70 hover:text-white transition-colors">
                 <MailIcon size={18} className="mr-3" />
                 contacto@suvenirs.cl
               </a>
-              <a href="tel:+56931464930" className="flex items-center text-muted-foreground hover:text-primary transition-colors">
+              <a href="tel:+56931464930" className="flex items-center text-white/70 hover:text-white transition-colors">
                 <PhoneIcon size={18} className="mr-3" />
                 +56 9 3146 4930
               </a>
-              <div className="flex items-start text-muted-foreground">
+              <div className="flex items-start text-white/70">
                 <LocationIcon size={18} className="mr-3 mt-1 flex-shrink-0" />
                 <div className="flex flex-col">
                   <span>Av. Irarrázaval 2401 Of. 607</span>
-                  <span className="text-muted-foreground/70 text-sm">Ñuñoa, Región Metropolitana</span>
+                  <span className="text-white/70/70 text-sm">Ñuñoa, Región Metropolitana</span>
                 </div>
               </div>
             </div>
@@ -70,13 +69,13 @@ export default function Footer() {
 
           {/* Products column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary">Productos</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Productos</h3>
             <ul className="space-y-3">
               {footerLinks.productos.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-white/70 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -87,13 +86,13 @@ export default function Footer() {
 
           {/* Company column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary">Empresa</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Empresa</h3>
             <ul className="space-y-3">
               {footerLinks.empresa.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-white/70 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -104,19 +103,19 @@ export default function Footer() {
 
           {/* Help column */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary">Ayuda</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Ayuda</h3>
             <ul className="space-y-3">
               <li key="Pagos y entregas">
-                <span className="text-muted-foreground/50 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
+                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
               </li>
               <li key="Política de devoluciones">
-                <span className="text-muted-foreground/50 cursor-not-allowed text-sm" title="Próximamente">Política de devoluciones</span>
+                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Política de devoluciones</span>
               </li>
               <li key="Preguntas frecuentes">
-                <span className="text-muted-foreground/50 cursor-not-allowed text-sm" title="Próximamente">Preguntas frecuentes</span>
+                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Preguntas frecuentes</span>
               </li>
               <li key="Términos y condiciones">
-                <span className="text-muted-foreground/50 cursor-not-allowed text-sm" title="Próximamente">Términos y condiciones</span>
+                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Términos y condiciones</span>
               </li>
             </ul>
           </div>
@@ -124,10 +123,10 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-border">
+      <div className="border-t border-white/20">
         <div className="container py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-muted-foreground/70 text-sm">
+            <p className="text-white/70/70 text-sm">
               &copy; {new Date().getFullYear()} Suvenirs. Todos los derechos reservados.
             </p>
 
@@ -139,7 +138,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all"
+                  className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white/70 hover:bg-white/30 hover:text-white transition-all"
                   aria-label={social.name}
                 >
                   <social.icon size={18} />
