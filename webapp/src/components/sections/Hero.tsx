@@ -120,8 +120,8 @@ export default function Hero() {
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
-          {/* Left column */}
-          <div className="text-center lg:text-left relative">
+          {/* Left column — glass card */}
+          <div className="text-center lg:text-left relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-10">
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
