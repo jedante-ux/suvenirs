@@ -2,3 +2,4 @@
 .env.local
 
 /src/generated/prisma
+*.ai

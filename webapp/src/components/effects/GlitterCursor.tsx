@@ -41,9 +41,10 @@ export default function GlitterCursor() {
   }, []);
 
   useEffect(() => {
-    // Skip on admin pages and respect reduced motion
+    // Skip on admin, mobile (no hover), and reduced motion
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return;
     isAdmin.current = window.location.pathname.startsWith('/gestion');
     if (isAdmin.current) return;
 
@@ -92,10 +93,6 @@ export default function GlitterCursor() {
         ctx.globalAlpha = opacity;
 
         const s = p.size * scale;
-
-        // Glow layer
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = s * 3;
 
         // Draw 4-point sparkle star
         ctx.fillStyle = p.color;

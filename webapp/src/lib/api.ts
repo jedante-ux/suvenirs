@@ -34,7 +34,7 @@ export async function getProducts(params?: GetProductsParams): Promise<Paginated
 
   const url = `${getApiUrl()}/api/products${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
 
-  const res = await fetch(url, { cache: 'no-store' })
+  const res = await fetch(url, { next: { revalidate: 60 } })
 
   if (!res.ok) throw new Error('Failed to fetch products')
 
@@ -42,35 +42,35 @@ export async function getProducts(params?: GetProductsParams): Promise<Paginated
 }
 
 export async function getProduct(id: string): Promise<Product | null> {
-  const res = await fetch(`${getApiUrl()}/api/products/${id}`, { cache: 'no-store' })
+  const res = await fetch(`${getApiUrl()}/api/products/${id}`, { next: { revalidate: 60 } })
   if (!res.ok) return null
   const data: ApiResponse<Product> = await res.json()
   return data.data
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const res = await fetch(`${getApiUrl()}/api/products/slug/${slug}`, { cache: 'no-store' })
+  const res = await fetch(`${getApiUrl()}/api/products/slug/${slug}`, { next: { revalidate: 60 } })
   if (!res.ok) return null
   const data: ApiResponse<Product> = await res.json()
   return data.data
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${getApiUrl()}/api/categories`, { cache: 'no-store' })
+  const res = await fetch(`${getApiUrl()}/api/categories`, { next: { revalidate: 120 } })
   if (!res.ok) throw new Error('Failed to fetch categories')
   const data: ApiResponse<Category[]> = await res.json()
   return data.data
 }
 
 export async function getKits(): Promise<Kit[]> {
-  const res = await fetch(`${getApiUrl()}/api/kits`, { cache: 'no-store' })
+  const res = await fetch(`${getApiUrl()}/api/kits`, { next: { revalidate: 120 } })
   if (!res.ok) throw new Error('Failed to fetch kits')
   const data: ApiResponse<Kit[]> = await res.json()
   return data.data
 }
 
 export async function getKitBySlug(slug: string): Promise<Kit | null> {
-  const res = await fetch(`${getApiUrl()}/api/kits/slug/${slug}`, { cache: 'no-store' })
+  const res = await fetch(`${getApiUrl()}/api/kits/slug/${slug}`, { next: { revalidate: 120 } })
   if (!res.ok) return null
   const data: ApiResponse<Kit> = await res.json()
   return data.data
