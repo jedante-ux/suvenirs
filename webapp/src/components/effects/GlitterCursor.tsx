@@ -28,13 +28,13 @@ export default function GlitterCursor() {
   const spawnParticles = useCallback((x: number, y: number) => {
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       particles.current.push({
-        x: x + (Math.random() - 0.5) * 12,
-        y: y + (Math.random() - 0.5) * 12,
-        size: Math.random() * 4 + 2,
+        x: x + (Math.random() - 0.5) * 10,
+        y: y + 15 + Math.random() * 6,
+        size: Math.random() * 5 + 2,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         birth: performance.now(),
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: Math.random() * -1.5 - 0.5,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: Math.random() * 1.5 + 0.5,
         rotation: Math.random() * 360,
       });
     }
@@ -82,16 +82,22 @@ export default function GlitterCursor() {
 
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.02; // subtle gravity
-        p.rotation += 3;
+        p.vy += 0.04; // gravity — falls down
+        p.vx *= 0.99; // subtle drag
+        p.rotation += 4;
 
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate((p.rotation * Math.PI) / 180);
         ctx.globalAlpha = opacity;
 
-        // Draw a 4-point star/sparkle
         const s = p.size * scale;
+
+        // Glow layer
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = s * 3;
+
+        // Draw 4-point sparkle star
         ctx.fillStyle = p.color;
         ctx.beginPath();
         for (let i = 0; i < 4; i++) {
@@ -99,14 +105,23 @@ export default function GlitterCursor() {
           const outerX = Math.cos(angle) * s;
           const outerY = Math.sin(angle) * s;
           const innerAngle = angle + Math.PI / 4;
-          const innerX = Math.cos(innerAngle) * s * 0.3;
-          const innerY = Math.sin(innerAngle) * s * 0.3;
+          const innerX = Math.cos(innerAngle) * s * 0.25;
+          const innerY = Math.sin(innerAngle) * s * 0.25;
           if (i === 0) ctx.moveTo(outerX, outerY);
           else ctx.lineTo(outerX, outerY);
           ctx.lineTo(innerX, innerY);
         }
         ctx.closePath();
         ctx.fill();
+
+        // Bright white center dot
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = opacity * 0.9;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, 0, s * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.restore();
       }
 
