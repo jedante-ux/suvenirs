@@ -147,17 +147,17 @@ export default function Header() {
                         </Link>
                       </NavigationMenuLink>
                     </div>
-                    {/* Categories — horizontal flow */}
-                    <div className="flex flex-wrap gap-1 max-h-[320px] overflow-y-auto">
+                    {/* Categories — vertical list */}
+                    <div className="flex flex-col max-h-[320px] overflow-y-auto">
                       {categories.map((cat) => {
                         const Icon = getCategoryIcon(cat.name);
                         return (
                           <NavigationMenuLink key={cat.id} asChild>
                             <Link
                               href={`/productos?category=${cat.slug}`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs hover:bg-muted transition-colors group whitespace-nowrap"
+                              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors group"
                             >
-                              <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                              <Icon className="h-4 w-4 text-primary flex-shrink-0" />
                               <span className="text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
                             </Link>
                           </NavigationMenuLink>
