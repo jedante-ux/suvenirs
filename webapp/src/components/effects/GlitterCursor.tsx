@@ -32,8 +32,8 @@ export default function GlitterCursor() {
         y: y + 6 + Math.random() * 12,
         size: Math.random() * 0.6 + 0.3, // 0.3–0.9px visible sparkle
         birth: performance.now(),
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: Math.random() * 0.4 + 0.08, // very slow fall
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: Math.random() * 1.8 + 0.5, // faster fall
         drift: Math.random() * Math.PI * 2,
         twinkleSpeed: Math.random() * 10 + 3,
         pinkAmount: Math.random(), // mix of pink and white
