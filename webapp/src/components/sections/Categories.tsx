@@ -86,19 +86,19 @@ export default function Categories() {
 
   if (loading) {
     return (
-      <section className="section bg-muted/50">
+      <section className="section" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
         <div className="container">
           <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
+            <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25">
               Nuestras Categorías
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Lo que buscas para tus empleados está aquí
             </h2>
           </div>
           <div className="flex gap-6 overflow-hidden">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex-none w-80 h-72 bg-muted rounded-2xl animate-pulse" />
+              <div key={i} className="flex-none w-80 h-72 bg-white/20 rounded-2xl animate-pulse" />
             ))}
           </div>
         </div>
@@ -109,17 +109,17 @@ export default function Categories() {
   if (categories.length === 0) return null;
 
   return (
-    <section className="section bg-muted/50">
+    <section className="section" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
       <div className="container">
         {/* Section header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 text-primary border-primary/20 bg-primary/5">
+          <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 backdrop-blur-sm">
             Nuestras Categorías
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Lo que buscas para tus empleados está aquí
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-white/80 max-w-2xl mx-auto">
             Encuentra el regalo corporativo perfecto para reconocer, motivar y sorprender a tu equipo
             en cada momento importante.
           </p>
