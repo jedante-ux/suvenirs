@@ -28,7 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MenuIcon, CartIcon, ChevronDownIcon, FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon } from '../icons';
+import { MenuIcon, CartIcon, ChevronDownIcon } from '../icons';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 
@@ -47,12 +47,6 @@ const navLinks = [
   { name: 'Contacto', href: '/contacto' },
 ];
 
-const socialLinks = [
-  { name: 'Facebook', href: 'https://facebook.com', icon: FacebookIcon },
-  { name: 'Instagram', href: 'https://instagram.com', icon: InstagramIcon },
-  { name: 'LinkedIn', href: 'https://linkedin.com', icon: LinkedInIcon },
-  { name: 'Twitter', href: 'https://twitter.com', icon: TwitterIcon },
-];
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -105,7 +99,8 @@ export default function Header() {
                     <>
                       <NavigationMenuTrigger
                         className={cn(
-                          'bg-transparent border-b-2 border-transparent hover:border-accent transition-colors',
+                          'bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                          !isScrolled && 'text-white hover:text-white/80',
                           link.submenu?.some(sub => pathname === sub.href) && 'border-accent'
                         )}
                       >
@@ -139,8 +134,9 @@ export default function Header() {
                         href={link.href}
                         className={cn(
                           navigationMenuTriggerStyle(),
-                          'border-b-2 border-transparent hover:border-accent transition-colors',
-                          pathname === link.href && 'border-accent text-accent-foreground'
+                          'border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                          !isScrolled && 'text-white hover:text-white/80',
+                          pathname === link.href && 'border-accent'
                         )}
                       >
                         {link.name}
@@ -154,24 +150,8 @@ export default function Header() {
 
           {/* Right section */}
           <div className="flex items-center gap-4">
-            {/* Social links - desktop only */}
-            <div className="hidden md:flex items-center gap-2">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors p-2 opacity-60 rounded-md hover:bg-primary/5"
-                  aria-label={social.name}
-                >
-                  <social.icon size={15} />
-                </a>
-              ))}
-            </div>
-
             {/* Cart */}
-            <Button variant="ghost" size="icon" className="relative" onClick={openCart}>
+            <Button variant="ghost" size="icon" className={cn("relative transition-colors duration-300", !isScrolled && "text-white hover:text-white/80 hover:bg-white/10")} onClick={openCart}>
               <CartIcon size={22} />
               {totalItems > 0 && (
                 <Badge
@@ -188,7 +168,7 @@ export default function Header() {
             {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
+                <Button variant="ghost" size="icon" className={cn("lg:hidden transition-colors duration-300", !isScrolled && "text-white hover:text-white/80 hover:bg-white/10")}>
                   <MenuIcon size={24} />
                 </Button>
               </SheetTrigger>
@@ -238,21 +218,6 @@ export default function Header() {
                     </div>
                   ))}
 
-                  {/* Social links in mobile menu */}
-                  <div className="flex items-center justify-center gap-4 mt-8 pt-8 border-t">
-                    {socialLinks.map((social) => (
-                      <a
-                        key={social.name}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-primary transition-colors p-2"
-                        aria-label={social.name}
-                      >
-                        <social.icon size={24} />
-                      </a>
-                    ))}
-                  </div>
                 </nav>
               </SheetContent>
             </Sheet>
