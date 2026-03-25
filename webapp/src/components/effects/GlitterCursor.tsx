@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-// Frost/escarcha style — ultra fine, pink on light, white on dark
-const PARTICLE_COUNT = 10;
-const PARTICLE_LIFE = 1800;
-const MIN_DISTANCE = 3;
+// Tinkerbell style — visible sparkle trail, pink on light, white on dark
+const PARTICLE_COUNT = 14;
+const PARTICLE_LIFE = 2000;
+const MIN_DISTANCE = 2;
 
 interface Particle {
   x: number;
@@ -30,7 +30,7 @@ export default function GlitterCursor() {
       particles.current.push({
         x: x + (Math.random() - 0.5) * 24,
         y: y + 6 + Math.random() * 12,
-        size: Math.random() * 0.4 + 0.2, // 0.2–0.6px escarcha
+        size: Math.random() * 0.6 + 0.3, // 0.3–0.9px visible sparkle
         birth: performance.now(),
         vx: (Math.random() - 0.5) * 0.5,
         vy: Math.random() * 0.4 + 0.08, // very slow fall
@@ -99,14 +99,14 @@ export default function GlitterCursor() {
         const age = now - p.birth;
         const life = age / PARTICLE_LIFE;
 
-        // Fade in fast, stay visible long, fade out last 30%
+        // Bright and visible — fade out only at the very end
         let opacity: number;
-        if (life < 0.05) opacity = life * 20;
-        else if (life < 0.7) opacity = 1;
-        else opacity = 1 - (life - 0.7) / 0.3;
+        if (life < 0.03) opacity = life * 33;
+        else if (life < 0.8) opacity = 1;
+        else opacity = 1 - (life - 0.8) / 0.2;
 
-        // Twinkle
-        const twinkle = 0.4 + 0.6 * Math.sin(age * p.twinkleSpeed * 0.01);
+        // Twinkle — high minimum so particles are always visible
+        const twinkle = 0.7 + 0.3 * Math.sin(age * p.twinkleSpeed * 0.01);
 
         // Floating drift
         p.x += p.vx + Math.sin(p.drift + age * 0.002) * 0.2;
@@ -133,22 +133,22 @@ export default function GlitterCursor() {
 
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.globalAlpha = opacity * twinkle * 0.9;
+        ctx.globalAlpha = opacity * twinkle;
 
-        // Glow halo
+        // Glow halo — bigger and brighter
         ctx.shadowColor = isLightBg ? '#FE248A' : '#ffffff';
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = 6;
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(0, 0, s, 0, Math.PI * 2);
         ctx.fill();
 
-        // White sparkle core
+        // Bright white sparkle core
         ctx.shadowBlur = 0;
-        ctx.globalAlpha = opacity * twinkle * 0.6;
+        ctx.globalAlpha = opacity * twinkle * 0.9;
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(0, 0, s * 0.4, 0, Math.PI * 2);
+        ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
