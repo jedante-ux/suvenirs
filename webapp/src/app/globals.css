@@ -10,13 +10,13 @@
   /* Primary: #FE248A (amor) | Secondary: #F47920 (jefas) | Accent: #D3DC2A (vitalidad) | Soft Pink: #FFD4E0 (balance) */
 
   --background: oklch(0.99 0.01 350);
-  --foreground: oklch(0.18 0.02 340);
+  --foreground: #6B1035;
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 340);
+  --card-foreground: #6B1035;
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 340);
+  --popover-foreground: #6B1035;
 
   /* Primary — Hot Pink #FE248A (amor) — exact logo color */
   --primary: #FE248A;
@@ -50,7 +50,7 @@
 
   /* Sidebar */
   --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.18 0.02 340);
+  --sidebar-foreground: #6B1035;
   --sidebar-primary: #FE248A;
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0.02 350);

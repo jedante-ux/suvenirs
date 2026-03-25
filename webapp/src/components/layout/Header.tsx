@@ -156,8 +156,8 @@ export default function Header() {
               className={cn(
                 "relative rounded-full px-4 gap-2 transition-all duration-300",
                 isScrolled
-                  ? "border-primary text-primary hover:bg-primary hover:text-white"
-                  : "border-white text-white hover:bg-white/10"
+                  ? "border-primary text-primary bg-transparent hover:bg-transparent"
+                  : "border-white text-white bg-transparent hover:bg-transparent"
               )}
               onClick={openCart}
             >
@@ -178,7 +178,7 @@ export default function Header() {
             {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={cn("lg:hidden transition-colors duration-300", !isScrolled && "text-white hover:text-white/80 hover:bg-white/10")}>
+                <Button variant="ghost" size="icon" className={cn("lg:hidden transition-colors duration-300 bg-transparent hover:bg-transparent", !isScrolled && "text-white hover:text-white/80")}>
                   <MenuIcon size={24} />
                 </Button>
               </SheetTrigger>

@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#2D2B3D] font-extrabold">
+      <span className="text-[#6B1035] font-extrabold">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#2D2B3D] font-extrabold whitespace-nowrap"
+        className="inline-block text-[#6B1035] font-extrabold whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -289,7 +289,7 @@ export default function Hero() {
 
             {/* H1 */}
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2D2B3D] leading-tight mb-4"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#6B1035] leading-tight mb-4"
               style={entranceStyle(0.2)}
             >
               Regalos<br />
@@ -299,7 +299,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-[#2D2B3D]/70 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-[#6B1035]/70 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
