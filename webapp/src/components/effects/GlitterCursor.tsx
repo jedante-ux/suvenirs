@@ -30,7 +30,7 @@ export default function GlitterCursor() {
       particles.current.push({
         x: x + (Math.random() - 0.5) * 16,
         y: y + 12 + Math.random() * 8,
-        size: Math.random() * 2 + 0.8,
+        size: Math.random() * 1.2 + 0.4,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         birth: performance.now(),
         vx: (Math.random() - 0.5) * 1.8,
@@ -94,11 +94,14 @@ export default function GlitterCursor() {
 
         const s = p.size * scale;
 
-        // Tiny glowing dot
-        ctx.fillStyle = p.color;
+        // Tiny shining dot with glow
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.arc(0, 0, s, 0, Math.PI * 2);
         ctx.fill();
+        ctx.shadowBlur = 0;
 
         ctx.restore();
       }
