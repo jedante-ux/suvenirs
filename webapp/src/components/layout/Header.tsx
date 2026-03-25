@@ -30,7 +30,7 @@ import { getCategories } from '@/lib/api';
 import {
   Gift, Trophy, Pen, Coffee, ShoppingBag, Package, Star, Gem,
   Medal, KeyRound, Stamp, Wine, Laptop, BookOpen, Briefcase, Box,
-  Grid3X3, Boxes, ArrowRight,
+  Grid3X3, Boxes, ArrowRight, Clock,
 } from 'lucide-react';
 
 // Map category name to icon
@@ -102,8 +102,8 @@ export default function Header() {
     <div className={cn(
       'fixed top-0 left-0 right-0 z-50 text-center py-1.5 text-xs font-medium text-white transition-all duration-300',
       isScrolled ? 'opacity-0 -translate-y-full' : 'opacity-100'
-    )} style={{ background: 'linear-gradient(90deg, #FE248A, #D3DC2A, #F47920)' }}>
-      ¡Respuesta en menos de 24 horas!
+    )} style={{ background: 'linear-gradient(90deg, #D3DC2A, #F47920, #D3DC2A)' }}>
+      <Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!
     </div>
     <header
       className={cn(
