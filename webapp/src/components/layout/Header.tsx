@@ -133,7 +133,7 @@ export default function Header() {
                   Productos
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-[420px] p-4">
+                  <div className="w-[560px] p-4">
                     {/* Quick links */}
                     <div className="flex gap-2 mb-3 pb-3 border-b border-border/60">
                       <NavigationMenuLink asChild>
@@ -147,19 +147,18 @@ export default function Header() {
                         </Link>
                       </NavigationMenuLink>
                     </div>
-                    {/* Categories list */}
-                    <div className="flex flex-col max-h-[360px] overflow-y-auto">
+                    {/* Categories — horizontal flow */}
+                    <div className="flex flex-wrap gap-1 max-h-[320px] overflow-y-auto">
                       {categories.map((cat) => {
                         const Icon = getCategoryIcon(cat.name);
                         return (
                           <NavigationMenuLink key={cat.id} asChild>
                             <Link
                               href={`/productos?category=${cat.slug}`}
-                              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors group"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs hover:bg-muted transition-colors group whitespace-nowrap"
                             >
-                              <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                              <span className="text-muted-foreground group-hover:text-foreground transition-colors flex-1">{cat.name}</span>
-                              <span className="text-xs text-muted-foreground/60">{cat.productCount}</span>
+                              <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                              <span className="text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
                             </Link>
                           </NavigationMenuLink>
                         );
