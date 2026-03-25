@@ -188,16 +188,16 @@ export default function Categories() {
         <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => swiperRef.current?.swiper.slidePrev()}
-            className="w-2.5 h-2.5 rounded-full bg-primary/30 hover:bg-primary/50 transition-all duration-300"
+            className="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300"
             aria-label="Anterior"
           />
           <button
-            className="w-3.5 h-3.5 rounded-full bg-primary transition-all duration-300"
+            className="w-3.5 h-3.5 rounded-full bg-white transition-all duration-300"
             aria-label="Actual"
           />
           <button
             onClick={() => swiperRef.current?.swiper.slideNext()}
-            className="w-2.5 h-2.5 rounded-full bg-primary/30 hover:bg-primary/50 transition-all duration-300"
+            className="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300"
             aria-label="Siguiente"
           />
         </div>

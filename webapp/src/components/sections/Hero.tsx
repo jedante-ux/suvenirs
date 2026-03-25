@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { Button } from '@/components/ui/button';
@@ -14,8 +14,6 @@ import { Truck, Gift } from 'lucide-react';
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
 const WORD_INTERVAL = 3500;
 const GRID_SIZE = 9;
-const SWAP_INTERVAL = 3500;
-const SWAP_ANIM_MS = 800;
 
 // ── Detect reduced motion once ──
 function prefersReducedMotion() {
@@ -73,151 +71,7 @@ function RotatingWord() {
   );
 }
 
-// ── Preload image ──
-function preloadImage(src: string): Promise<void> {
-  return new Promise((resolve) => {
-    if (!src) { resolve(); return; }
-    const img = new window.Image();
-    img.onload = () => resolve();
-    img.onerror = () => resolve();
-    img.src = src;
-  });
-}
-
-// ── Grid tile swap hook ──
-interface GridTile {
-  product: Product;
-  animState: 'idle' | 'flip-out' | 'flip-in';
-}
-
-function useAsyncGridSwap(allProducts: Product[]) {
-  const [tiles, setTiles] = useState<GridTile[]>([]);
-  const busyRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const usedIndicesRef = useRef<number[]>([]);
-  const reducedRef = useRef(false);
-
-  useEffect(() => {
-    reducedRef.current = prefersReducedMotion();
-  }, []);
-
-  useEffect(() => {
-    if (allProducts.length >= GRID_SIZE) {
-      setTiles(
-        allProducts.slice(0, GRID_SIZE).map((product) => ({
-          product,
-          animState: 'idle' as const,
-        }))
-      );
-      usedIndicesRef.current = [];
-    }
-  }, [allProducts]);
-
-  const swapNextTile = useCallback(async () => {
-    if (busyRef.current || allProducts.length <= GRID_SIZE) return;
-    busyRef.current = true;
-
-    // Pick random unused tile index
-    if (usedIndicesRef.current.length >= GRID_SIZE) {
-      usedIndicesRef.current = [];
-    }
-    const available = Array.from({ length: GRID_SIZE }, (_, i) => i)
-      .filter((i) => !usedIndicesRef.current.includes(i));
-    const tileIndex = available[Math.floor(Math.random() * available.length)];
-    usedIndicesRef.current.push(tileIndex);
-
-    // Pick new product — read current tiles via ref to avoid stale closure
-    const pickedRef = { value: null as Product | null };
-    setTiles((prev) => {
-      const currentTileIds = new Set(prev.map((t) => t.product.id));
-      const validPool = allProducts.filter((p) => !currentTileIds.has(p.id));
-      if (validPool.length > 0) {
-        pickedRef.value = validPool[Math.floor(Math.random() * validPool.length)];
-      }
-      return prev;
-    });
-    // Wait a tick for setState callback to execute
-    await new Promise((r) => setTimeout(r, 0));
-    const newProduct = pickedRef.value;
-    if (!newProduct) { busyRef.current = false; return; }
-
-    // Preload image before animating
-    await preloadImage(newProduct.image || '/placeholder-product.jpg');
-
-    if (reducedRef.current) {
-      // No animation — just swap instantly
-      setTiles((prev) =>
-        prev.map((tile, i) =>
-          i === tileIndex ? { product: newProduct, animState: 'idle' } : tile
-        )
-      );
-      busyRef.current = false;
-      return;
-    }
-
-    // Phase 1: flip out
-    setTiles((prev) =>
-      prev.map((tile, i) =>
-        i === tileIndex ? { ...tile, animState: 'flip-out' } : tile
-      )
-    );
-
-    // Phase 2: swap + flip in
-    await new Promise((r) => setTimeout(r, SWAP_ANIM_MS / 2));
-    setTiles((prev) =>
-      prev.map((tile, i) =>
-        i === tileIndex ? { product: newProduct, animState: 'flip-in' } : tile
-      )
-    );
-
-    // Phase 3: settle
-    await new Promise((r) => setTimeout(r, SWAP_ANIM_MS / 2));
-    setTiles((prev) =>
-      prev.map((tile, i) =>
-        i === tileIndex ? { ...tile, animState: 'idle' } : tile
-      )
-    );
-    busyRef.current = false;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allProducts]);
-
-  useEffect(() => {
-    if (tiles.length === 0) return;
-
-    const startDelay = setTimeout(() => {
-      swapNextTile();
-      timerRef.current = setInterval(swapNextTile, SWAP_INTERVAL);
-    }, 2500);
-
-    return () => {
-      clearTimeout(startDelay);
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [tiles.length, swapNextTile]);
-
-  return tiles;
-}
-
-// ── Tile styles — simple crossfade instead of 3D flip to avoid flicker ──
-const TILE_TRANSITION = `opacity ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${SWAP_ANIM_MS / 2}ms cubic-bezier(0.16, 1, 0.3, 1)`;
-
-const TILE_STYLES: Record<GridTile['animState'], React.CSSProperties> = {
-  'flip-out': {
-    transform: 'scale(0.95)',
-    opacity: 0,
-    transition: TILE_TRANSITION,
-  },
-  'flip-in': {
-    transform: 'scale(1.02)',
-    opacity: 0.5,
-    transition: TILE_TRANSITION,
-  },
-  idle: {
-    transform: 'scale(1)',
-    opacity: 1,
-    transition: TILE_TRANSITION,
-  },
-};
+// ── Static grid — load once, no swapping ──
 
 // ── Entrance transition helper (respects reduced motion) ──
 function useEntrance() {
@@ -246,15 +100,14 @@ function useEntrance() {
 }
 
 export default function Hero() {
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const { mounted, style: entranceStyle, reduced } = useEntrance();
-  const tiles = useAsyncGridSwap(allProducts);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts({ limit: 30, random: true });
-        setAllProducts(response.data);
+        const response = await getProducts({ limit: GRID_SIZE, random: true });
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -348,38 +201,32 @@ export default function Hero() {
             }}
           >
             <div className="grid grid-cols-3 grid-rows-3 gap-2.5 lg:gap-3 w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
-              {tiles.map((tile, index) => (
+              {products.map((product, index) => (
                 <Link
-                  key={`tile-${index}`}
-                  href={`/productos/${tile.product.slug || tile.product.productId}`}
+                  key={product.id}
+                  href={`/productos/${product.slug || product.productId}`}
                   className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300"
-                  style={{
-                    ...TILE_STYLES[tile.animState],
-                    transformOrigin: 'center center',
-                  }}
                 >
                   <SafeImage
-                    src={tile.product.image || '/placeholder-product.jpg'}
-                    alt={tile.product.name}
+                    src={product.image || '/placeholder-product.jpg'}
+                    alt={product.name}
                     fill
                     sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 170px"
                     className="object-cover"
                     priority={index < 3}
                   />
-                  {/* Hover overlay */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
                     <p className="text-white text-sm font-semibold text-center px-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      {tile.product.name}
+                      {product.name}
                     </p>
                   </div>
                 </Link>
               ))}
-              {/* Placeholders */}
-              {tiles.length === 0 &&
+              {products.length === 0 &&
                 Array.from({ length: GRID_SIZE }).map((_, index) => (
                   <div
                     key={`placeholder-${index}`}
-                    className="aspect-square rounded-2xl bg-muted animate-pulse"
+                    className="aspect-square rounded-2xl bg-white/20 animate-pulse"
                   />
                 ))}
             </div>
