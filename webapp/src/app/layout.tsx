@@ -4,9 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import { Toaster } from "@/components/ui/sonner";
-import dynamic from "next/dynamic";
-
-const GlitterCursor = dynamic(() => import("@/components/effects/GlitterCursor"), { ssr: false });
+import GlitterCursor from "@/components/effects/GlitterCursor";
 
 const poppins = Poppins({
   subsets: ["latin"],
