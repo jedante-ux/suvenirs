@@ -57,10 +57,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Get initial session
     checkAuth()
 
-    // Failsafe: if loading hangs for 8s (stale tokens, network issues), force stop
+    // Failsafe: if loading hangs for 4s (stale tokens, network issues), force stop
     const failsafe = setTimeout(() => {
       setIsLoading(false)
-    }, 8000)
+    }, 4000)
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event) => {
