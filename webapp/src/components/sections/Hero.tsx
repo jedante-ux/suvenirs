@@ -46,7 +46,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#FE248A] font-extrabold">
+      <span className="text-white font-extrabold underline decoration-white/40 decoration-4 underline-offset-4">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -60,7 +60,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#FE248A] font-extrabold whitespace-nowrap"
+        className="inline-block text-white font-extrabold underline decoration-white/40 decoration-4 underline-offset-4 whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -263,14 +263,12 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-16 md:pt-20 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #FE248A22 0%, #FE248A10 40%, #FE248A05 70%, #ffffff 100%)' }}>
+    <section className="relative pt-16 md:pt-20 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #FE248A 0%, #FE248A90 25%, #FE248A40 50%, #FE248A15 75%, #ffffff 100%)' }}>
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
           {/* Left column */}
           <div className="text-center lg:text-left relative">
-            {/* Readability overlay */}
-            <div className="absolute -inset-6 rounded-3xl bg-white/25 -z-10 hidden lg:block" />
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
@@ -278,12 +276,12 @@ export default function Hero() {
             >
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-[#FE248A]/10 text-[#FE248A] border border-[#FE248A]/20 font-medium animate-fadeIn"
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 font-medium animate-fadeIn"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-[#F47920]/10 text-[#F47920] border border-[#F47920]/20 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
+              <Badge className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -291,7 +289,7 @@ export default function Hero() {
 
             {/* H1 */}
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2D2B3D] leading-tight mb-4"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
               style={entranceStyle(0.2)}
             >
               Regalos<br />
@@ -301,7 +299,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-[#2D2B3D]/75 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-white/85 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
@@ -315,7 +313,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-[#FE248A] text-white hover:bg-[#FE248A]/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
+                className="w-full sm:w-auto bg-white text-[#FE248A] hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
               >
                 <Link href="/productos">
                   Ver colección
@@ -326,7 +324,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-[#F47920]/40 text-[#F47920] bg-[#F47920]/5 hover:bg-[#F47920]/10 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
+                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
               >
                 <Link href="/contacto">
                   Cotizar ahora
