@@ -133,42 +133,40 @@ export default function Header() {
                   Productos
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-[560px] p-4">
+                  <div className="p-2 min-w-[220px]">
                     {/* Quick links */}
-                    <div className="flex gap-2 mb-3 pb-3 border-b border-border/60">
-                      <NavigationMenuLink asChild>
-                        <Link href="/productos" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
-                          <Grid3X3 className="h-4 w-4" /> Todos los productos
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/kits" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
-                          <Boxes className="h-4 w-4" /> Kits Corporativos
-                        </Link>
-                      </NavigationMenuLink>
-                    </div>
-                    {/* Categories — vertical list */}
-                    <div className="flex flex-col max-h-[320px] overflow-y-auto">
+                    <NavigationMenuLink asChild>
+                      <Link href="/productos" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                        <Grid3X3 className="h-3.5 w-3.5" /> Todos los productos
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link href="/kits" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                        <Boxes className="h-3.5 w-3.5" /> Kits Corporativos
+                      </Link>
+                    </NavigationMenuLink>
+                    <div className="border-t border-border/60 my-1.5" />
+                    {/* Categories */}
+                    <div className="flex flex-col max-h-[280px] overflow-y-auto">
                       {categories.map((cat) => {
                         const Icon = getCategoryIcon(cat.name);
                         return (
                           <NavigationMenuLink key={cat.id} asChild>
                             <Link
                               href={`/productos?category=${cat.slug}`}
-                              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors group"
+                              className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm hover:bg-muted transition-colors group"
                             >
-                              <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+                              <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                               <span className="text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
                             </Link>
                           </NavigationMenuLink>
                         );
                       })}
                     </div>
-                    {/* Footer */}
-                    <div className="mt-3 pt-3 border-t border-border/60">
+                    <div className="border-t border-border/60 mt-1.5 pt-1.5">
                       <NavigationMenuLink asChild>
-                        <Link href="/categorias" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-                          Ver todas las categorías <ArrowRight className="h-3.5 w-3.5" />
+                        <Link href="/categorias" className="flex items-center gap-2 px-2.5 py-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                          Ver todas <ArrowRight className="h-3.5 w-3.5" />
                         </Link>
                       </NavigationMenuLink>
                     </div>
