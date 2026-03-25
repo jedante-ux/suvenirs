@@ -33,19 +33,19 @@ const StatCard = React.memo(function StatCard({
         transitionDelay: `${index * 0.12}s`,
       }}
     >
-      <div className="p-6 rounded-2xl bg-white/20 backdrop-blur-sm transition-all duration-300 hover:bg-white/30 border border-white/30">
+      <div className="p-6 rounded-2xl bg-white border border-border/60 transition-all duration-300 hover:border-primary/30">
         <div className="flex justify-center mb-3">
           <div
-            className={`w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}
+            className={`w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-500 ${isDone && isInView ? 'animate-glow-pulse' : ''}`}
             aria-hidden="true"
           >
-            <Icon className="h-6 w-6 text-white" />
+            <Icon className="h-6 w-6 text-primary" />
           </div>
         </div>
-        <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 tabular-nums">
-          {Number.isInteger(value) ? count.toLocaleString() : count}<span className="text-white/70">{suffix}</span>
+        <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-2 tabular-nums">
+          {Number.isInteger(value) ? count.toLocaleString() : count}<span className="text-primary">{suffix}</span>
         </p>
-        <p className="text-white/80 text-sm md:text-base group-hover:text-white transition-colors duration-300">
+        <p className="text-muted-foreground text-sm md:text-base group-hover:text-foreground transition-colors duration-300">
           {label}
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function Stats() {
   const { ref, isInView } = useInView<HTMLDivElement>({ threshold: 0.3 });
 
   return (
-    <section className="py-12 md:py-16 relative" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
+    <section className="py-12 md:py-16 relative bg-muted/50">
       <div className="container">
         <div ref={ref} className="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
           {stats.map((stat, index) => (
