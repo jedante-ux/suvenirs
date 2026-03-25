@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightIcon } from '../icons';
@@ -163,7 +163,7 @@ export default function FeaturedProducts() {
             >
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-muted/50">
-                <Image
+                <SafeImage
                   src={product.image || '/placeholder-product.jpg'}
                   alt={product.name}
                   fill

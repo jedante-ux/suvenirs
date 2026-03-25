@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { SwiperRef } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
@@ -149,7 +149,7 @@ export default function Categories() {
                   <div className="grid grid-cols-3 gap-0.5 h-36 bg-muted">
                     {category.products.slice(0, 3).map((product, i) => (
                       <div key={product.id} className="relative overflow-hidden">
-                        <Image
+                        <SafeImage
                           src={product.image || '/placeholder-product.jpg'}
                           alt={product.name}
                           fill

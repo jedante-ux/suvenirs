@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/context/CartContext';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import Link from 'next/link';
 import { ShoppingCart, Star, Eye, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -37,7 +37,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       <Card className="group overflow-hidden transition-all duration-300 hover:scale-[1.02] h-full cursor-pointer p-0 gap-0">
         <div className="relative aspect-square bg-muted/50 overflow-hidden rounded-t-xl">
           <div className="relative w-full h-full overflow-hidden rounded-lg">
-            <Image
+            <SafeImage
               src={product.image || '/placeholder-product.jpg'}
               alt={product.name}
               fill

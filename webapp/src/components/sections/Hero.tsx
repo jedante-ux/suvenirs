@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { SafeImage } from '@/components/ui/SafeImage';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightIcon } from '../icons';
@@ -358,7 +358,7 @@ export default function Hero() {
                     transformOrigin: 'center center',
                   }}
                 >
-                  <Image
+                  <SafeImage
                     src={tile.product.image || '/placeholder-product.jpg'}
                     alt={tile.product.name}
                     fill
