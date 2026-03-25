@@ -99,7 +99,7 @@ export default function Header() {
                     <>
                       <NavigationMenuTrigger
                         className={cn(
-                          'bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                          'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
                           !isScrolled && 'text-white hover:text-white/80',
                           link.submenu?.some(sub => pathname === sub.href) && 'border-accent'
                         )}
@@ -134,7 +134,7 @@ export default function Header() {
                         href={link.href}
                         className={cn(
                           navigationMenuTriggerStyle(),
-                          'border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                          'bg-transparent hover:bg-transparent focus:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
                           !isScrolled && 'text-white hover:text-white/80',
                           pathname === link.href && 'border-accent'
                         )}
