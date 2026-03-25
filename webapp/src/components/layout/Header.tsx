@@ -125,9 +125,9 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger
                   className={cn(
-                    'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                    'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
                     !isScrolled && 'text-white hover:text-white/80',
-                    (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'border-accent'
+                    isScrolled && (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'text-primary font-semibold'
                   )}
                 >
                   Productos
@@ -185,9 +185,9 @@ export default function Header() {
                       href={link.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        'bg-transparent hover:bg-transparent focus:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                        'bg-transparent hover:bg-transparent focus:bg-transparent transition-all duration-300 hover:opacity-70',
                         !isScrolled && 'text-white hover:text-white/80',
-                        pathname === link.href && 'border-accent'
+                        isScrolled && pathname === link.href && 'text-primary font-semibold'
                       )}
                     >
                       {link.name}
