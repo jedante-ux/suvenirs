@@ -22,26 +22,39 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MenuIcon, CartIcon, ChevronDownIcon } from '../icons';
+import { MenuIcon, CartIcon } from '../icons';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
+import { Category } from '@/types';
+import { getCategories } from '@/lib/api';
+import {
+  Gift, Trophy, Pen, Coffee, ShoppingBag, Package, Star, Gem,
+  Medal, KeyRound, Stamp, Wine, Laptop, BookOpen, Briefcase, Box,
+  Grid3X3, Boxes, ArrowRight,
+} from 'lucide-react';
+
+// Map category name to icon
+function getCategoryIcon(name: string) {
+  const n = name.toLowerCase();
+  if (n.includes('trofeo') || n.includes('copa') || n.includes('torre')) return Trophy;
+  if (n.includes('medalla')) return Medal;
+  if (n.includes('llavero')) return KeyRound;
+  if (n.includes('bolígrafo') || n.includes('lápic') || n.includes('libreta') || n.includes('cuaderno')) return Pen;
+  if (n.includes('botella') || n.includes('mug') || n.includes('taz') || n.includes('termo') || n.includes('vaso')) return Coffee;
+  if (n.includes('bolsa') || n.includes('mochila') || n.includes('bolso')) return ShoppingBag;
+  if (n.includes('vino') || n.includes('descorchador')) return Wine;
+  if (n.includes('tecnológ') || n.includes('usb')) return Laptop;
+  if (n.includes('timbre') || n.includes('sello')) return Stamp;
+  if (n.includes('galvano') || n.includes('cristal')) return Gem;
+  if (n.includes('set de regalo') || n.includes('kit')) return Gift;
+  if (n.includes('placa')) return Star;
+  if (n.includes('caja') || n.includes('estuche') || n.includes('packaging')) return Box;
+  if (n.includes('lanyard') || n.includes('identificación')) return Briefcase;
+  if (n.includes('bamboo')) return BookOpen;
+  return Package;
+}
 
 const navLinks = [
-  {
-    name: 'Productos',
-    href: '/productos',
-    submenu: [
-      { name: 'Todos los productos', href: '/productos', description: 'Explora todo nuestro catálogo' },
-      { name: 'Categorías', href: '/categorias', description: 'Navega por categorías' },
-      { name: 'Kits Corporativos', href: '/kits', description: 'Combos pre-armados para empresas' },
-    ],
-  },
   { name: 'Blog', href: '/blog' },
   { name: 'Nosotros', href: '/nosotros' },
   { name: 'Contacto', href: '/contacto' },
@@ -52,10 +65,17 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [badgePop, setBadgePop] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const prevCountRef = useRef(0);
   const pathname = usePathname();
   const { openCart, getTotalItems } = useCart();
   const totalItems = getTotalItems();
+
+  useEffect(() => {
+    getCategories().then(cats => {
+      setCategories(cats.filter(c => c.productCount > 0).sort((a, b) => b.productCount - a.productCount).slice(0, 16));
+    }).catch(() => {});
+  }, []);
 
   // Animate badge when count changes
   useEffect(() => {
@@ -101,56 +121,86 @@ export default function Header() {
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
+              {/* Productos megamenu */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger
+                  className={cn(
+                    'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                    !isScrolled && 'text-white hover:text-white/80',
+                    (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'border-accent'
+                  )}
+                >
+                  Productos
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="w-[680px] p-5">
+                    {/* Quick links row */}
+                    <div className="flex gap-2 mb-4 pb-4 border-b border-border/60">
+                      <NavigationMenuLink asChild>
+                        <Link href="/productos" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                          <Grid3X3 className="h-4 w-4" />
+                          Todos los productos
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/categorias" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                          <Package className="h-4 w-4" />
+                          Ver categorías
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/kits" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                          <Boxes className="h-4 w-4" />
+                          Kits Corporativos
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                    {/* Categories grid */}
+                    <div className="grid grid-cols-4 gap-1">
+                      {categories.map((cat) => {
+                        const Icon = getCategoryIcon(cat.name);
+                        return (
+                          <NavigationMenuLink key={cat.id} asChild>
+                            <Link
+                              href={`/productos?category=${cat.slug}`}
+                              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm hover:bg-muted transition-colors group"
+                            >
+                              <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+                              <span className="truncate text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
+                            </Link>
+                          </NavigationMenuLink>
+                        );
+                      })}
+                    </div>
+                    {/* Footer link */}
+                    <div className="mt-4 pt-4 border-t border-border/60">
+                      <NavigationMenuLink asChild>
+                        <Link href="/categorias" className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                          Ver todas las categorías
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Other nav links */}
               {navLinks.map((link) => (
                 <NavigationMenuItem key={link.name}>
-                  {link.submenu ? (
-                    <>
-                      <NavigationMenuTrigger
-                        className={cn(
-                          'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
-                          !isScrolled && 'text-white hover:text-white/80',
-                          link.submenu?.some(sub => pathname === sub.href) && 'border-accent'
-                        )}
-                      >
-                        {link.name}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
-                          {link.submenu.map((sublink) => (
-                            <li key={sublink.name}>
-                              <NavigationMenuLink asChild>
-                                <Link
-                                  href={sublink.href}
-                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                >
-                                  <div className="text-sm font-medium leading-none">
-                                    {sublink.name}
-                                  </div>
-                                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                    {sublink.description}
-                                  </p>
-                                </Link>
-                              </NavigationMenuLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
-                    </>
-                  ) : (
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          navigationMenuTriggerStyle(),
-                          'bg-transparent hover:bg-transparent focus:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
-                          !isScrolled && 'text-white hover:text-white/80',
-                          pathname === link.href && 'border-accent'
-                        )}
-                      >
-                        {link.name}
-                      </Link>
-                    </NavigationMenuLink>
-                  )}
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        'bg-transparent hover:bg-transparent focus:bg-transparent border-b-2 border-transparent hover:border-accent transition-all duration-300',
+                        !isScrolled && 'text-white hover:text-white/80',
+                        pathname === link.href && 'border-accent'
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -194,48 +244,29 @@ export default function Header() {
                 <SheetHeader>
                   <SheetTitle className="text-left"><Logo size="sm" /></SheetTitle>
                 </SheetHeader>
-                <nav className="flex flex-col gap-4 mt-8">
+                <nav className="flex flex-col gap-2 mt-8">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Productos</p>
+                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
+                    <Link href="/productos" onClick={() => setIsOpen(false)}>
+                      <Grid3X3 className="mr-2 h-4 w-4 text-primary" /> Todos los productos
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
+                    <Link href="/categorias" onClick={() => setIsOpen(false)}>
+                      <Package className="mr-2 h-4 w-4 text-primary" /> Categorías
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
+                    <Link href="/kits" onClick={() => setIsOpen(false)}>
+                      <Boxes className="mr-2 h-4 w-4 text-primary" /> Kits Corporativos
+                    </Link>
+                  </Button>
+                  <div className="border-t border-border/60 my-2" />
                   {navLinks.map((link) => (
-                    <div key={link.name}>
-                      {link.submenu ? (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-between text-lg font-medium"
-                            >
-                              {link.name}
-                              <ChevronDownIcon size={20} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56">
-                            {link.submenu.map((sublink) => (
-                              <DropdownMenuItem key={sublink.name} asChild>
-                                <Link
-                                  href={sublink.href}
-                                  onClick={() => setIsOpen(false)}
-                                  className="cursor-pointer"
-                                >
-                                  {sublink.name}
-                                </Link>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start text-lg font-medium"
-                          asChild
-                        >
-                          <Link href={link.href} onClick={() => setIsOpen(false)}>
-                            {link.name}
-                          </Link>
-                        </Button>
-                      )}
-                    </div>
+                    <Button key={link.name} variant="ghost" className="w-full justify-start text-base font-medium" asChild>
+                      <Link href={link.href} onClick={() => setIsOpen(false)}>{link.name}</Link>
+                    </Button>
                   ))}
-
                 </nav>
               </SheetContent>
             </Sheet>
