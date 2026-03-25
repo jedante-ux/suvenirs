@@ -151,12 +151,22 @@ export default function Header() {
           {/* Right section */}
           <div className="flex items-center gap-4">
             {/* Cart */}
-            <Button variant="ghost" size="icon" className={cn("relative transition-colors duration-300", !isScrolled && "text-white hover:text-white/80 hover:bg-white/10")} onClick={openCart}>
-              <CartIcon size={22} />
+            <Button
+              variant="outline"
+              className={cn(
+                "relative rounded-full px-4 gap-2 transition-all duration-300",
+                isScrolled
+                  ? "border-primary text-primary hover:bg-primary hover:text-white"
+                  : "border-white text-white hover:bg-white/10"
+              )}
+              onClick={openCart}
+            >
+              <CartIcon size={18} />
+              Carrito
               {totalItems > 0 && (
                 <Badge
                   className={cn(
-                    "absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] font-bold shadow-sm ring-2 ring-background transition-transform bg-accent text-accent-foreground hover:bg-accent/90",
+                    "h-5 min-w-5 flex items-center justify-center px-1 text-[10px] font-bold transition-transform bg-accent text-accent-foreground",
                     badgePop && "animate-badge-pop"
                   )}
                 >
