@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-const COLORS = ['#ffffff', '#FE248A', '#FFD4E0', '#ffffff', '#FF6B9D'];
-const PARTICLE_COUNT = 5;
-const PARTICLE_LIFE = 450;
-const MIN_DISTANCE = 5;
+// Sandman dreamsand style — ultra fine luminous pink dust
+const COLORS = ['#FE248A', '#FF6B9D', '#FFB6D1', '#FFD4E0', '#ffffff'];
+const PARTICLE_COUNT = 8;
+const PARTICLE_LIFE = 800;
+const MIN_DISTANCE = 3;
 
 interface Particle {
   x: number;
@@ -15,7 +16,8 @@ interface Particle {
   birth: number;
   vx: number;
   vy: number;
-  rotation: number;
+  drift: number; // sine wave drift
+  twinkleSpeed: number;
 }
 
 export default function GlitterCursor() {
@@ -28,20 +30,20 @@ export default function GlitterCursor() {
   const spawnParticles = useCallback((x: number, y: number) => {
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       particles.current.push({
-        x: x + (Math.random() - 0.5) * 16,
-        y: y + 12 + Math.random() * 8,
-        size: Math.random() * 1.2 + 0.4,
+        x: x + (Math.random() - 0.5) * 20,
+        y: y + 8 + Math.random() * 10,
+        size: Math.random() * 0.8 + 0.2, // 0.2–1.0px ultra fine
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         birth: performance.now(),
-        vx: (Math.random() - 0.5) * 1.8,
-        vy: Math.random() * 2 + 0.3,
-        rotation: Math.random() * 360,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: Math.random() * 0.8 + 0.15, // gentle fall
+        drift: Math.random() * Math.PI * 2, // random sine phase
+        twinkleSpeed: Math.random() * 8 + 4, // twinkle frequency
       });
     }
   }, []);
 
   useEffect(() => {
-    // Skip on admin, mobile (no hover), and reduced motion
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (window.matchMedia('(hover: none)').matches) return;
@@ -78,30 +80,39 @@ export default function GlitterCursor() {
       for (const p of particles.current) {
         const age = now - p.birth;
         const life = age / PARTICLE_LIFE;
-        const opacity = 1 - life;
-        const scale = 1 - life * 0.5;
 
-        p.x += p.vx;
+        // Fade in quickly then fade out slowly
+        const opacity = life < 0.1 ? life * 10 : 1 - (life - 0.1) / 0.9;
+
+        // Twinkle — pulsing brightness
+        const twinkle = 0.5 + 0.5 * Math.sin(age * p.twinkleSpeed * 0.01);
+
+        // Sine wave horizontal drift — floats like dream dust
+        p.x += p.vx + Math.sin(p.drift + age * 0.003) * 0.3;
         p.y += p.vy;
-        p.vy += 0.04; // gravity — falls down
-        p.vx *= 0.99; // subtle drag
-        p.rotation += 4;
+        p.vy *= 0.998; // slow deceleration — hangs in the air
+
+        const s = p.size * (1 - life * 0.3);
 
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.globalAlpha = opacity;
+        ctx.globalAlpha = opacity * twinkle;
 
-        const s = p.size * scale;
-
-        // Tiny shining dot with glow
+        // Outer glow halo
         ctx.shadowColor = p.color;
-        ctx.shadowBlur = 6;
-        ctx.fillStyle = '#ffffff';
+        ctx.shadowBlur = 4 + s * 3;
+        ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(0, 0, s, 0, Math.PI * 2);
         ctx.fill();
+
+        // Bright white core
         ctx.shadowBlur = 0;
+        ctx.globalAlpha = opacity * twinkle * 0.8;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
+        ctx.fill();
 
         ctx.restore();
       }
