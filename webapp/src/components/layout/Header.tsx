@@ -77,10 +77,18 @@ export default function Header() {
   }, []);
 
   return (
+    <>
+    {/* Top announcement bar */}
+    <div className={cn(
+      'fixed top-0 left-0 right-0 z-50 text-center py-1.5 text-xs font-medium text-white transition-all duration-300',
+      isScrolled ? 'opacity-0 -translate-y-full' : 'opacity-100'
+    )} style={{ background: 'linear-gradient(90deg, #FE248A, #D3DC2A, #F47920)' }}>
+      ¡Respuesta en menos de 24 horas!
+    </div>
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-border/50' : 'bg-transparent'
+        'fixed left-0 right-0 z-50 transition-all duration-300',
+        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md border-b border-border/50' : 'top-7 bg-transparent'
       )}
     >
       <div className="container">
@@ -235,5 +243,6 @@ export default function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 }
