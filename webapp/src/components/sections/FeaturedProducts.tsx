@@ -30,7 +30,7 @@ export default function FeaturedProducts() {
         if (hasHistory && recommendationQuery) {
           // Fetch products based on search history
           const response = await getProducts({
-            limit: 15,
+            limit: 8,
             search: recommendationQuery,
           });
 
@@ -40,14 +40,14 @@ export default function FeaturedProducts() {
             setIsPersonalized(true);
           } else {
             // If not enough results, supplement with random products
-            const randomResponse = await getProducts({ limit: 15, random: true });
+            const randomResponse = await getProducts({ limit: 8, random: true });
 
             // Combine: prioritize search results, then add random ones
             const combinedProducts = [...response.data];
             const existingIds = new Set(response.data.map(p => p.id));
 
             for (const product of randomResponse.data) {
-              if (!existingIds.has(product.id) && combinedProducts.length < 15) {
+              if (!existingIds.has(product.id) && combinedProducts.length < 8) {
                 combinedProducts.push(product);
               }
             }
@@ -57,7 +57,7 @@ export default function FeaturedProducts() {
           }
         } else {
           // No search history, fetch random products
-          const response = await getProducts({ limit: 15, random: true });
+          const response = await getProducts({ limit: 8, random: true });
           setProducts(response.data);
           setIsPersonalized(false);
         }
@@ -65,7 +65,7 @@ export default function FeaturedProducts() {
         console.error('Error fetching products:', error);
         // Fallback to random products on error
         try {
-          const response = await getProducts({ limit: 15, random: true });
+          const response = await getProducts({ limit: 8, random: true });
           setProducts(response.data);
         } catch {
           setProducts([]);
@@ -137,7 +137,7 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Products grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {loading ? (
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
               <div key={i} className="rounded-2xl overflow-hidden animate-pulse border border-border/60 bg-card">
