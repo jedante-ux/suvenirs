@@ -2,11 +2,17 @@ import { Product, Category, Kit, PaginatedResponse, ApiResponse } from '@/types'
 
 function getApiUrl() {
   if (typeof window === 'undefined') {
-    // Server-side: use absolute URL for fetch
     return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   }
-  // Client-side: relative URL works
   return ''
+}
+
+// Server: revalidate cache. Client: no-store (next options don't work in browser)
+function fetchOptions(revalidate: number): RequestInit {
+  if (typeof window === 'undefined') {
+    return { next: { revalidate } } as RequestInit
+  }
+  return { cache: 'no-store' }
 }
 
 export interface GetProductsParams {
@@ -34,7 +40,7 @@ export async function getProducts(params?: GetProductsParams): Promise<Paginated
 
   const url = `${getApiUrl()}/api/products${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
 
-  const res = await fetch(url, { next: { revalidate: 60 } })
+  const res = await fetch(url, fetchOptions(60))
 
   if (!res.ok) throw new Error('Failed to fetch products')
 
@@ -42,35 +48,35 @@ export async function getProducts(params?: GetProductsParams): Promise<Paginated
 }
 
 export async function getProduct(id: string): Promise<Product | null> {
-  const res = await fetch(`${getApiUrl()}/api/products/${id}`, { next: { revalidate: 60 } })
+  const res = await fetch(`${getApiUrl()}/api/products/${id}`, fetchOptions(60))
   if (!res.ok) return null
   const data: ApiResponse<Product> = await res.json()
   return data.data
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const res = await fetch(`${getApiUrl()}/api/products/slug/${slug}`, { next: { revalidate: 60 } })
+  const res = await fetch(`${getApiUrl()}/api/products/slug/${slug}`, fetchOptions(60))
   if (!res.ok) return null
   const data: ApiResponse<Product> = await res.json()
   return data.data
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const res = await fetch(`${getApiUrl()}/api/categories`, { next: { revalidate: 120 } })
+  const res = await fetch(`${getApiUrl()}/api/categories`, fetchOptions(120))
   if (!res.ok) throw new Error('Failed to fetch categories')
   const data: ApiResponse<Category[]> = await res.json()
   return data.data
 }
 
 export async function getKits(): Promise<Kit[]> {
-  const res = await fetch(`${getApiUrl()}/api/kits`, { next: { revalidate: 120 } })
+  const res = await fetch(`${getApiUrl()}/api/kits`, fetchOptions(120))
   if (!res.ok) throw new Error('Failed to fetch kits')
   const data: ApiResponse<Kit[]> = await res.json()
   return data.data
 }
 
 export async function getKitBySlug(slug: string): Promise<Kit | null> {
-  const res = await fetch(`${getApiUrl()}/api/kits/slug/${slug}`, { next: { revalidate: 120 } })
+  const res = await fetch(`${getApiUrl()}/api/kits/slug/${slug}`, fetchOptions(120))
   if (!res.ok) return null
   const data: ApiResponse<Kit> = await res.json()
   return data.data
