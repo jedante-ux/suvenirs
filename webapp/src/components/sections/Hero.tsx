@@ -105,6 +105,47 @@ function RotatingWord() {
   );
 }
 
+// ── Banner slider — full width images ──
+const BANNER_IMAGES = [
+  { src: '/banners/banner-1.svg', alt: 'Regalos Corporativos', href: '/productos' },
+  { src: '/banners/banner-2.svg', alt: 'Kits Corporativos', href: '/kits' },
+  { src: '/banners/banner-3.svg', alt: 'Ofertas Especiales', href: '/productos' },
+];
+
+function HeroBanner() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setActive(p => (p + 1) % BANNER_IMAGES.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="my-4 relative rounded-2xl overflow-hidden bg-white/10 border border-white/20">
+      <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1] md:aspect-[5/1]">
+        <SafeImage
+          src={BANNER_IMAGES[active].src}
+          alt={BANNER_IMAGES[active].alt}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+        />
+      </Link>
+      {/* Dots */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {BANNER_IMAGES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            className={`w-2 h-2 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Featured product slider ──
 function FeaturedSlider({ products }: { products: Product[] }) {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -188,7 +229,9 @@ export default function Hero() {
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         {/* Search bar */}
         <HeroSearch />
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-7rem)]">
+        {/* Banner slider */}
+        <HeroBanner />
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0">
           {/* Left column — glass card */}
           <div className="text-center lg:text-left relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-10">
             {/* Badges */}
@@ -221,7 +264,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-sm md:text-base text-white/80 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.

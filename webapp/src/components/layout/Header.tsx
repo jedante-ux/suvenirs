@@ -55,29 +55,22 @@ function getCategoryIcon(name: string) {
 }
 
 const popularItems = [
-  { name: 'Bolígrafos y Lápices', slug: 'bol-grafos-l-pices-estuches', icon: Pen },
-  { name: 'Tazas y Mugs', slug: 'botellas-mugs-tazones-termos-vasos', icon: Coffee },
-  { name: 'Galvanos', slug: 'galvanos-de-cristal', icon: Gem },
-  { name: 'Llaveros', slug: 'llaveros', icon: KeyRound },
-  { name: 'Cuadernos y Libretas', slug: 'libretas-cuadernos-memo-set', icon: BookOpen },
-  { name: 'Bolsas Publicitarias', slug: 'bolsas-publicitarias', icon: ShoppingBag },
-  { name: 'Encobrizados', slug: '', search: 'cobre', icon: Medal },
-  { name: 'Ecológicos', slug: 'l-nea-bamboo', icon: Gift },
-];
-
-const techItems = [
-  { name: 'Todos los tecnológicos', slug: 'tecnol-gicos', search: '', icon: Laptop },
-  { name: 'Parlantes y Bluetooth', slug: '', search: 'parlante bluetooth', icon: Laptop },
-  { name: 'Cargadores', slug: '', search: 'cargador', icon: Laptop },
-  { name: 'Auriculares', slug: '', search: 'auricular', icon: Laptop },
-  { name: 'USB y Pendrive', slug: '', search: 'usb pendrive', icon: Laptop },
-  { name: 'Linternas LED', slug: '', search: 'linterna led', icon: Laptop },
-  { name: 'Mouse y Accesorios', slug: '', search: 'mouse', icon: Laptop },
+  { name: 'Bolígrafos y Lápices', slug: 'bol-grafos-l-pices-estuches', search: '' },
+  { name: 'Tazas y Mugs', slug: 'botellas-mugs-tazones-termos-vasos', search: '' },
+  { name: 'Galvanos', slug: 'galvanos-de-cristal', search: '' },
+  { name: 'Llaveros', slug: 'llaveros', search: '' },
+  { name: 'Cuadernos y Libretas', slug: 'libretas-cuadernos-memo-set', search: '' },
+  { name: 'Bolsas Publicitarias', slug: 'bolsas-publicitarias', search: '' },
+  { name: 'Encobrizados', slug: '', search: 'cobre' },
+  { name: 'Ecológicos', slug: 'l-nea-bamboo', search: '' },
+  { name: 'Tecnológicos', slug: 'tecnol-gicos', search: '' },
+  { name: 'Parlantes y Bluetooth', slug: '', search: 'parlante bluetooth' },
+  { name: 'Cargadores', slug: '', search: 'cargador' },
+  { name: 'USB y Pendrive', slug: '', search: 'usb pendrive' },
 ];
 
 const navLinks = [
   { name: 'Blog', href: '/blog' },
-  { name: 'Nosotros', href: '/nosotros' },
   { name: 'Contacto', href: '/contacto' },
 ];
 
@@ -160,7 +153,7 @@ export default function Header() {
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
-              {/* Productos megamenu */}
+              {/* Categorías megamenu */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger
                   className={cn(
@@ -169,7 +162,7 @@ export default function Header() {
                     showDarkNav && (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'text-primary font-semibold'
                   )}
                 >
-                  Productos
+                  Categorías
                 </NavigationMenuTrigger>
                 <NavigationMenuContent >
                   <div className="flex" onMouseLeave={() => setHoveredParent(null)}>
@@ -264,37 +257,6 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* Tecnología dropdown */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger
-                  className={cn(
-                    'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
-                    !showDarkNav && 'text-white hover:text-white/80',
-                  )}
-                >
-                  Tecnología
-                </NavigationMenuTrigger>
-                <NavigationMenuContent >
-                  <div className="w-[260px] py-3 text-left">
-                    {techItems.map((item) => {
-                      const href = item.search
-                        ? `/productos?search=${encodeURIComponent(item.search)}`
-                        : `/productos?category=${item.slug}`;
-                      return (
-                        <NavigationMenuLink key={item.name} asChild>
-                          <Link
-                            href={href}
-                            className="block px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
-                          >
-                            {item.name}
-                          </Link>
-                        </NavigationMenuLink>
-                      );
-                    })}
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
               {/* Other nav links */}
               {navLinks.map((link) => (
                 <NavigationMenuItem key={link.name}>
@@ -368,18 +330,6 @@ export default function Header() {
                   <div className="border-t border-border/60 my-2" />
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Populares</p>
                   {popularItems.map((item) => {
-                    const href = item.search
-                      ? `/productos?search=${encodeURIComponent(item.search)}`
-                      : `/productos?category=${item.slug}`;
-                    return (
-                      <Link key={item.name} href={href} onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors">
-                        {item.name}
-                      </Link>
-                    );
-                  })}
-                  <div className="border-t border-border/60 my-2" />
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Tecnología</p>
-                  {techItems.map((item) => {
                     const href = item.search
                       ? `/productos?search=${encodeURIComponent(item.search)}`
                       : `/productos?category=${item.slug}`;

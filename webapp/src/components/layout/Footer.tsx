@@ -11,7 +11,6 @@ const footerLinks = {
     { name: 'Categorías', href: '/categorias' },
   ],
   empresa: [
-    { name: 'Nosotros', href: '/nosotros' },
     { name: 'Blog', href: '/blog' },
     { name: 'Contacto', href: '/contacto' },
   ],
