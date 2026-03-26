@@ -22,6 +22,19 @@ export async function POST(req: NextRequest) {
     })
     const priceMap = new Map(products.map((p) => [p.productId, p.salePrice ?? p.price ?? 0]))
 
+    // Fetch variant prices when variantSku is provided
+    const variantSkus = items.map((i: any) => i.variantSku).filter(Boolean)
+    const variantPriceMap = new Map<string, number>()
+    if (variantSkus.length > 0) {
+      const variants = await prisma.productVariant.findMany({
+        where: { sku: { in: variantSkus } },
+        select: { sku: true, price: true, salePrice: true },
+      })
+      for (const v of variants) {
+        variantPriceMap.set(v.sku, v.salePrice ?? v.price ?? 0)
+      }
+    }
+
     const count = await prisma.quote.count()
     const now = new Date()
     const year = now.getFullYear().toString().slice(-2)
@@ -49,7 +62,7 @@ export async function POST(req: NextRequest) {
             variantSku: item.variantSku || null,
             variantLabel: item.variantLabel || null,
             quantity: item.quantity,
-            unitPrice: priceMap.get(item.productId) ?? 0,
+            unitPrice: (item.variantSku ? variantPriceMap.get(item.variantSku) : null) ?? priceMap.get(item.productId) ?? 0,
             description: item.description || '',
           })),
         },
