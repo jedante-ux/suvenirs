@@ -128,7 +128,7 @@ function HeroBanner() {
           alt={BANNER_IMAGES[active].alt}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-contain"
           priority
         />
       </Link>
