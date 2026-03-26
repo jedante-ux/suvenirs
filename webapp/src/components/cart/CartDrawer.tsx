@@ -3,10 +3,11 @@
 import { useCart } from '@/context/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: number) => void }) {
   const [input, setInput] = useState(String(value));
@@ -57,8 +58,39 @@ function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: numbe
 export default function CartDrawer() {
   const { state, closeCart, removeItem, updateQuantity, clearCart, getTotalItems } = useCart();
   const router = useRouter();
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  // Auto-select all items when cart changes
+  useEffect(() => {
+    setSelected(new Set(state.items.map(i => i.product.id)));
+  }, [state.items]);
+
+  const allSelected = state.items.length > 0 && selected.size === state.items.length;
+
+  const toggleItem = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(state.items.map(i => i.product.id)));
+  };
+
+  const selectedItems = state.items.filter(i => selected.has(i.product.id));
+  const selectedUnits = selectedItems.reduce((s, i) => s + i.quantity, 0);
 
   const handleNext = () => {
+    // Remove unselected items before navigating
+    state.items.forEach(item => {
+      if (!selected.has(item.product.id)) {
+        removeItem(item.product.id);
+      }
+    });
     closeCart();
     router.push('/resumen-pedido');
   };
@@ -77,6 +109,19 @@ export default function CartDrawer() {
               </span>
             )}
           </SheetTitle>
+          {state.items.length > 0 && (
+            <div className="flex items-center gap-2 mt-2">
+              <Checkbox
+                id="select-all"
+                checked={allSelected}
+                onCheckedChange={toggleAll}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              />
+              <label htmlFor="select-all" className="text-xs text-muted-foreground cursor-pointer">
+                {allSelected ? 'Deseleccionar todo' : 'Seleccionar todo'} ({selected.size}/{state.items.length})
+              </label>
+            </div>
+          )}
         </SheetHeader>
 
         {/* Body */}
@@ -97,9 +142,17 @@ export default function CartDrawer() {
               {state.items.map((item, index) => (
                 <div
                   key={item.product.id}
-                  className={`flex gap-3 p-3 bg-muted/40 rounded-xl border border-border/50 ${index < 5 ? 'animate-cart-item-in' : ''}`}
+                  className={`flex gap-3 p-3 rounded-xl border transition-colors ${selected.has(item.product.id) ? 'bg-muted/40 border-border/50' : 'bg-muted/20 border-border/30 opacity-60'} ${index < 5 ? 'animate-cart-item-in' : ''}`}
                   style={index < 5 ? { animationDelay: `${index * 0.05}s`, opacity: 0 } : undefined}
                 >
+                  {/* Checkbox */}
+                  <div className="flex items-start pt-1">
+                    <Checkbox
+                      checked={selected.has(item.product.id)}
+                      onCheckedChange={() => toggleItem(item.product.id)}
+                      className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                  </div>
                   {/* Image */}
                   <div className="relative w-18 h-18 min-w-[72px] min-h-[72px] bg-white rounded-lg overflow-hidden border border-border/30 flex-shrink-0">
                     <Image
@@ -143,8 +196,8 @@ export default function CartDrawer() {
           <div className="flex-shrink-0 px-6 pt-4 pb-6 border-t bg-background space-y-3">
             {/* Total */}
             <div className="flex items-center justify-between px-4 py-3 bg-primary/5 border border-primary/10 rounded-xl">
-              <span className="text-sm font-medium text-foreground">Total de unidades</span>
-              <span className="text-xl font-bold text-primary tabular-nums">{getTotalItems()}</span>
+              <span className="text-sm font-medium text-foreground">Seleccionados</span>
+              <span className="text-xl font-bold text-primary tabular-nums">{selectedItems.length} prod. · {selectedUnits} uds.</span>
             </div>
 
             {/* Actions */}
@@ -152,8 +205,9 @@ export default function CartDrawer() {
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
               size="lg"
               onClick={handleNext}
+              disabled={selected.size === 0}
             >
-              Siguiente
+              Cotizar seleccionados ({selectedItems.length})
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button

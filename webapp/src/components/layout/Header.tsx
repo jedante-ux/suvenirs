@@ -123,7 +123,7 @@ export default function Header() {
     <div className={cn(
       'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-white transition-all duration-300',
       isScrolled ? 'opacity-0 -translate-y-full' : 'opacity-100'
-    )} style={{ background: 'linear-gradient(90deg, #D3DC2A, #F47920, #D3DC2A)' }}>
+    )} style={{ background: 'linear-gradient(90deg, #F2C94C, #F47920, #F2C94C)' }}>
       <div className="container flex items-center justify-between">
         <a href="mailto:contacto@suvenirs.cl" className="hover:underline">contacto@suvenirs.cl</a>
         <span className="flex items-center"><Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!</span>

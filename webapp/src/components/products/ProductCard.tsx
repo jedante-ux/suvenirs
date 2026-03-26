@@ -4,12 +4,10 @@ import { Product } from '@/types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useCart } from '@/context/CartContext';
 import { SafeImage } from '@/components/ui/SafeImage';
+import AddToCartButton from '@/components/cart/AddToCartButton';
 import Link from 'next/link';
-import { ShoppingCart, Star, Eye, Check } from 'lucide-react';
-import { toast } from 'sonner';
-import { useState } from 'react';
+import { Star, Eye } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -17,21 +15,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index }: ProductCardProps) {
-  const { addItem } = useCart();
-
-  const [justAdded, setJustAdded] = useState(false);
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem(product, 1);
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 600);
-    toast.success('Producto agregado al carrito', {
-      description: product.name,
-    });
-  };
-
   return (
     <Link href={`/productos/${product.slug || product.productId}`}>
       <Card className="group overflow-hidden transition-all duration-300 hover:scale-[1.02] h-full cursor-pointer p-0 gap-0">
@@ -60,30 +43,8 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
         </CardContent>
 
-        <CardFooter className="p-4 pt-0 gap-2">
-          <Button
-            variant="outline"
-            className="flex-1 min-w-0 basis-0 border-primary/40 text-primary hover:bg-primary/5 bg-white"
-          >
-            <Eye className="mr-2 h-4 w-4" />
-            Ver detalle
-          </Button>
-          <Button
-            className={`flex-1 min-w-0 basis-0 cursor-pointer hover:scale-[1.03] transition-all duration-200 ${justAdded ? 'bg-green-600 hover:bg-green-600' : ''}`}
-            onClick={handleAddToCart}
-          >
-            {justAdded ? (
-              <>
-                <Check className="mr-2 h-4 w-4" />
-                Agregado
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                Agregar
-              </>
-            )}
-          </Button>
+        <CardFooter className="p-4 pt-0">
+          <AddToCartButton product={product} className="w-full" />
         </CardFooter>
       </Card>
     </Link>

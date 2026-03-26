@@ -26,7 +26,7 @@ export default function KitsShowcase() {
   if (!loading && kits.length === 0) return null;
 
   return (
-    <section className="section" style={{ background: 'linear-gradient(135deg, #D3DC2A 0%, #B8C820 50%, #D3DC2A 100%)' }}>
+    <section className="section" style={{ background: 'linear-gradient(135deg, #F2C94C 0%, #D4A843 50%, #F2C94C 100%)' }}>
       <div className="container" ref={ref}>
         {/* Header */}
         <div className="text-center mb-12">
