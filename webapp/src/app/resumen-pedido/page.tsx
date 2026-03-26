@@ -40,8 +40,10 @@ export default function ResumenPedidoPage() {
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<'form' | 'loading' | 'success'>('form');
   const [customerName, setCustomerName] = useState('');
+  const [customerCompany, setCustomerCompany] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
 
   const generateWhatsAppMessage = () => {
     let message = '¡Hola! Me gustaría cotizar los siguientes productos:\n\n';
@@ -53,6 +55,9 @@ export default function ResumenPedidoPage() {
     message += `\n📦 Total: ${state.items.length} producto${state.items.length !== 1 ? 's' : ''}, ${getTotalItems()} unidades\n`;
     if (shippingEnabled) {
       message += `🚚 Despacho: ${shippingZone === 'santiago' ? 'Santiago' : 'Regiones'}\n`;
+    }
+    if (customerAddress.trim()) {
+      message += `📍 Dirección: ${customerAddress.trim()}\n`;
     }
     message += `\nQuedo atento/a a su respuesta. ¡Gracias!`;
 
@@ -70,8 +75,10 @@ export default function ResumenPedidoPage() {
         body: JSON.stringify({
           source: 'whatsapp',
           customerName: customerName.trim() || null,
+          customerCompany: customerCompany.trim() || null,
           customerEmail: customerEmail.trim() || null,
           customerPhone: customerPhone.trim() || null,
+          notes: customerAddress.trim() || null,
           shippingService: shippingEnabled ? shippingZone : null,
           items: state.items.map((item) => ({
             productId: item.product.productId,
@@ -350,6 +357,16 @@ export default function ResumenPedidoPage() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="customer-company">Empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Input
+                  id="customer-company"
+                  type="text"
+                  placeholder="Ej: Minera Los Andes"
+                  value={customerCompany}
+                  onChange={(e) => setCustomerCompany(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="customer-email">Correo electrónico</Label>
                 <Input
                   id="customer-email"
@@ -367,6 +384,16 @@ export default function ResumenPedidoPage() {
                   placeholder="Ej: +56 9 1234 5678"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="customer-address">Dirección de despacho <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Input
+                  id="customer-address"
+                  type="text"
+                  placeholder="Ej: Av. Providencia 1234, Santiago"
+                  value={customerAddress}
+                  onChange={(e) => setCustomerAddress(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleConfirmAndSend()}
                 />
               </div>
