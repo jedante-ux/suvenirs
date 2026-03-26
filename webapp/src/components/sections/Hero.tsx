@@ -4,13 +4,24 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRightIcon } from '../icons';
 import { Product } from '@/types';
 import { getProducts } from '@/lib/api';
-import { Truck, Gift, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+// ── Config ──
+const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
+const WORD_INTERVAL = 3500;
+const GRID_SIZE = 6;
+
+// ── Detect reduced motion once ──
+function prefersReducedMotion() {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+// ── Search bar ──
 function HeroSearch() {
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -23,8 +34,8 @@ function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="pt-4 pb-2" role="search">
-      <div className="max-w-xl mx-auto bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
+    <form onSubmit={handleSubmit} role="search" className="w-full max-w-xl">
+      <div className="bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
         <input
           type="text"
           placeholder="Buscar productos, categorías..."
@@ -45,27 +56,13 @@ function HeroSearch() {
   );
 }
 
-// ── Config ──
-const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
-const WORD_INTERVAL = 3500;
-const GRID_SIZE = 6;
-const SLIDER_SIZE = 4;
-
-// ── Detect reduced motion once ──
-function prefersReducedMotion() {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 // ── Rotating word ──
 function RotatingWord() {
   const [index, setIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
   const reduced = useRef(false);
 
-  useEffect(() => {
-    reduced.current = prefersReducedMotion();
-  }, []);
+  useEffect(() => { reduced.current = prefersReducedMotion(); }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,20 +76,11 @@ function RotatingWord() {
   }, []);
 
   if (reduced.current) {
-    return (
-      <span className="text-accent font-extrabold">
-        {ROTATING_WORDS[index]}
-      </span>
-    );
+    return <span className="text-accent font-extrabold">{ROTATING_WORDS[index]}</span>;
   }
 
   return (
-    <span
-      className="inline-flex relative overflow-hidden align-bottom"
-      role="status"
-      aria-live="polite"
-      aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
-    >
+    <span className="inline-flex relative overflow-hidden align-bottom" role="status" aria-live="polite" aria-label={`Categoría: ${ROTATING_WORDS[index]}`}>
       <span
         className="inline-block text-accent font-extrabold whitespace-nowrap"
         style={{
@@ -107,7 +95,7 @@ function RotatingWord() {
   );
 }
 
-// ── Banner slider ──
+// ── Banner ──
 const BANNER_IMAGES = [
   { src: '/banner2.jpg', alt: 'Suvenirs — Regalos Corporativos Personalizados', href: '/productos' },
 ];
@@ -116,32 +104,30 @@ function HeroBanner() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    if (BANNER_IMAGES.length <= 1) return;
     const timer = setInterval(() => setActive(p => (p + 1) % BANNER_IMAGES.length), 5000);
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <div className="relative overflow-hidden">
-      <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1] md:aspect-[5/1]">
-        <SafeImage
-          src={BANNER_IMAGES[active].src}
-          alt={BANNER_IMAGES[active].alt}
-          fill
-          sizes="100vw"
-          className="object-contain"
-          priority
-        />
-      </Link>
-      {/* Dots — only show when multiple banners */}
+    <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1]">
+      <SafeImage
+        src={BANNER_IMAGES[active].src}
+        alt={BANNER_IMAGES[active].alt}
+        fill
+        sizes="100vw"
+        className="object-cover"
+        priority
+      />
       {BANNER_IMAGES.length > 1 && (
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
           {BANNER_IMAGES.map((banner, i) => (
             <button
               key={i}
               role="tab"
               aria-selected={i === active}
               aria-label={`Banner ${i + 1}: ${banner.alt}`}
-              onClick={() => setActive(i)}
+              onClick={(e) => { e.preventDefault(); setActive(i); }}
               className="w-11 h-11 flex items-center justify-center"
             >
               <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
@@ -149,44 +135,11 @@ function HeroBanner() {
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-// ── Featured product slider ──
-function FeaturedSlider({ products }: { products: Product[] }) {
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => {
-    if (products.length === 0) return;
-    const timer = setInterval(() => setActiveSlide(p => (p + 1) % products.length), 4000);
-    return () => clearInterval(timer);
-  }, [products.length]);
-
-  if (products.length === 0) return <div className="h-16 bg-primary/20 animate-pulse rounded-2xl" />;
-  const current = products[activeSlide];
-  if (!current) return null;
-
-  return (
-    <Link href={`/productos/${current.slug || current.productId}`} className="flex items-center gap-4 p-3 group">
-      <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white">
-        <SafeImage src={current.images?.[0] || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[10px] text-white/60 font-mono uppercase">{current.productId}</p>
-        <p className="text-sm font-semibold text-white truncate group-hover:text-white/80">{current.name}</p>
-        <p className="text-xs text-white/70 mt-0.5">Personalizable</p>
-      </div>
-      <div className="flex gap-1.5 flex-shrink-0" aria-hidden="true">
-        {products.map((_, i) => (
-          <span key={i} className={`block w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
-        ))}
-      </div>
     </Link>
   );
 }
 
-// ── Entrance transition helper (respects reduced motion) ──
+// ── Entrance animation ──
 function useEntrance() {
   const [mounted, setMounted] = useState(false);
   const reduced = useRef(false);
@@ -201,8 +154,8 @@ function useEntrance() {
       if (reduced.current) return { opacity: 1 };
       return {
         opacity: mounted ? 1 : 0,
-        transform: mounted ? 'translateY(0)' : 'translateY(24px)',
-        transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: mounted ? 'translateY(0)' : 'translateY(20px)',
+        transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: `${delay}s`,
       };
     },
@@ -212,130 +165,83 @@ function useEntrance() {
   return { mounted, style, reduced: reduced.current };
 }
 
+// ── Main Hero ──
 export default function Hero() {
   const [products, setProducts] = useState<Product[]>([]);
   const { mounted, style: entranceStyle, reduced } = useEntrance();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await getProducts({ limit: GRID_SIZE + SLIDER_SIZE, random: true });
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-    fetchProducts();
+    getProducts({ limit: GRID_SIZE, random: true })
+      .then(r => setProducts(r.data))
+      .catch(() => {});
   }, []);
 
   return (
-    <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden bg-primary">
-
-      {/* Search bar */}
-      <div className="container relative z-10">
-        <HeroSearch />
+    <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
+      {/* Row 1: Search + CTAs */}
+      <div className="container relative z-10 py-5">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <HeroSearch />
+          <div className="flex items-center gap-3 flex-shrink-0" style={entranceStyle(0.1)}>
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-primary hover:bg-white/90 rounded-full px-6 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
+            >
+              <Link href="/productos">
+                Ver colección
+                <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-6 transition-all duration-300 font-semibold hover:scale-[1.03]"
+            >
+              <Link href="/contacto">Cotizar ahora</Link>
+            </Button>
+          </div>
+        </div>
       </div>
 
-      {/* Banner slider */}
+      {/* Row 2: Banner — edge to edge */}
       <HeroBanner />
 
-      <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 pb-16 lg:py-0 lg:pb-20">
-
-          {/* Left column */}
-          <div className="text-center lg:text-left relative bg-primary-foreground/10 rounded-3xl p-8 lg:p-10">
-            {/* Badges */}
-            <div
-              className="flex items-center justify-center lg:justify-start gap-3 mb-6"
-              style={entranceStyle(0.1)}
-            >
-              <Badge
-                variant="secondary"
-                className="px-4 py-2 bg-white/15 text-white border border-white/25 font-medium animate-fadeIn"
-              >
-                <Truck size={14} className="mr-2" />
-                Envío a todo Chile
-              </Badge>
-              <Badge className="px-4 py-2 bg-white/15 text-white border border-white/25 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
-                <Gift size={14} className="mr-2" />
-                Descuentos al mayor
-              </Badge>
-            </div>
-
-            {/* H1 */}
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
-              style={entranceStyle(0.2)}
-            >
+      {/* Row 3: H1 + Product grid */}
+      <div className="container relative z-10 py-8 pb-12 md:pb-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left: copy */}
+          <div className="text-center lg:text-left" style={entranceStyle(0.15)}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
               Regalos<br />
               <RotatingWord /><br />
               que Inspiran
             </h1>
-
-            {/* Subtitle */}
-            <p
-              className="text-sm md:text-base text-white/85 mb-8 max-w-xl mx-auto lg:mx-0"
-              style={entranceStyle(0.3)}
-            >
-              Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
+            <p className="text-sm md:text-base text-white/85 max-w-lg mx-auto lg:mx-0">
+              Merchandising personalizado, trofeos, copas y reconocimientos. Cotiza online y recibe en todo Chile.
             </p>
-
-            {/* CTAs */}
-            <div
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 w-full"
-              style={entranceStyle(0.4)}
-            >
-              <Button
-                asChild
-                size="lg"
-                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
-              >
-                <Link href="/productos">
-                  Ver colección
-                  <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
-              >
-                <Link href="/contacto">
-                  Cotizar ahora
-                </Link>
-              </Button>
-            </div>
           </div>
 
-          {/* Right column — Slider + Product grid */}
+          {/* Right: product grid 3x2 */}
           <div
-            className="relative block space-y-3"
             style={{
               ...(reduced
                 ? { opacity: 1 }
                 : {
                     opacity: mounted ? 1 : 0,
-                    transform: mounted ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(24px)',
-                    transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transform: mounted ? 'scale(1)' : 'scale(0.92)',
+                    transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
                     transitionDelay: '0.25s',
                   }),
             }}
           >
-            {/* Featured product slider */}
-            <div className="w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
-              <div className="relative rounded-2xl overflow-hidden bg-primary/30 border border-white/20">
-                <FeaturedSlider products={products.slice(GRID_SIZE, GRID_SIZE + SLIDER_SIZE)} />
-              </div>
-            </div>
-
-            {/* Product grid 3x2 */}
-            <div className="grid grid-cols-3 grid-rows-2 gap-2.5 lg:gap-3 w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
+            <div className="grid grid-cols-3 grid-rows-2 gap-2 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto">
               {products.slice(0, GRID_SIZE).map((product, index) => (
                 <Link
                   key={product.id}
                   href={`/productos/${product.slug || product.productId}`}
-                  className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                  className="group relative aspect-square rounded-xl overflow-hidden hover:scale-[1.04] transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 >
                   <SafeImage
                     src={product.images?.[0] || '/placeholder-product.jpg'}
@@ -346,18 +252,15 @@ export default function Hero() {
                     priority={index < 3}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
-                    <p className="text-white text-sm font-semibold text-center px-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                    <p className="text-white text-xs font-semibold text-center px-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                       {product.name}
                     </p>
                   </div>
                 </Link>
               ))}
               {products.length === 0 &&
-                Array.from({ length: GRID_SIZE }).map((_, index) => (
-                  <div
-                    key={`placeholder-${index}`}
-                    className="aspect-square rounded-2xl bg-white/20 animate-pulse"
-                  />
+                Array.from({ length: GRID_SIZE }).map((_, i) => (
+                  <div key={`ph-${i}`} className="aspect-square rounded-xl bg-white/20 animate-pulse" />
                 ))}
             </div>
           </div>
