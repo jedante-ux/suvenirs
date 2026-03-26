@@ -121,7 +121,7 @@ function HeroBanner() {
   }, []);
 
   return (
-    <div className="my-4 relative overflow-hidden bg-primary/30 border-y border-white/20">
+    <div className="relative overflow-hidden">
       <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1] md:aspect-[5/1]">
         <SafeImage
           src={BANNER_IMAGES[active].src}
