@@ -109,9 +109,9 @@ function RotatingWord() {
 
 // ── Banner slider ──
 const BANNER_IMAGES = [
-  { src: '/banners/banner-1.svg', alt: 'Regalos Corporativos — ver catálogo completo', href: '/productos' },
-  { src: '/banners/banner-2.svg', alt: 'Kits Corporativos — arma tu pack', href: '/kits' },
-  { src: '/banners/banner-3.svg', alt: 'Ofertas Especiales — productos destacados', href: '/productos' },
+  { src: '/banners/banner-1.jpg', alt: 'Regalos Corporativos — ver catálogo completo', href: '/productos' },
+  { src: '/banners/banner-2.jpg', alt: 'Kits Corporativos — arma tu pack', href: '/kits' },
+  { src: '/banners/banner-3.jpg', alt: 'Trofeos y Reconocimientos — premios personalizados', href: '/productos' },
 ];
 
 function HeroBanner() {
