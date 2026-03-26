@@ -116,7 +116,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-[4.5rem] md:pt-24 overflow-hidden" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
+    <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
