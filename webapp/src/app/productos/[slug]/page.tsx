@@ -154,6 +154,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const relatedProducts = await getRelatedProducts(product);
   const parsed = parseProductDescription(product.description || '');
   const categoryName = product.category?.name || 'Sin categoría';
+  const categorySlug = product.category?.slug;
   const clientProduct = toClientProduct(product);
 
   // JSON-LD structured data
@@ -225,9 +226,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                 {/* Category */}
                 <div>
-                  <Badge variant="outline" className="text-primary border-primary/20">
-                    {categoryName}
-                  </Badge>
+                  {categorySlug ? (
+                    <Link href={`/productos?category=${categorySlug}`}>
+                      <Badge variant="outline" className="text-primary border-primary/20 text-sm px-4 py-1.5 hover:bg-primary/10 transition-colors cursor-pointer">
+                        {categoryName}
+                      </Badge>
+                    </Link>
+                  ) : (
+                    <Badge variant="outline" className="text-primary border-primary/20 text-sm px-4 py-1.5">
+                      {categoryName}
+                    </Badge>
+                  )}
                 </div>
 
                 {/* Title */}
