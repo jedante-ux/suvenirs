@@ -30,7 +30,7 @@ export default function KitsShowcase() {
       <div className="container" ref={ref}>
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 bg-[#2D2B3D]/10 text-[#2D2B3D] border-[#2D2B3D]/20">
+          <Badge variant="outline" className="mb-4 bg-[#2D2B3D]/10 text-[#2D2B3D] border-[#2D2B3D]/20 text-sm px-4 py-1.5 font-medium">
             <Boxes className="h-3.5 w-3.5 mr-1.5" />
             Kits Corporativos
           </Badge>

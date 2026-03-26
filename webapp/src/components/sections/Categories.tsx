@@ -89,7 +89,7 @@ export default function Categories() {
       <section className="section" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
         <div className="container">
           <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25">
+            <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 text-sm px-4 py-1.5">
               Nuestras Categorías
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
