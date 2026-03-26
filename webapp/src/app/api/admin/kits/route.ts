@@ -13,7 +13,7 @@ export async function GET() {
           include: {
             product: {
               select: {
-                id: true, productId: true, name: true, image: true,
+                id: true, productId: true, name: true, images: true,
                 price: true, salePrice: true,
                 category: { select: { name: true } },
               },
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
         items: {
           include: {
             product: {
-              select: { id: true, productId: true, name: true, image: true },
+              select: { id: true, productId: true, name: true, images: true },
             },
           },
           orderBy: { order: 'asc' },

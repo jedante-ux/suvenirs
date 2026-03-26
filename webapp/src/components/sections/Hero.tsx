@@ -121,7 +121,7 @@ function HeroBanner() {
   }, []);
 
   return (
-    <div className="my-4 relative rounded-2xl overflow-hidden bg-white/10 border border-white/20">
+    <div className="my-4 relative overflow-hidden bg-white/10 border-y border-white/20">
       <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1] md:aspect-[5/1]">
         <SafeImage
           src={BANNER_IMAGES[active].src}
@@ -163,7 +163,7 @@ function FeaturedSlider({ products }: { products: Product[] }) {
   return (
     <Link href={`/productos/${current.slug || current.productId}`} className="flex items-center gap-4 p-3 group">
       <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white">
-        <SafeImage src={current.image || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
+        <SafeImage src={current.images?.[0] || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-[10px] text-white/50 font-mono uppercase">{current.productId}</p>
@@ -226,11 +226,14 @@ export default function Hero() {
   return (
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
 
-      <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        {/* Search bar */}
+      {/* Search bar inside container */}
+      <div className="container relative z-10">
         <HeroSearch />
-        {/* Banner slider */}
-        <HeroBanner />
+      </div>
+      {/* Banner slider — full width, edge to edge */}
+      <HeroBanner />
+
+      <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0">
           {/* Left column — glass card */}
           <div className="text-center lg:text-left relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-10">
@@ -328,7 +331,7 @@ export default function Hero() {
                   className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300"
                 >
                   <SafeImage
-                    src={product.image || '/placeholder-product.jpg'}
+                    src={product.images?.[0] || '/placeholder-product.jpg'}
                     alt={product.name}
                     fill
                     sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 170px"

@@ -13,6 +13,7 @@ interface Props {
   customerEmail?: string;
   customerPhone?: string;
   customerCompany?: string;
+  customerAddress?: string;
   items: QuoteItem[];
   stampingType?: StampingType | null;
   stampingPrice: number;

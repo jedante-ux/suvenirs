@@ -164,7 +164,7 @@ export default function FeaturedProducts() {
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-muted/50">
                 <SafeImage
-                  src={product.image || '/placeholder-product.jpg'}
+                  src={product.images?.[0] || '/placeholder-product.jpg'}
                   alt={product.name}
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"

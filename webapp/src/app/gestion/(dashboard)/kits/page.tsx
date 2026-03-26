@@ -469,7 +469,7 @@ export default function KitsPage() {
                       onClick={() => addProduct(product)}
                     >
                       <img
-                        src={product.image}
+                        src={product.images?.[0] || "/placeholder-product.jpg"}
                         alt={product.name}
                         className="w-8 h-8 rounded object-cover flex-shrink-0"
                       />
@@ -495,7 +495,7 @@ export default function KitsPage() {
                         {index + 1}
                       </span>
                       <img
-                        src={product.image}
+                        src={product.images?.[0] || "/placeholder-product.jpg"}
                         alt={product.name}
                         className="w-8 h-8 rounded object-cover flex-shrink-0"
                       />

@@ -202,7 +202,7 @@ export default function KitsPage() {
                         {kit.items.slice(0, 4).map((item) => (
                           <div key={item.id} className="relative aspect-square bg-white">
                             <Image
-                              src={item.product.image || '/placeholder-product.jpg'}
+                              src={item.product.images?.[0] || '/placeholder-product.jpg'}
                               alt={item.product.name}
                               fill
                               className="object-cover"
@@ -230,7 +230,7 @@ export default function KitsPage() {
                           <div key={item.id} className="flex items-center gap-2">
                             <div className="relative w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-muted">
                               <Image
-                                src={item.product.image || '/placeholder-product.jpg'}
+                                src={item.product.images?.[0] || '/placeholder-product.jpg'}
                                 alt={item.product.name}
                                 fill
                                 className="object-cover"

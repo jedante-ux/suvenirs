@@ -287,6 +287,7 @@ interface QuotePDFProps {
   customerEmail?: string;
   customerPhone?: string;
   customerCompany?: string;
+  customerAddress?: string;
   items: QuoteItem[];
   stampingType?: StampingType | null;
   stampingPrice: number;
@@ -305,6 +306,7 @@ export function QuotePDF({
   customerEmail,
   customerPhone,
   customerCompany,
+  customerAddress,
   items,
   stampingType,
   stampingPrice,
@@ -395,14 +397,22 @@ export function QuotePDF({
                 <Text style={s.clientValue}>{customerPhone || '—'}</Text>
               </View>
             </View>
-            {shippingService && (
+            {(customerAddress || shippingService) && (
               <View style={s.clientCol}>
-                <View style={s.clientRow}>
-                  <Text style={s.clientLabel}>Despacho</Text>
-                  <Text style={s.clientValue}>
-                    {shippingService === 'santiago' ? 'Santiago' : 'Regiones'}
-                  </Text>
-                </View>
+                {customerAddress && (
+                  <View style={s.clientRow}>
+                    <Text style={s.clientLabel}>Dirección</Text>
+                    <Text style={s.clientValue}>{customerAddress}</Text>
+                  </View>
+                )}
+                {shippingService && (
+                  <View style={s.clientRow}>
+                    <Text style={s.clientLabel}>Despacho</Text>
+                    <Text style={s.clientValue}>
+                      {shippingService === 'santiago' ? 'Santiago' : 'Regiones'}
+                    </Text>
+                  </View>
+                )}
               </View>
             )}
           </View>
@@ -429,8 +439,10 @@ export function QuotePDF({
               const lineTotal = clientUnitPrice * item.quantity;
               return (
                 <View key={i} style={[s.tableRow, i % 2 === 1 ? s.tableRowAlt : {}]}>
-                  <Text style={[s.tableCellGray, s.colCode]}>{item.productId}</Text>
-                  <Text style={[s.tableCell, s.colDesc]}>{item.productName}</Text>
+                  <Text style={[s.tableCellGray, s.colCode]}>{item.variantSku || item.productId}</Text>
+                  <Text style={[s.tableCell, s.colDesc]}>
+                    {item.productName}{item.variantLabel ? ` — ${item.variantLabel}` : ''}
+                  </Text>
                   <Text style={[s.tableCell, s.colQty]}>{item.quantity}</Text>
                   <Text style={[s.tableCell, s.colUnit]}>{formatCLP(clientUnitPrice)}</Text>
                   <Text style={[s.tableCell, s.colTotal]}>{formatCLP(lineTotal)}</Text>
@@ -452,12 +464,12 @@ export function QuotePDF({
               <Text style={s.totalLabel}>IVA (19%)</Text>
               <Text style={s.totalValue}>{formatCLP(iva)}</Text>
             </View>
-            {shippingPrice > 0 && (
+            {shippingService && (
               <View style={s.totalRow}>
                 <Text style={s.totalLabel}>
-                  Despacho{shippingService ? ` (${shippingService === 'santiago' ? 'Santiago' : 'Regiones'})` : ''}
+                  Despacho ({shippingService === 'santiago' ? 'Santiago' : 'Regiones'})
                 </Text>
-                <Text style={s.totalValue}>{formatCLP(shippingPrice)}</Text>
+                <Text style={s.totalValue}>{shippingPrice > 0 ? formatCLP(shippingPrice) : 'Por cotizar'}</Text>
               </View>
             )}
             <View style={s.totalFinalRow}>

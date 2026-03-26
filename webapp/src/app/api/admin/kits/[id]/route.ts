@@ -15,7 +15,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
           include: {
             product: {
               select: {
-                id: true, productId: true, name: true, image: true,
+                id: true, productId: true, name: true, images: true,
                 price: true, salePrice: true,
                 category: { select: { name: true } },
               },
@@ -70,7 +70,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
           items: {
             include: {
               product: {
-                select: { id: true, productId: true, name: true, image: true },
+                select: { id: true, productId: true, name: true, images: true },
               },
             },
             orderBy: { order: 'asc' },

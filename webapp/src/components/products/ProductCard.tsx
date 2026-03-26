@@ -21,7 +21,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         <div className="relative aspect-square bg-muted/50 overflow-hidden rounded-t-xl">
           <div className="relative w-full h-full overflow-hidden rounded-lg">
             <SafeImage
-              src={product.image || '/placeholder-product.jpg'}
+              src={product.images?.[0] || '/placeholder-product.jpg'}
               alt={product.name}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg"

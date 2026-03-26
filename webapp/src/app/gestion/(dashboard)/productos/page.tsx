@@ -76,6 +76,22 @@ const emptyProduct: ProductFormData = {
   isActive: true,
 };
 
+function productToForm(product: Product): ProductFormData {
+  return {
+    productId: product.productId,
+    name: product.name,
+    description: product.description,
+    quantity: product.quantity,
+    price: product.price,
+    salePrice: product.salePrice,
+    currency: product.currency,
+    image: product.images?.[0] || '',
+    category: product.categoryId,
+    featured: product.featured,
+    isActive: product.isActive,
+  };
+}
+
 interface PaginationData {
   page: number;
   limit: number;
@@ -178,19 +194,7 @@ export default function ProductosPage() {
     // Extract category ID properly
     const categoryId: string | undefined = product.categoryId || undefined;
 
-    setFormData({
-      productId: product.productId,
-      name: product.name,
-      description: product.description,
-      quantity: product.quantity,
-      price: product.price,
-      salePrice: product.salePrice,
-      currency: product.currency || 'CLP',
-      image: product.image,
-      category: categoryId,
-      featured: product.featured,
-      isActive: product.isActive,
-    });
+    setFormData(productToForm(product));
     setDialogOpen(true);
   };
 
@@ -266,17 +270,7 @@ export default function ProductosPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          productId: product.productId,
-          name: product.name,
-          description: product.description,
-          quantity: product.quantity,
-          price: product.price,
-          salePrice: product.salePrice,
-          currency: product.currency,
-          image: product.image,
-          category: categoryId,
           featured: !product.featured,
-          isActive: product.isActive,
         }),
       });
 
@@ -558,7 +552,7 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                   <TableCell>
                     <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
                       <Image
-                        src={product.image || '/placeholder-product.jpg'}
+                        src={product.images?.[0] || '/placeholder-product.jpg'}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -566,7 +560,12 @@ PROD-001,Producto Ejemplo,Descripción del producto ejemplo,100,https://ejemplo.
                     </div>
                   </TableCell>
                   <TableCell className="font-mono text-xs">{product.productId}</TableCell>
-                  <TableCell className="font-medium text-xs max-w-48 truncate">{product.name}</TableCell>
+                  <TableCell className="font-medium text-xs max-w-48">
+                    <span className="truncate block">{product.name}</span>
+                    {(product as any)._count?.variants > 0 && (
+                      <span className="text-[10px] text-primary font-normal">{(product as any)._count.variants} variantes</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {typeof product.category === 'object' && product.category ? (
                       <span className="text-xs text-muted-foreground">{product.category.name}</span>

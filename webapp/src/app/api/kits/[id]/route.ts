@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
             product: {
               select: {
                 id: true, productId: true, name: true, slug: true,
-                description: true, image: true, price: true, salePrice: true,
+                description: true, images: true, price: true, salePrice: true,
                 currency: true, category: { select: { name: true, slug: true } },
               },
             },

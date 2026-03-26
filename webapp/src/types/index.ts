@@ -15,6 +15,26 @@ export interface Category {
   updatedAt: string;
 }
 
+export interface ProductAttribute {
+  id: string;
+  productId: string;
+  name: string;
+  values: string[];
+  sortOrder: number;
+}
+
+export interface ProductVariant {
+  id: string;
+  productId: string;
+  sku: string;
+  attributes: Record<string, string>;
+  image?: string | null;
+  price?: number | null;
+  salePrice?: number | null;
+  isActive: boolean;
+  sortOrder: number;
+}
+
 export interface Product {
   id: string;
   productId: string;
@@ -27,9 +47,15 @@ export interface Product {
   price?: number;
   salePrice?: number;
   currency: string;
-  image: string;
+  images: string[];
   featured: boolean;
   isActive: boolean;
+  weight?: number | null;
+  length?: number | null;
+  width?: number | null;
+  height?: number | null;
+  variants?: ProductVariant[];
+  attributes?: ProductAttribute[];
   createdAt: string;
   updatedAt: string;
 }
@@ -37,6 +63,7 @@ export interface Product {
 export interface CartItem {
   product: Product;
   quantity: number;
+  variant?: ProductVariant | null;
 }
 
 export interface CartState {
@@ -110,6 +137,8 @@ export interface QuoteItem {
   id: string;
   productId: string;
   productName: string;
+  variantSku?: string | null;
+  variantLabel?: string | null;
   quantity: number;
   unitPrice: number;
   description: string;
@@ -130,6 +159,7 @@ export interface Quote {
   customerEmail?: string;
   customerPhone?: string;
   customerCompany?: string;
+  customerAddress?: string;
   notes?: string;
   shippingService?: string | null;
   shippingPrice: number;

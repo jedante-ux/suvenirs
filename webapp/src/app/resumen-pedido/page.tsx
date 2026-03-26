@@ -45,11 +45,17 @@ export default function ResumenPedidoPage() {
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
 
+  const canSubmit = customerCompany.trim().length > 0 && (!shippingEnabled || customerAddress.trim().length > 0);
+
   const generateWhatsAppMessage = () => {
     let message = '¡Hola! Me gustaría cotizar los siguientes productos:\n\n';
 
     state.items.forEach((item, index) => {
-      message += `${index + 1}. ${item.product.name} (SKU: ${item.product.productId}) — ${item.quantity} uds.\n`;
+      const sku = item.variant?.sku || item.product.productId;
+      const variantLabel = item.variant
+        ? ' — ' + Object.values(item.variant.attributes as Record<string, string>).join(' / ')
+        : '';
+      message += `${index + 1}. ${item.product.name}${variantLabel} (SKU: ${sku}) — ${item.quantity} uds.\n`;
     });
 
     message += `\n📦 Total: ${state.items.length} producto${state.items.length !== 1 ? 's' : ''}, ${getTotalItems()} unidades\n`;
@@ -78,11 +84,16 @@ export default function ResumenPedidoPage() {
           customerCompany: customerCompany.trim() || null,
           customerEmail: customerEmail.trim() || null,
           customerPhone: customerPhone.trim() || null,
-          notes: customerAddress.trim() || null,
+          customerAddress: customerAddress.trim() || null,
+          notes: null,
           shippingService: shippingEnabled ? shippingZone : null,
           items: state.items.map((item) => ({
             productId: item.product.productId,
             productName: item.product.name,
+            variantSku: item.variant?.sku || null,
+            variantLabel: item.variant
+              ? Object.values(item.variant.attributes as Record<string, string>).join(' / ')
+              : null,
             quantity: item.quantity,
             description: item.product.description || '',
           })),
@@ -159,13 +170,19 @@ export default function ResumenPedidoPage() {
                 </Button>
               </CardHeader>
               <CardContent className="space-y-4">
-                {state.items.map((item, index) => (
-                  <div key={item.product.id}>
+                {state.items.map((item, index) => {
+                  const imgSrc = item.variant?.image || item.product.images?.[0] || '/placeholder-product.jpg';
+                  const variantLabel = item.variant
+                    ? Object.values(item.variant.attributes as Record<string, string>).join(' / ')
+                    : null;
+                  const itemSku = item.variant?.sku || item.product.productId;
+                  return (
+                  <div key={`${item.product.id}-${item.variant?.sku || 'base'}`}>
                     {index > 0 && <Separator className="my-4" />}
                     <div className="flex gap-4">
                       <div className="relative w-24 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                         <Image
-                          src={item.product.image || '/placeholder-product.jpg'}
+                          src={imgSrc}
                           alt={item.product.name}
                           fill
                           className="object-cover"
@@ -174,8 +191,11 @@ export default function ResumenPedidoPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-xs text-muted-foreground font-mono mb-1">{item.product.productId}</p>
+                            <p className="text-xs text-muted-foreground font-mono mb-1">{itemSku}</p>
                             <h3 className="font-semibold text-lg">{item.product.name}</h3>
+                            {variantLabel && (
+                              <p className="text-sm text-primary font-medium">{variantLabel}</p>
+                            )}
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2 whitespace-pre-line">
                               {formatDescription(item.product.description)}
                             </p>
@@ -190,7 +210,8 @@ export default function ResumenPedidoPage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </CardContent>
             </Card>
           </div>
@@ -246,15 +267,32 @@ export default function ResumenPedidoPage() {
                     />
                   </div>
                   {shippingEnabled && (
-                    <Select value={shippingZone} onValueChange={(v) => setShippingZone(v as 'santiago' | 'regiones')}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="santiago">Santiago</SelectItem>
-                        <SelectItem value="regiones">Regiones</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <>
+                      <Select value={shippingZone} onValueChange={(v) => setShippingZone(v as 'santiago' | 'regiones')}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="santiago">Santiago</SelectItem>
+                          <SelectItem value="regiones">Regiones</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="shipping-address" className="text-sm">
+                          Dirección de despacho <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="shipping-address"
+                          type="text"
+                          placeholder="Ej: Av. Providencia 1234, Santiago"
+                          value={customerAddress}
+                          onChange={(e) => setCustomerAddress(e.target.value)}
+                        />
+                        {!customerAddress.trim() && (
+                          <p className="text-xs text-red-500">Debes ingresar una dirección para el despacho</p>
+                        )}
+                      </div>
+                    </>
                   )}
                 </div>
 
@@ -357,7 +395,7 @@ export default function ResumenPedidoPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="customer-company">Empresa <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Label htmlFor="customer-company">Empresa <span className="text-red-500">*</span></Label>
                 <Input
                   id="customer-company"
                   type="text"
@@ -387,17 +425,23 @@ export default function ResumenPedidoPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="customer-address">Dirección de despacho <span className="text-muted-foreground font-normal">(opcional)</span></Label>
+                <Label htmlFor="customer-address">
+                  Dirección de despacho
+                  {shippingEnabled
+                    ? <span className="text-red-500"> *</span>
+                    : <span className="text-muted-foreground font-normal"> (opcional)</span>
+                  }
+                </Label>
                 <Input
                   id="customer-address"
                   type="text"
                   placeholder="Ej: Av. Providencia 1234, Santiago"
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleConfirmAndSend()}
+                  onKeyDown={(e) => e.key === 'Enter' && canSubmit && handleConfirmAndSend()}
                 />
               </div>
-              <Button className="w-full" size="lg" onClick={handleConfirmAndSend}>
+              <Button className="w-full" size="lg" onClick={handleConfirmAndSend} disabled={!canSubmit}>
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Continuar a WhatsApp
               </Button>

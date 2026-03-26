@@ -6,6 +6,7 @@ import {
   Building2,
   Mail,
   Phone,
+  MapPin,
   Package,
   MessageCircle,
   Calendar,
@@ -26,6 +27,8 @@ interface QuoteItem {
   id: string
   productId: string
   productName: string
+  variantSku?: string | null
+  variantLabel?: string | null
   quantity: number
   description: string
 }
@@ -39,6 +42,7 @@ interface Quote {
   customerEmail?: string
   customerPhone?: string
   customerCompany?: string
+  customerAddress?: string
   notes?: string
   status: string
   source: string
@@ -92,7 +96,7 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
   const waUrl = `https://wa.me/${waNumber}?text=${waMessage}`
 
   const hasCustomerInfo =
-    quote.customerName || quote.customerCompany || quote.customerEmail || quote.customerPhone
+    quote.customerName || quote.customerCompany || quote.customerEmail || quote.customerPhone || quote.customerAddress
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -196,6 +200,9 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
               {quote.customerPhone && (
                 <InfoRow icon={Phone} label="Teléfono / WhatsApp" value={quote.customerPhone} />
               )}
+              {quote.customerAddress && (
+                <InfoRow icon={MapPin} label="Dirección" value={quote.customerAddress} />
+              )}
             </div>
           </div>
         )}
@@ -222,9 +229,12 @@ export default async function PublicQuotePage({ params }: { params: Promise<{ to
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-400 font-mono uppercase tracking-wide leading-none mb-0.5">
-                    <Hash className="inline h-3 w-3 mr-0.5" />{item.productId}
+                    <Hash className="inline h-3 w-3 mr-0.5" />{item.variantSku || item.productId}
                   </p>
-                  <p className="text-sm font-medium text-gray-900 truncate">{item.productName}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {item.productName}
+                    {item.variantLabel && <span className="text-xs text-pink-500 ml-1">({item.variantLabel})</span>}
+                  </p>
                 </div>
                 <div className="flex-shrink-0 text-right">
                   <p className="text-xs text-gray-400 leading-none mb-0.5">Cant.</p>

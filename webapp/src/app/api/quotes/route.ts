@@ -5,7 +5,7 @@ import { Prisma, QuoteStatus } from '@prisma/client'
 
 export async function POST(req: NextRequest) {
   try {
-    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source, shippingService, kitId } = await req.json()
+    const { items, customerName, customerEmail, customerPhone, customerCompany, customerAddress, notes, source, shippingService, kitId } = await req.json()
 
     if (!items || items.length === 0) {
       return NextResponse.json({ success: false, error: 'At least one item is required' }, { status: 400 })
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         customerEmail,
         customerPhone,
         customerCompany,
+        customerAddress,
         notes,
         shippingService: shippingService || null,
         kitId: kitId || null,
@@ -45,6 +46,8 @@ export async function POST(req: NextRequest) {
           create: items.map((item: any) => ({
             productId: item.productId,
             productName: item.productName,
+            variantSku: item.variantSku || null,
+            variantLabel: item.variantLabel || null,
             quantity: item.quantity,
             unitPrice: priceMap.get(item.productId) ?? 0,
             description: item.description || '',

@@ -150,7 +150,7 @@ export default function Categories() {
                     {category.products.slice(0, 3).map((product, i) => (
                       <div key={product.id} className="relative overflow-hidden">
                         <SafeImage
-                          src={product.image || '/placeholder-product.jpg'}
+                          src={product.images?.[0] || '/placeholder-product.jpg'}
                           alt={product.name}
                           fill
                           sizes="110px"

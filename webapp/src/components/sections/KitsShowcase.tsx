@@ -66,7 +66,7 @@ export default function KitsShowcase() {
                   {kit.items.slice(0, 4).map((item) => (
                     <div key={item.id} className="relative flex-1 overflow-hidden">
                       <SafeImage
-                        src={item.product.image || '/placeholder-product.jpg'}
+                        src={item.product.images?.[0] || '/placeholder-product.jpg'}
                         alt={item.product.name}
                         fill
                         sizes="140px"

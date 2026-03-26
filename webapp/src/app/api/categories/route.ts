@@ -15,10 +15,10 @@ export async function GET() {
         if (cat.image) return cat
         const product = await prisma.product.findFirst({
           where: { categoryId: cat.id, isActive: true },
-          select: { image: true },
+          select: { images: true },
           orderBy: { createdAt: 'desc' },
         })
-        return { ...cat, image: product?.image || null }
+        return { ...cat, image: product?.images?.[0] || null }
       })
     )
 

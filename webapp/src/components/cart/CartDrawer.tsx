@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from '@/context/CartContext';
+import { useCart, cartItemKey } from '@/context/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,6 +8,11 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import type { CartItem } from '@/types';
+
+function itemKey(item: CartItem): string {
+  return cartItemKey(item.product.id, item.variant);
+}
 
 function QuantityInput({ value, onUpdate }: { value: number; onUpdate: (n: number) => void }) {
   const [input, setInput] = useState(String(value));
@@ -62,33 +67,33 @@ export default function CartDrawer() {
 
   // Auto-select all items when cart changes
   useEffect(() => {
-    setSelected(new Set(state.items.map(i => i.product.id)));
+    setSelected(new Set(state.items.map(i => itemKey(i))));
   }, [state.items]);
 
   const allSelected = state.items.length > 0 && selected.size === state.items.length;
 
-  const toggleItem = (id: string) => {
+  const toggleItem = (key: string) => {
     setSelected(prev => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
       return next;
     });
   };
 
   const toggleAll = () => {
     if (allSelected) setSelected(new Set());
-    else setSelected(new Set(state.items.map(i => i.product.id)));
+    else setSelected(new Set(state.items.map(i => itemKey(i))));
   };
 
-  const selectedItems = state.items.filter(i => selected.has(i.product.id));
+  const selectedItems = state.items.filter(i => selected.has(itemKey(i)));
   const selectedUnits = selectedItems.reduce((s, i) => s + i.quantity, 0);
 
   const handleNext = () => {
     // Remove unselected items before navigating
     state.items.forEach(item => {
-      if (!selected.has(item.product.id)) {
-        removeItem(item.product.id);
+      if (!selected.has(itemKey(item))) {
+        removeItem(itemKey(item));
       }
     });
     closeCart();
@@ -139,24 +144,30 @@ export default function CartDrawer() {
             </div>
           ) : (
             <div className="space-y-3">
-              {state.items.map((item, index) => (
+              {state.items.map((item, index) => {
+                const key = itemKey(item);
+                const imgSrc = item.variant?.image || item.product.images?.[0] || '/placeholder-product.jpg';
+                const variantLabel = item.variant
+                  ? Object.values(item.variant.attributes).join(' / ')
+                  : null;
+                return (
                 <div
-                  key={item.product.id}
-                  className={`flex gap-3 p-3 rounded-xl border transition-colors ${selected.has(item.product.id) ? 'bg-muted/40 border-border/50' : 'bg-muted/20 border-border/30 opacity-60'} ${index < 5 ? 'animate-cart-item-in' : ''}`}
+                  key={key}
+                  className={`flex gap-3 p-3 rounded-xl border transition-colors ${selected.has(key) ? 'bg-muted/40 border-border/50' : 'bg-muted/20 border-border/30 opacity-60'} ${index < 5 ? 'animate-cart-item-in' : ''}`}
                   style={index < 5 ? { animationDelay: `${index * 0.05}s`, opacity: 0 } : undefined}
                 >
                   {/* Checkbox */}
                   <div className="flex items-start pt-1">
                     <Checkbox
-                      checked={selected.has(item.product.id)}
-                      onCheckedChange={() => toggleItem(item.product.id)}
+                      checked={selected.has(key)}
+                      onCheckedChange={() => toggleItem(key)}
                       className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                   </div>
                   {/* Image */}
                   <div className="relative w-18 h-18 min-w-[72px] min-h-[72px] bg-white rounded-lg overflow-hidden border border-border/30 flex-shrink-0">
                     <Image
-                      src={item.product.image || '/placeholder-product.jpg'}
+                      src={imgSrc}
                       alt={item.product.name}
                       fill
                       sizes="72px"
@@ -167,26 +178,30 @@ export default function CartDrawer() {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] text-muted-foreground/70 font-mono tracking-wide uppercase leading-none mb-0.5">
-                      {item.product.productId}
+                      {item.variant?.sku || item.product.productId}
                     </p>
                     <h4 className="font-medium text-sm leading-snug line-clamp-2">{item.product.name}</h4>
+                    {variantLabel && (
+                      <p className="text-xs text-primary font-medium mt-0.5">{variantLabel}</p>
+                    )}
                     <div className="flex items-center justify-between mt-2.5">
                       <QuantityInput
                         value={item.quantity}
-                        onUpdate={(n) => updateQuantity(item.product.id, n)}
+                        onUpdate={(n) => updateQuantity(key, n)}
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
-                        onClick={() => removeItem(item.product.id)}
+                        onClick={() => removeItem(key)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

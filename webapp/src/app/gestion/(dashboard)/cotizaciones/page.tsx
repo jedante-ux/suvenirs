@@ -55,6 +55,7 @@ interface EditForm {
   customerEmail: string;
   customerPhone: string;
   customerCompany: string;
+  customerAddress: string;
   notes: string;
   shippingService: string;
   shippingPrice: string;
@@ -79,7 +80,7 @@ export default function CotizacionesPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [editForm, setEditForm] = useState<EditForm>({
     customerName: '', customerEmail: '', customerPhone: '',
-    customerCompany: '', notes: '', shippingService: '', shippingPrice: '',
+    customerCompany: '', customerAddress: '', notes: '', shippingService: '', shippingPrice: '',
     stampingTypeId: '', stampingPrice: '',
     status: 'PENDING', items: [],
   });
@@ -171,6 +172,7 @@ export default function CotizacionesPage() {
       customerEmail: quote.customerEmail || '',
       customerPhone: quote.customerPhone || '',
       customerCompany: quote.customerCompany || '',
+      customerAddress: quote.customerAddress || '',
       notes: quote.notes || '',
       shippingService: quote.shippingService || '',
       shippingPrice: quote.shippingPrice > 0 ? String(quote.shippingPrice) : '',
@@ -207,6 +209,7 @@ export default function CotizacionesPage() {
           customerEmail: editForm.customerEmail || null,
           customerPhone: editForm.customerPhone || null,
           customerCompany: editForm.customerCompany || null,
+          customerAddress: editForm.customerAddress || null,
           notes: editForm.notes || null,
           shippingService: editForm.shippingService || null,
           shippingPrice: editForm.shippingPrice ? parseFloat(editForm.shippingPrice) : 0,
@@ -539,8 +542,11 @@ export default function CotizacionesPage() {
                     <TableBody>
                       {selectedQuote.items.map((item, index) => (
                         <TableRow key={index}>
-                          <TableCell className="font-mono text-xs">{item.productId}</TableCell>
-                          <TableCell>{item.productName}</TableCell>
+                          <TableCell className="font-mono text-xs">{item.variantSku || item.productId}</TableCell>
+                          <TableCell>
+                            {item.productName}
+                            {item.variantLabel && <span className="text-xs text-primary ml-1">({item.variantLabel})</span>}
+                          </TableCell>
                           <TableCell className="text-right">{item.quantity}</TableCell>
                           <TableCell className="text-right">
                             {item.unitPrice > 0
@@ -610,6 +616,9 @@ export default function CotizacionesPage() {
                     <p className="text-sm font-medium capitalize">{selectedQuote.shippingService === 'santiago' ? 'Santiago' : 'Regiones'}</p>
                   </div>
                 </div>
+              )}
+              {selectedQuote.customerAddress && (
+                <div><p className="text-sm text-muted-foreground mb-1">Dirección de despacho</p><p className="text-sm p-3 bg-muted rounded-lg">{selectedQuote.customerAddress}</p></div>
               )}
               {selectedQuote.notes && (
                 <div><p className="text-sm text-muted-foreground mb-1">Notas</p><p className="text-sm p-3 bg-muted rounded-lg">{selectedQuote.notes}</p></div>
@@ -715,6 +724,11 @@ export default function CotizacionesPage() {
                   <Label htmlFor="edit-company">Empresa</Label>
                   <Input id="edit-company" value={editForm.customerCompany}
                     onChange={e => setEditForm({ ...editForm, customerCompany: e.target.value })} />
+                </div>
+                <div className="space-y-1 col-span-2">
+                  <Label htmlFor="edit-address">Dirección de despacho</Label>
+                  <Input id="edit-address" value={editForm.customerAddress} placeholder="Ej: Av. Providencia 1234, Santiago"
+                    onChange={e => setEditForm({ ...editForm, customerAddress: e.target.value })} />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="edit-email">Email</Label>
@@ -1143,6 +1157,7 @@ export default function CotizacionesPage() {
                 customerEmail={editForm.customerEmail || selectedQuote.customerEmail}
                 customerPhone={editForm.customerPhone || selectedQuote.customerPhone}
                 customerCompany={editForm.customerCompany || selectedQuote.customerCompany}
+                customerAddress={editForm.customerAddress || selectedQuote.customerAddress}
                 items={editForm.items.length ? editForm.items : selectedQuote.items}
                 stampingType={stampingTypes.find(t => t.id === editForm.stampingTypeId) ?? selectedQuote.stampingType}
                 stampingPrice={editForm.stampingPrice ? parseFloat(editForm.stampingPrice) : selectedQuote.stampingPrice}

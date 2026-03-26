@@ -1,17 +1,26 @@
 'use client';
 
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
-import { Product, CartItem } from '@/types';
+import { Product, CartItem, ProductVariant } from '@/types';
 
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
 }
 
+// Unique key for a cart item: productId + optional variant SKU
+export function cartItemKey(productId: string, variant?: ProductVariant | null): string {
+  return variant ? `${productId}::${variant.sku}` : productId;
+}
+
+function getKey(item: CartItem): string {
+  return cartItemKey(item.product.id, item.variant);
+}
+
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: { product: Product; quantity: number } }
+  | { type: 'ADD_ITEM'; payload: { product: Product; quantity: number; variant?: ProductVariant | null } }
   | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { productId: string; quantity: number } }
+  | { type: 'UPDATE_QUANTITY'; payload: { key: string; quantity: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'TOGGLE_CART' }
   | { type: 'OPEN_CART' }
@@ -20,15 +29,16 @@ type CartAction =
 
 interface CartContextType {
   state: CartState;
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, quantity?: number, variant?: ProductVariant | null) => void;
+  removeItem: (key: string) => void;
+  updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
   getTotalItems: () => number;
-  getItemQuantity: (productId: string) => number;
+  getItemQuantity: (productId: string, variant?: ProductVariant | null) => number;
+  getCartItemKey: (productId: string, variant?: ProductVariant | null) => string;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -41,40 +51,48 @@ const initialState: CartState = {
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
+      const key = cartItemKey(action.payload.product.id, action.payload.variant);
       const existingIndex = state.items.findIndex(
-        (item) => item.product.id === action.payload.product.id
+        (item) => getKey(item) === key
       );
 
       if (existingIndex >= 0) {
         const updatedItems = [...state.items];
-        updatedItems[existingIndex].quantity += action.payload.quantity;
+        updatedItems[existingIndex] = {
+          ...updatedItems[existingIndex],
+          quantity: updatedItems[existingIndex].quantity + action.payload.quantity,
+        };
         return { ...state, items: updatedItems };
       }
 
       return {
         ...state,
-        items: [...state.items, { product: action.payload.product, quantity: action.payload.quantity }],
+        items: [...state.items, {
+          product: action.payload.product,
+          quantity: action.payload.quantity,
+          variant: action.payload.variant || undefined,
+        }],
       };
     }
 
     case 'REMOVE_ITEM':
       return {
         ...state,
-        items: state.items.filter((item) => item.product.id !== action.payload),
+        items: state.items.filter((item) => getKey(item) !== action.payload),
       };
 
     case 'UPDATE_QUANTITY': {
       if (action.payload.quantity <= 0) {
         return {
           ...state,
-          items: state.items.filter((item) => item.product.id !== action.payload.productId),
+          items: state.items.filter((item) => getKey(item) !== action.payload.key),
         };
       }
 
       return {
         ...state,
         items: state.items.map((item) =>
-          item.product.id === action.payload.productId
+          getKey(item) === action.payload.key
             ? { ...item, quantity: action.payload.quantity }
             : item
         ),
@@ -122,16 +140,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('suvenirs-cart', JSON.stringify(state.items));
   }, [state.items]);
 
-  const addItem = (product: Product, quantity = 1) => {
-    dispatch({ type: 'ADD_ITEM', payload: { product, quantity } });
+  const addItem = (product: Product, quantity = 1, variant?: ProductVariant | null) => {
+    dispatch({ type: 'ADD_ITEM', payload: { product, quantity, variant } });
   };
 
-  const removeItem = (productId: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: productId });
+  const removeItem = (key: string) => {
+    dispatch({ type: 'REMOVE_ITEM', payload: key });
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
+  const updateQuantity = (key: string, quantity: number) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { key, quantity } });
   };
 
   const clearCart = () => {
@@ -154,8 +172,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return state.items.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const getItemQuantity = (productId: string) => {
-    return state.items.find((item) => item.product.id === productId)?.quantity ?? 0;
+  const getItemQuantity = (productId: string, variant?: ProductVariant | null) => {
+    const key = cartItemKey(productId, variant);
+    return state.items.find((item) => getKey(item) === key)?.quantity ?? 0;
   };
 
   return (
@@ -171,6 +190,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         closeCart,
         getTotalItems,
         getItemQuantity,
+        getCartItemKey: cartItemKey,
       }}
     >
       {children}

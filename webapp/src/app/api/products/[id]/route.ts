@@ -24,7 +24,19 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params
     const body = await req.json()
     if (body.name) {
-      body.slug = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      body.slug = body.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    }
+    // Transform legacy `image` field to `images` array
+    if (body.image !== undefined && body.images === undefined) {
+      body.images = body.image ? [body.image] : []
+      delete body.image
+    }
+    // Transform `category` slug to `categoryId`
+    if (body.category !== undefined) {
+      if (body.category) {
+        body.categoryId = body.category
+      }
+      delete body.category
     }
     const product = await prisma.product.update({ where: { id }, data: body })
     return NextResponse.json({ success: true, data: product })

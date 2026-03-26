@@ -83,7 +83,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const slug = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    const slug = body.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    // Transform legacy `image` field to `images` array
+    if (body.image !== undefined && body.images === undefined) {
+      body.images = body.image ? [body.image] : []
+      delete body.image
+    }
+    if (body.category !== undefined) {
+      if (body.category) body.categoryId = body.category
+      delete body.category
+    }
     const product = await prisma.product.create({ data: { ...body, slug } })
     return NextResponse.json({ success: true, data: product }, { status: 201 })
   } catch (error: any) {

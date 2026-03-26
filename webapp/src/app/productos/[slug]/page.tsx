@@ -28,14 +28,19 @@ import ProductActions from './ProductDetailClient';
 // --- Data fetching ---
 
 async function getProduct(slug: string) {
+  const include = {
+    category: { select: { name: true, slug: true, description: true, icon: true } },
+    variants: { where: { isActive: true }, orderBy: { sortOrder: 'asc' as const } },
+    attributes: { orderBy: { sortOrder: 'asc' as const } },
+  };
   let product = await prisma.product.findFirst({
     where: { slug, isActive: true },
-    include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+    include,
   });
   if (!product) {
     product = await prisma.product.findFirst({
       where: { productId: slug, isActive: true },
-      include: { category: { select: { name: true, slug: true, description: true, icon: true } } },
+      include,
     });
   }
   return product;
@@ -78,8 +83,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const categoryName = product.category?.name || 'Regalos Corporativos';
   const description = `${product.name} — ${categoryName}. Regalo corporativo personalizable con envío a todo Chile. Solicita tu cotización en Suvenirs.`;
-  const imageUrl = product.image && product.image !== '/placeholder-product.jpg'
-    ? product.image
+  const imageUrl = product.images?.[0] && product.images[0] !== '/placeholder-product.jpg'
+    ? product.images[0]
     : undefined;
 
   return {
@@ -135,9 +140,18 @@ function toClientProduct(p: any): Product {
     price: p.price ?? undefined,
     salePrice: p.salePrice ?? undefined,
     currency: p.currency,
-    image: p.image,
+    images: p.images || [],
     featured: p.featured,
     isActive: p.isActive,
+    weight: p.weight,
+    length: p.length,
+    width: p.width,
+    height: p.height,
+    variants: p.variants?.map((v: any) => ({
+      ...v,
+      attributes: v.attributes ?? {},
+    })) || [],
+    attributes: p.attributes || [],
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   };
@@ -158,12 +172,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const clientProduct = toClientProduct(product);
 
   // JSON-LD structured data
+  const mainImage = product.images?.[0];
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: parsed.description || product.description,
-    image: product.image && product.image !== '/placeholder-product.jpg' ? product.image : undefined,
+    image: mainImage && mainImage !== '/placeholder-product.jpg' ? mainImage : undefined,
     sku: product.productId,
     brand: { '@type': 'Brand', name: 'Suvenirs' },
     category: categoryName,
@@ -195,25 +210,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <section className="py-12">
           <div className="container">
             <div className="grid lg:grid-cols-2 gap-12">
-              {/* Product Image */}
-              <div className="space-y-4">
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted">
-                  <Image
-                    src={product.image || '/placeholder-product.jpg'}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  {product.featured && (
-                    <Badge className="absolute top-4 left-4 bg-pink-500">
-                      Destacado
-                    </Badge>
-                  )}
-                </div>
-              </div>
+              {/* Left: Image carousel + variant selectors + actions (client component) */}
+              <ProductActions product={clientProduct} />
 
-              {/* Product Info */}
+              {/* Right: Product Info */}
               <div className="space-y-6">
                 {/* Breadcrumb */}
                 <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -243,14 +243,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                   {product.name}
                 </h1>
-
-                {/* Interactive: quantity + cart buttons */}
-                <ProductActions product={clientProduct} />
-
-                {/* SKU */}
-                <p className="text-sm text-muted-foreground font-mono">
-                  SKU: {product.productId}
-                </p>
 
                 {/* Description */}
                 {parsed.description && (
@@ -336,7 +328,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       <div className="p-3">
                         <div className="relative aspect-square overflow-hidden rounded-[16px] bg-white/10">
                           <Image
-                            src={rp.image || '/placeholder-product.jpg'}
+                            src={rp.images?.[0] || '/placeholder-product.jpg'}
                             alt={rp.name}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
