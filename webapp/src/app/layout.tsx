@@ -53,6 +53,14 @@ export default function RootLayout({
   return (
     <html lang="es-CL">
       <head>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1JWT23MNW" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-N1JWT23MNW');
+        `}} />
         <script dangerouslySetInnerHTML={{ __html: `
           window.addEventListener('error', function(e) {
             if (e.message && (
