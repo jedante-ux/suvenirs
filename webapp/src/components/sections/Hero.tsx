@@ -184,7 +184,9 @@ export default function Hero() {
       </div>
 
       {/* Banner — edge to edge */}
-      <HeroBanner />
+      <div className="mt-4">
+        <HeroBanner />
+      </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}
       <div className="container relative z-10 px-4 sm:px-6 lg:px-8 py-10 md:py-14 lg:py-16">
