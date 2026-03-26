@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Nosotros - Suvenirs',
-  description: 'Conoce la historia de Suvenirs, tu socio en regalos corporativos premium en Chile.',
+  title: 'Nosotros',
+  description: 'Conoce la historia de Suvenirs, tu socio en regalos corporativos premium en Chile. Grabados, trofeos y regalos personalizados.',
+  alternates: { canonical: '/nosotros' },
 };
 
 const values = [

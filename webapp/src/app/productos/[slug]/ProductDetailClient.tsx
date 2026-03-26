@@ -143,7 +143,7 @@ export default function ProductActions({ product }: ProductActionsProps) {
                   i === currentImageIndex ? 'border-primary' : 'border-transparent hover:border-border'
                 }`}
               >
-                <Image src={img} alt="" fill className="object-cover" sizes="64px" />
+                <Image src={img} alt={`${product.name} - imagen ${i + 1}`} fill className="object-cover" sizes="64px" />
               </button>
             ))}
           </div>

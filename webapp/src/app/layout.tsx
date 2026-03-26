@@ -14,14 +14,34 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Suvenirs - Regalos Corporativos y Grabados Personalizados",
-  description: "Tu socio corporativo líder en grabados, regalos y reconocimientos. Transformamos tus ideas en regalos personalizados únicos.",
-  keywords: "regalos corporativos, grabados personalizados, regalos empresariales, reconocimientos, gifts chile",
+  metadataBase: new URL("https://suvenirs.cl"),
+  title: {
+    default: "Suvenirs - Regalos Corporativos y Grabados Personalizados",
+    template: "%s | Suvenirs",
+  },
+  description: "Tu socio corporativo líder en grabados, regalos y reconocimientos. Transformamos tus ideas en regalos personalizados únicos. Envío a todo Chile.",
+  keywords: "regalos corporativos, grabados personalizados, regalos empresariales, reconocimientos, trofeos, copas, merchandising, chile",
+  authors: [{ name: "Suvenirs Corporativos SPA" }],
   openGraph: {
     title: "Suvenirs - Regalos Corporativos Premium",
-    description: "Transformamos tus ideas en regalos personalizados únicos",
+    description: "Transformamos tus ideas en regalos personalizados únicos. Envío a todo Chile.",
     locale: "es_CL",
     type: "website",
+    siteName: "Suvenirs",
+    url: "https://suvenirs.cl",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Suvenirs - Regalos Corporativos Premium",
+    description: "Transformamos tus ideas en regalos personalizados únicos.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  alternates: {
+    canonical: "https://suvenirs.cl",
   },
 };
 

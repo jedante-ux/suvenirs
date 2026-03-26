@@ -106,7 +106,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ...(imageUrl && { images: [imageUrl] }),
     },
     alternates: {
-      canonical: `https://suvenirs.vercel.app/productos/${product.slug || product.productId}`,
+      canonical: `https://suvenirs.cl/productos/${product.slug || product.productId}`,
     },
   };
 }
@@ -194,8 +194,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://suvenirs.vercel.app/' },
-      { '@type': 'ListItem', position: 2, name: 'Productos', item: 'https://suvenirs.vercel.app/productos' },
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://suvenirs.cl/' },
+      { '@type': 'ListItem', position: 2, name: 'Productos', item: 'https://suvenirs.cl/productos' },
       { '@type': 'ListItem', position: 3, name: product.name },
     ],
   };
