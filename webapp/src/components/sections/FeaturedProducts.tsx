@@ -97,7 +97,7 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="section">
+    <section className="section bg-muted">
       <div className="container" ref={sectionRef}>
         {/* Section header */}
         <div

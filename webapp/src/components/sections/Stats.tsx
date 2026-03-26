@@ -63,7 +63,7 @@ export default function Stats() {
   const { ref, isInView } = useInView<HTMLDivElement>({ threshold: 0.3 });
 
   return (
-    <section className="py-12 md:py-16 relative bg-muted/50">
+    <section className="py-12 md:py-16 relative bg-muted">
       <div className="container">
         <div ref={ref} className="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
           {stats.map((stat, index) => (

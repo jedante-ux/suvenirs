@@ -355,23 +355,17 @@ export default function Header() {
                 <SheetHeader>
                   <SheetTitle className="text-left"><Logo size="sm" /></SheetTitle>
                 </SheetHeader>
-                <nav className="flex flex-col gap-2 mt-8">
+                <nav className="flex flex-col gap-0.5 mt-8 overflow-y-auto">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Productos</p>
-                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
-                    <Link href="/productos" onClick={() => setIsOpen(false)}>
-                      <Grid3X3 className="mr-2 h-4 w-4 text-primary" /> Todos los productos
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
-                    <Link href="/categorias" onClick={() => setIsOpen(false)}>
-                      <Package className="mr-2 h-4 w-4 text-primary" /> Categorías
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start text-base font-medium" asChild>
-                    <Link href="/kits" onClick={() => setIsOpen(false)}>
-                      <Boxes className="mr-2 h-4 w-4 text-primary" /> Kits Corporativos
-                    </Link>
-                  </Button>
+                  <Link href="/productos" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted transition-colors">
+                    <Grid3X3 className="h-4 w-4 text-primary flex-shrink-0" /> Todos los productos
+                  </Link>
+                  <Link href="/categorias" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted transition-colors">
+                    <Package className="h-4 w-4 text-primary flex-shrink-0" /> Categorías
+                  </Link>
+                  <Link href="/kits" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted transition-colors">
+                    <Boxes className="h-4 w-4 text-primary flex-shrink-0" /> Kits Corporativos
+                  </Link>
                   <div className="border-t border-border/60 my-2" />
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Populares</p>
                   {popularItems.map((item) => {
@@ -380,11 +374,9 @@ export default function Header() {
                       ? `/productos?search=${encodeURIComponent(item.search)}`
                       : `/productos?category=${item.slug}`;
                     return (
-                      <Button key={item.name} variant="ghost" className="w-full justify-start text-sm font-medium" asChild>
-                        <Link href={href} onClick={() => setIsOpen(false)}>
-                          <Icon className="mr-2 h-4 w-4 text-primary" /> {item.name}
-                        </Link>
-                      </Button>
+                      <Link key={item.name} href={href} onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors">
+                        <Icon className="h-4 w-4 text-primary flex-shrink-0" /> {item.name}
+                      </Link>
                     );
                   })}
                   <div className="border-t border-border/60 my-2" />
@@ -395,18 +387,14 @@ export default function Header() {
                       ? `/productos?search=${encodeURIComponent(item.search)}`
                       : `/productos?category=${item.slug}`;
                     return (
-                      <Button key={item.name} variant="ghost" className="w-full justify-start text-sm font-medium" asChild>
-                        <Link href={href} onClick={() => setIsOpen(false)}>
-                          <Icon className="mr-2 h-4 w-4 text-primary" /> {item.name}
-                        </Link>
-                      </Button>
+                      <Link key={item.name} href={href} onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors">
+                        <Icon className="h-4 w-4 text-primary flex-shrink-0" /> {item.name}
+                      </Link>
                     );
                   })}
                   <div className="border-t border-border/60 my-2" />
                   {navLinks.map((link) => (
-                    <Button key={link.name} variant="ghost" className="w-full justify-start text-base font-medium" asChild>
-                      <Link href={link.href} onClick={() => setIsOpen(false)}>{link.name}</Link>
-                    </Button>
+                    <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="flex items-center px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-muted transition-colors">{link.name}</Link>
                   ))}
                 </nav>
               </SheetContent>
