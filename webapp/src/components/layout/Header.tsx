@@ -140,7 +140,7 @@ export default function Header() {
     <header
       className={cn(
         'fixed left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md border-b border-border/50' : (isHeroPage ? 'top-7 bg-transparent' : 'top-7 bg-white/95 backdrop-blur-md')
+        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md' : (isHeroPage ? 'top-7 bg-transparent' : 'top-7 bg-white/95 backdrop-blur-md')
       )}
     >
       <div className="container">

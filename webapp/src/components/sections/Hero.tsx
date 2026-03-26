@@ -23,18 +23,20 @@ function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="pt-4 pb-2">
-      <div className="max-w-xl mx-auto bg-white/15 backdrop-blur-xl border border-white/25 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/25 focus-within:border-white/40">
+    <form onSubmit={handleSubmit} className="pt-4 pb-2" role="search">
+      <div className="max-w-xl mx-auto bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
         <input
           type="text"
           placeholder="Buscar productos, categorías..."
+          aria-label="Buscar productos"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 bg-transparent border-none text-white placeholder:text-white/50 text-sm px-4 py-1.5 focus:outline-none"
+          className="flex-1 bg-transparent border-none text-white placeholder:text-white/60 text-sm px-4 py-1.5 focus:outline-none"
         />
         <button
           type="submit"
-          className="bg-white text-[#FE248A] rounded-full p-2 hover:bg-white/90 transition-colors flex-shrink-0"
+          aria-label="Buscar"
+          className="bg-white text-primary rounded-full p-2.5 hover:bg-white/90 transition-colors flex-shrink-0"
         >
           <Search className="h-4 w-4" />
         </button>
@@ -55,7 +57,7 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// ── Rotating word — simplified: 2 state updates instead of 6 ──
+// ── Rotating word ──
 function RotatingWord() {
   const [index, setIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -78,7 +80,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#F5D966] font-extrabold">
+      <span className="text-accent font-extrabold">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -92,7 +94,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#F5D966] font-extrabold whitespace-nowrap"
+        className="inline-block text-accent font-extrabold whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,
@@ -105,11 +107,11 @@ function RotatingWord() {
   );
 }
 
-// ── Banner slider — full width images ──
+// ── Banner slider ──
 const BANNER_IMAGES = [
-  { src: '/banners/banner-1.svg', alt: 'Regalos Corporativos', href: '/productos' },
-  { src: '/banners/banner-2.svg', alt: 'Kits Corporativos', href: '/kits' },
-  { src: '/banners/banner-3.svg', alt: 'Ofertas Especiales', href: '/productos' },
+  { src: '/banners/banner-1.svg', alt: 'Regalos Corporativos — ver catálogo completo', href: '/productos' },
+  { src: '/banners/banner-2.svg', alt: 'Kits Corporativos — arma tu pack', href: '/kits' },
+  { src: '/banners/banner-3.svg', alt: 'Ofertas Especiales — productos destacados', href: '/productos' },
 ];
 
 function HeroBanner() {
@@ -121,7 +123,7 @@ function HeroBanner() {
   }, []);
 
   return (
-    <div className="my-4 relative overflow-hidden bg-white/10 border-y border-white/20">
+    <div className="my-4 relative overflow-hidden bg-primary/30 border-y border-white/20">
       <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1] md:aspect-[5/1]">
         <SafeImage
           src={BANNER_IMAGES[active].src}
@@ -132,14 +134,19 @@ function HeroBanner() {
           priority
         />
       </Link>
-      {/* Dots */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {BANNER_IMAGES.map((_, i) => (
+      {/* Dots — min 44px touch targets */}
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
+        {BANNER_IMAGES.map((banner, i) => (
           <button
             key={i}
+            role="tab"
+            aria-selected={i === active}
+            aria-label={`Banner ${i + 1}: ${banner.alt}`}
             onClick={() => setActive(i)}
-            className={`w-2 h-2 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`}
-          />
+            className="w-11 h-11 flex items-center justify-center"
+          >
+            <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
+          </button>
         ))}
       </div>
     </div>
@@ -156,7 +163,7 @@ function FeaturedSlider({ products }: { products: Product[] }) {
     return () => clearInterval(timer);
   }, [products.length]);
 
-  if (products.length === 0) return <div className="h-16 bg-white/10 animate-pulse rounded-2xl" />;
+  if (products.length === 0) return <div className="h-16 bg-primary/20 animate-pulse rounded-2xl" />;
   const current = products[activeSlide];
   if (!current) return null;
 
@@ -166,20 +173,18 @@ function FeaturedSlider({ products }: { products: Product[] }) {
         <SafeImage src={current.images?.[0] || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] text-white/50 font-mono uppercase">{current.productId}</p>
+        <p className="text-[10px] text-white/60 font-mono uppercase">{current.productId}</p>
         <p className="text-sm font-semibold text-white truncate group-hover:text-white/80">{current.name}</p>
-        <p className="text-xs text-white/60 mt-0.5">Personalizable</p>
+        <p className="text-xs text-white/70 mt-0.5">Personalizable</p>
       </div>
-      <div className="flex gap-1 flex-shrink-0">
+      <div className="flex gap-1.5 flex-shrink-0" aria-hidden="true">
         {products.map((_, i) => (
-          <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
+          <span key={i} className={`block w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
         ))}
       </div>
     </Link>
   );
 }
-
-// ── Static grid — load once, no swapping ──
 
 // ── Entrance transition helper (respects reduced motion) ──
 function useEntrance() {
@@ -224,19 +229,21 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
+    <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden bg-primary">
 
-      {/* Search bar inside container */}
+      {/* Search bar */}
       <div className="container relative z-10">
         <HeroSearch />
       </div>
-      {/* Banner slider — full width, edge to edge */}
+
+      {/* Banner slider */}
       <HeroBanner />
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0">
-          {/* Left column — glass card */}
-          <div className="text-center lg:text-left relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 pb-16 lg:py-0 lg:pb-20">
+
+          {/* Left column */}
+          <div className="text-center lg:text-left relative bg-primary-foreground/10 rounded-3xl p-8 lg:p-10">
             {/* Badges */}
             <div
               className="flex items-center justify-center lg:justify-start gap-3 mb-6"
@@ -244,12 +251,12 @@ export default function Hero() {
             >
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-white/15 backdrop-blur-sm text-white border border-white/25 font-medium animate-fadeIn"
+                className="px-4 py-2 bg-white/15 text-white border border-white/25 font-medium animate-fadeIn"
               >
                 <Truck size={14} className="mr-2" />
                 Envío a todo Chile
               </Badge>
-              <Badge className="px-4 py-2 bg-white/15 backdrop-blur-sm text-white border border-white/25 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
+              <Badge className="px-4 py-2 bg-white/15 text-white border border-white/25 font-bold animate-fadeIn" style={{ animationDelay: '0.15s' }}>
                 <Gift size={14} className="mr-2" />
                 Descuentos al mayor
               </Badge>
@@ -267,7 +274,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p
-              className="text-sm md:text-base text-white/80 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-sm md:text-base text-white/85 mb-8 max-w-xl mx-auto lg:mx-0"
               style={entranceStyle(0.3)}
             >
               Encuentra el regalo perfecto para cada ocasión. Cajas gourmet, merchandising personalizado y mucho más para sorprender a tus clientes y colaboradores.
@@ -281,7 +288,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="w-full sm:w-auto bg-white text-[#FE248A] hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
+                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
               >
                 <Link href="/productos">
                   Ver colección
@@ -292,7 +299,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
+                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
               >
                 <Link href="/contacto">
                   Cotizar ahora
@@ -317,7 +324,7 @@ export default function Hero() {
           >
             {/* Featured product slider */}
             <div className="w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
-              <div className="relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+              <div className="relative rounded-2xl overflow-hidden bg-primary/30 border border-white/20">
                 <FeaturedSlider products={products.slice(GRID_SIZE, GRID_SIZE + SLIDER_SIZE)} />
               </div>
             </div>
@@ -328,7 +335,7 @@ export default function Hero() {
                 <Link
                   key={product.id}
                   href={`/productos/${product.slug || product.productId}`}
-                  className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300"
+                  className="group relative aspect-square rounded-2xl overflow-hidden hover:scale-[1.04] transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 >
                   <SafeImage
                     src={product.images?.[0] || '/placeholder-product.jpg'}
