@@ -109,9 +109,7 @@ function RotatingWord() {
 
 // ── Banner slider ──
 const BANNER_IMAGES = [
-  { src: '/banners/banner-1.jpg', alt: 'Regalos Corporativos — ver catálogo completo', href: '/productos' },
-  { src: '/banners/banner-2.jpg', alt: 'Kits Corporativos — arma tu pack', href: '/kits' },
-  { src: '/banners/banner-3.jpg', alt: 'Trofeos y Reconocimientos — premios personalizados', href: '/productos' },
+  { src: '/banner1-suvernirs.png', alt: 'Suvenirs — Regalos Corporativos Personalizados', href: '/productos' },
 ];
 
 function HeroBanner() {
@@ -134,21 +132,23 @@ function HeroBanner() {
           priority
         />
       </Link>
-      {/* Dots — min 44px touch targets */}
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
-        {BANNER_IMAGES.map((banner, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={i === active}
-            aria-label={`Banner ${i + 1}: ${banner.alt}`}
-            onClick={() => setActive(i)}
-            className="w-11 h-11 flex items-center justify-center"
-          >
-            <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
-          </button>
-        ))}
-      </div>
+      {/* Dots — only show when multiple banners */}
+      {BANNER_IMAGES.length > 1 && (
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
+          {BANNER_IMAGES.map((banner, i) => (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={i === active}
+              aria-label={`Banner ${i + 1}: ${banner.alt}`}
+              onClick={() => setActive(i)}
+              className="w-11 h-11 flex items-center justify-center"
+            >
+              <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
