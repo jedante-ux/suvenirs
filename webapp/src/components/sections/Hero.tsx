@@ -8,7 +8,41 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRightIcon } from '../icons';
 import { Product } from '@/types';
 import { getProducts } from '@/lib/api';
-import { Truck, Gift } from 'lucide-react';
+import { Truck, Gift, Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+function HeroSearch() {
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/productos?search=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="pt-4 pb-2">
+      <div className="max-w-xl mx-auto lg:mx-0 bg-white/15 backdrop-blur-xl border border-white/25 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/25 focus-within:border-white/40">
+        <Search className="h-4 w-4 text-white/60 ml-3 flex-shrink-0" />
+        <input
+          type="text"
+          placeholder="Buscar productos, categorías..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex-1 bg-transparent border-none text-white placeholder:text-white/50 text-sm px-3 py-1.5 focus:outline-none"
+        />
+        <button
+          type="submit"
+          className="bg-white text-[#FE248A] rounded-full px-5 py-1.5 text-sm font-semibold hover:bg-white/90 transition-colors flex-shrink-0"
+        >
+          Buscar
+        </button>
+      </div>
+    </form>
+  );
+}
 
 // ── Config ──
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
@@ -119,7 +153,9 @@ export default function Hero() {
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden" style={{ background: 'linear-gradient(135deg, #FE248A 0%, #FF6B9D 50%, #FE248A 100%)' }}>
 
       <div className="container relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-5rem)]">
+        {/* Search bar */}
+        <HeroSearch />
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-10 lg:py-0 lg:h-[calc(100vh-7rem)]">
           {/* Left column — glass card */}
           <div className="text-center lg:text-left relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-10">
             {/* Badges */}
