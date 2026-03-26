@@ -33,7 +33,8 @@ import {
 
 function ProductosContent() {
   const searchParams = useSearchParams();
-  const categoryFromUrl = searchParams.get('categoria');
+  const categoryFromUrl = searchParams.get('category') || searchParams.get('categoria');
+  const searchFromUrl = searchParams.get('search') || '';
 
   const [products, setProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo>({
@@ -44,7 +45,7 @@ function ProductosContent() {
   });
 
   // Applied filters (used for fetching)
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchFromUrl);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     categoryFromUrl ? [categoryFromUrl] : []
   );
@@ -54,7 +55,7 @@ function ProductosContent() {
   });
 
   // Pending filters (not applied until "Buscar" is clicked)
-  const [pendingSearch, setPendingSearch] = useState('');
+  const [pendingSearch, setPendingSearch] = useState(searchFromUrl);
   const [pendingCategories, setPendingCategories] = useState<string[]>(
     categoryFromUrl ? [categoryFromUrl] : []
   );

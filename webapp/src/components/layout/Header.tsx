@@ -66,12 +66,13 @@ const popularItems = [
 ];
 
 const techItems = [
-  { name: 'Todos los tecnológicos', slug: 'tecnol-gicos', icon: Laptop },
-  { name: 'Parlantes y Audio', slug: '', search: 'parlante', icon: Package },
-  { name: 'Cargadores y Power Banks', slug: '', search: 'cargador power bank', icon: Package },
-  { name: 'Audífonos', slug: '', search: 'audifono auricular', icon: Package },
-  { name: 'USB y Pendrive', slug: '', search: 'usb pendrive', icon: Package },
-  { name: 'Accesorios Tech', slug: '', search: 'mouse pad soporte', icon: Package },
+  { name: 'Todos los tecnológicos', slug: 'tecnol-gicos', search: '', icon: Laptop },
+  { name: 'Parlantes y Bluetooth', slug: '', search: 'parlante bluetooth', icon: Laptop },
+  { name: 'Cargadores', slug: '', search: 'cargador', icon: Laptop },
+  { name: 'Auriculares', slug: '', search: 'auricular', icon: Laptop },
+  { name: 'USB y Pendrive', slug: '', search: 'usb pendrive', icon: Laptop },
+  { name: 'Linternas LED', slug: '', search: 'linterna led', icon: Laptop },
+  { name: 'Mouse y Accesorios', slug: '', search: 'mouse', icon: Laptop },
 ];
 
 const navLinks = [
