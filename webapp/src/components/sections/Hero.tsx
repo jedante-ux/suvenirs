@@ -106,6 +106,39 @@ function RotatingWord() {
   );
 }
 
+// ── Featured product slider ──
+function FeaturedSlider({ products }: { products: Product[] }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (products.length === 0) return;
+    const timer = setInterval(() => setActiveSlide(p => (p + 1) % products.length), 4000);
+    return () => clearInterval(timer);
+  }, [products.length]);
+
+  if (products.length === 0) return <div className="h-16 bg-white/10 animate-pulse rounded-2xl" />;
+  const current = products[activeSlide];
+  if (!current) return null;
+
+  return (
+    <Link href={`/productos/${current.slug || current.productId}`} className="flex items-center gap-4 p-3 group">
+      <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white">
+        <SafeImage src={current.image || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] text-white/50 font-mono uppercase">{current.productId}</p>
+        <p className="text-sm font-semibold text-white truncate group-hover:text-white/80">{current.name}</p>
+        <p className="text-xs text-white/60 mt-0.5">Personalizable</p>
+      </div>
+      <div className="flex gap-1 flex-shrink-0">
+        {products.map((_, i) => (
+          <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
+        ))}
+      </div>
+    </Link>
+  );
+}
+
 // ── Static grid — load once, no swapping ──
 
 // ── Entrance transition helper (respects reduced motion) ──
@@ -240,36 +273,7 @@ export default function Hero() {
             {/* Featured product slider */}
             <div className="w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
               <div className="relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
-                {products.length > GRID_SIZE && (() => {
-                  const sliderProducts = products.slice(GRID_SIZE, GRID_SIZE + SLIDER_SIZE);
-                  const [activeSlide, setActiveSlide] = React.useState(0);
-                  React.useEffect(() => {
-                    const timer = setInterval(() => setActiveSlide(p => (p + 1) % sliderProducts.length), 4000);
-                    return () => clearInterval(timer);
-                  }, [sliderProducts.length]);
-                  const current = sliderProducts[activeSlide];
-                  if (!current) return null;
-                  return (
-                    <Link href={`/productos/${current.slug || current.productId}`} className="flex items-center gap-4 p-3 group">
-                      <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white">
-                        <SafeImage src={current.image || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[10px] text-white/50 font-mono uppercase">{current.productId}</p>
-                        <p className="text-sm font-semibold text-white truncate group-hover:text-white/80">{current.name}</p>
-                        <p className="text-xs text-white/60 mt-0.5">Personalizable</p>
-                      </div>
-                      <div className="flex gap-1 flex-shrink-0">
-                        {sliderProducts.map((_, i) => (
-                          <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
-                        ))}
-                      </div>
-                    </Link>
-                  );
-                })()}
-                {products.length <= GRID_SIZE && (
-                  <div className="h-16 bg-white/10 animate-pulse rounded-2xl" />
-                )}
+                <FeaturedSlider products={products.slice(GRID_SIZE, GRID_SIZE + SLIDER_SIZE)} />
               </div>
             </div>
 
