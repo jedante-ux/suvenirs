@@ -167,10 +167,10 @@ export default function Header() {
                 >
                   Productos
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="flex text-left" onMouseLeave={() => setHoveredParent(null)}>
+                <NavigationMenuContent className="!left-0 !translate-x-0">
+                  <div className="flex" onMouseLeave={() => setHoveredParent(null)}>
                     {/* Left panel */}
-                    <div className="w-[260px] py-3 border-r border-border/30 max-h-[480px] overflow-y-auto">
+                    <div className="w-[300px] py-3 border-r border-border/30 max-h-[480px] overflow-y-auto text-left">
                       <NavigationMenuLink asChild>
                         <Link href="/productos" className="flex items-center justify-between px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
                           onMouseEnter={() => setHoveredParent(null)}>
@@ -201,7 +201,7 @@ export default function Header() {
 
                     {/* Right: subcategories */}
                     {hoveredParent && getChildren(hoveredParent).length > 0 && (
-                      <div className="w-[240px] py-3 max-h-[480px] overflow-y-auto">
+                      <div className="w-[260px] py-3 max-h-[480px] overflow-y-auto text-left">
                         <p className="px-5 pb-2 text-sm font-semibold text-foreground">
                           {parentCategories.find(c => c.id === hoveredParent)?.name}
                         </p>
@@ -239,8 +239,8 @@ export default function Header() {
                 >
                   Populares
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="w-[240px] py-3 text-left">
+                <NavigationMenuContent className="!left-0 !translate-x-0">
+                  <div className="w-[260px] py-3 text-left">
                     {popularItems.map((item) => {
                       const href = item.search
                         ? `/productos?search=${encodeURIComponent(item.search)}`
@@ -270,8 +270,8 @@ export default function Header() {
                 >
                   Tecnología
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="w-[240px] py-3 text-left">
+                <NavigationMenuContent className="!left-0 !translate-x-0">
+                  <div className="w-[260px] py-3 text-left">
                     {techItems.map((item) => {
                       const href = item.search
                         ? `/productos?search=${encodeURIComponent(item.search)}`
