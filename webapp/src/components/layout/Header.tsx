@@ -167,7 +167,7 @@ export default function Header() {
                 >
                   Productos
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="!left-0 !translate-x-0">
+                <NavigationMenuContent >
                   <div className="flex" onMouseLeave={() => setHoveredParent(null)}>
                     {/* Left panel */}
                     <div className="w-[300px] py-3 border-r border-border/30 max-h-[480px] overflow-y-auto text-left">
@@ -239,7 +239,7 @@ export default function Header() {
                 >
                   Populares
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="!left-0 !translate-x-0">
+                <NavigationMenuContent >
                   <div className="w-[260px] py-3 text-left">
                     {popularItems.map((item) => {
                       const href = item.search
@@ -270,7 +270,7 @@ export default function Header() {
                 >
                   Tecnología
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="!left-0 !translate-x-0">
+                <NavigationMenuContent >
                   <div className="w-[260px] py-3 text-left">
                     {techItems.map((item) => {
                       const href = item.search
