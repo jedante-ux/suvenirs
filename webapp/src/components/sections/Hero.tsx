@@ -47,7 +47,8 @@ function HeroSearch() {
 // ── Config ──
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
 const WORD_INTERVAL = 3500;
-const GRID_SIZE = 9;
+const GRID_SIZE = 6;
+const SLIDER_SIZE = 4;
 
 // ── Detect reduced motion once ──
 function prefersReducedMotion() {
@@ -140,7 +141,7 @@ export default function Hero() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts({ limit: GRID_SIZE, random: true });
+        const response = await getProducts({ limit: GRID_SIZE + SLIDER_SIZE, random: true });
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -222,9 +223,9 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right column — Product grid */}
+          {/* Right column — Slider + Product grid */}
           <div
-            className="relative block"
+            className="relative block space-y-3"
             style={{
               ...(reduced
                 ? { opacity: 1 }
@@ -236,8 +237,45 @@ export default function Hero() {
                   }),
             }}
           >
-            <div className="grid grid-cols-3 grid-rows-3 gap-2.5 lg:gap-3 w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
-              {products.map((product, index) => (
+            {/* Featured product slider */}
+            <div className="w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
+              <div className="relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20">
+                {products.length > GRID_SIZE && (() => {
+                  const sliderProducts = products.slice(GRID_SIZE, GRID_SIZE + SLIDER_SIZE);
+                  const [activeSlide, setActiveSlide] = React.useState(0);
+                  React.useEffect(() => {
+                    const timer = setInterval(() => setActiveSlide(p => (p + 1) % sliderProducts.length), 4000);
+                    return () => clearInterval(timer);
+                  }, [sliderProducts.length]);
+                  const current = sliderProducts[activeSlide];
+                  if (!current) return null;
+                  return (
+                    <Link href={`/productos/${current.slug || current.productId}`} className="flex items-center gap-4 p-3 group">
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white">
+                        <SafeImage src={current.image || '/placeholder-product.jpg'} alt={current.name} fill sizes="64px" className="object-cover" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-white/50 font-mono uppercase">{current.productId}</p>
+                        <p className="text-sm font-semibold text-white truncate group-hover:text-white/80">{current.name}</p>
+                        <p className="text-xs text-white/60 mt-0.5">Personalizable</p>
+                      </div>
+                      <div className="flex gap-1 flex-shrink-0">
+                        {sliderProducts.map((_, i) => (
+                          <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === activeSlide ? 'bg-white' : 'bg-white/30'}`} />
+                        ))}
+                      </div>
+                    </Link>
+                  );
+                })()}
+                {products.length <= GRID_SIZE && (
+                  <div className="h-16 bg-white/10 animate-pulse rounded-2xl" />
+                )}
+              </div>
+            </div>
+
+            {/* Product grid 3x2 */}
+            <div className="grid grid-cols-3 grid-rows-2 gap-2.5 lg:gap-3 w-full max-w-xs sm:max-w-sm lg:max-w-lg mx-auto">
+              {products.slice(0, GRID_SIZE).map((product, index) => (
                 <Link
                   key={product.id}
                   href={`/productos/${product.slug || product.productId}`}
