@@ -54,6 +54,17 @@ function getCategoryIcon(name: string) {
   return Package;
 }
 
+const popularItems = [
+  { name: 'Bolígrafos y Lápices', slug: 'bol-grafos-l-pices-estuches', icon: Pen },
+  { name: 'Tazas y Mugs', slug: 'botellas-mugs-tazones-termos-vasos', icon: Coffee },
+  { name: 'Galvanos', slug: 'galvanos-de-cristal', icon: Gem },
+  { name: 'Llaveros', slug: 'llaveros', icon: KeyRound },
+  { name: 'Cuadernos y Libretas', slug: 'libretas-cuadernos-memo-set', icon: BookOpen },
+  { name: 'Bolsas Publicitarias', slug: 'bolsas-publicitarias', icon: ShoppingBag },
+  { name: 'Encobrizados', slug: '', search: 'cobre', icon: Medal },
+  { name: 'Ecológicos', slug: 'l-nea-bamboo', icon: Gift },
+];
+
 const navLinks = [
   { name: 'Blog', href: '/blog' },
   { name: 'Nosotros', href: '/nosotros' },
@@ -65,7 +76,8 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [badgePop, setBadgePop] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [hoveredParent, setHoveredParent] = useState<string | null>(null);
   const prevCountRef = useRef(0);
   const pathname = usePathname();
   const { openCart, getTotalItems } = useCart();
@@ -73,9 +85,18 @@ export default function Header() {
 
   useEffect(() => {
     getCategories().then(cats => {
-      setCategories(cats.filter(c => c.productCount > 0).sort((a, b) => b.productCount - a.productCount).slice(0, 16));
+      setAllCategories(cats.filter(c => c.productCount > 0));
     }).catch(() => {});
   }, []);
+
+  // Parent categories (no parentId) sorted by product count
+  const parentCategories = allCategories
+    .filter(c => !c.parentId)
+    .sort((a, b) => b.productCount - a.productCount);
+
+  // Get children for a given parent
+  const getChildren = (parentId: string) =>
+    allCategories.filter(c => c.parentId === parentId).sort((a, b) => b.productCount - a.productCount);
 
   // Animate badge when count changes
   useEffect(() => {
@@ -133,45 +154,115 @@ export default function Header() {
                   Productos
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="w-[240px] p-1.5 text-left">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/productos" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors w-full text-left">
-                          <Grid3X3 className="h-3.5 w-3.5 flex-shrink-0" /><span>Todos los productos</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/kits" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors w-full text-left">
-                          <Boxes className="h-3.5 w-3.5 flex-shrink-0" /><span>Kits Corporativos</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li className="border-t border-border/60 my-1" />
-                    {categories.map((cat) => {
-                      const Icon = getCategoryIcon(cat.name);
+                  <div className="flex text-left" onMouseLeave={() => setHoveredParent(null)}>
+                    {/* Left: parent categories */}
+                    <div className="w-[250px] p-1.5 border-r border-border/40 max-h-[420px] overflow-y-auto">
+                      <li className="list-none">
+                        <NavigationMenuLink asChild>
+                          <Link href="/productos" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors w-full">
+                            <Grid3X3 className="h-3.5 w-3.5 flex-shrink-0" /> Todos los productos
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li className="list-none">
+                        <NavigationMenuLink asChild>
+                          <Link href="/kits" className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors w-full">
+                            <Boxes className="h-3.5 w-3.5 flex-shrink-0" /> Kits Corporativos
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <div className="border-t border-border/40 my-1" />
+                      {parentCategories.map((cat) => {
+                        const Icon = getCategoryIcon(cat.name);
+                        const children = getChildren(cat.id);
+                        const hasChildren = children.length > 0;
+                        return (
+                          <div
+                            key={cat.id}
+                            onMouseEnter={() => hasChildren ? setHoveredParent(cat.id) : setHoveredParent(null)}
+                          >
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={`/productos?category=${cat.slug}`}
+                                className={cn(
+                                  "flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-colors w-full group",
+                                  hoveredParent === cat.id ? "bg-muted text-foreground" : "hover:bg-muted"
+                                )}
+                              >
+                                <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                                <span className="text-muted-foreground group-hover:text-foreground transition-colors flex-1">{cat.name}</span>
+                                {hasChildren && <ArrowRight className="h-3 w-3 text-muted-foreground/50" />}
+                              </Link>
+                            </NavigationMenuLink>
+                          </div>
+                        );
+                      })}
+                      <div className="border-t border-border/40 mt-1 pt-1">
+                        <NavigationMenuLink asChild>
+                          <Link href="/categorias" className="flex items-center gap-2 px-2.5 py-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors w-full">
+                            Ver todas <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </div>
+
+                    {/* Right: subcategories panel */}
+                    {hoveredParent && getChildren(hoveredParent).length > 0 && (
+                      <div className="w-[220px] p-1.5 max-h-[420px] overflow-y-auto">
+                        <p className="px-2.5 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          Subcategorías
+                        </p>
+                        {getChildren(hoveredParent).map((sub) => {
+                          const SubIcon = getCategoryIcon(sub.name);
+                          return (
+                            <NavigationMenuLink key={sub.id} asChild>
+                              <Link
+                                href={`/productos?category=${sub.slug}`}
+                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm hover:bg-muted transition-colors group w-full"
+                              >
+                                <SubIcon className="h-3.5 w-3.5 text-primary/60 flex-shrink-0" />
+                                <span className="text-muted-foreground group-hover:text-foreground transition-colors">{sub.name}</span>
+                              </Link>
+                            </NavigationMenuLink>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Populares dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger
+                  className={cn(
+                    'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
+                    !isScrolled && 'text-white hover:text-white/80',
+                  )}
+                >
+                  Populares
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="w-[220px] p-1.5 text-left">
+                    {popularItems.map((item) => {
+                      const Icon = item.icon;
+                      const href = item.search
+                        ? `/productos?search=${encodeURIComponent(item.search)}`
+                        : `/productos?category=${item.slug}`;
                       return (
-                        <li key={cat.id}>
+                        <li key={item.name}>
                           <NavigationMenuLink asChild>
                             <Link
-                              href={`/productos?category=${cat.slug}`}
+                              href={href}
                               className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm hover:bg-muted transition-colors group w-full text-left"
                             >
                               <Icon className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                              <span className="text-muted-foreground group-hover:text-foreground transition-colors">{cat.name}</span>
+                              <span className="text-muted-foreground group-hover:text-foreground transition-colors">{item.name}</span>
                             </Link>
                           </NavigationMenuLink>
                         </li>
                       );
                     })}
-                    <li className="border-t border-border/60 mt-1 pt-1">
-                      <NavigationMenuLink asChild>
-                        <Link href="/categorias" className="flex items-center gap-2 px-2.5 py-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors w-full text-left">
-                          Ver todas <ArrowRight className="h-3.5 w-3.5" />
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -252,6 +343,21 @@ export default function Header() {
                       <Boxes className="mr-2 h-4 w-4 text-primary" /> Kits Corporativos
                     </Link>
                   </Button>
+                  <div className="border-t border-border/60 my-2" />
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-3 mb-1">Populares</p>
+                  {popularItems.map((item) => {
+                    const Icon = item.icon;
+                    const href = item.search
+                      ? `/productos?search=${encodeURIComponent(item.search)}`
+                      : `/productos?category=${item.slug}`;
+                    return (
+                      <Button key={item.name} variant="ghost" className="w-full justify-start text-sm font-medium" asChild>
+                        <Link href={href} onClick={() => setIsOpen(false)}>
+                          <Icon className="mr-2 h-4 w-4 text-primary" /> {item.name}
+                        </Link>
+                      </Button>
+                    );
+                  })}
                   <div className="border-t border-border/60 my-2" />
                   {navLinks.map((link) => (
                     <Button key={link.name} variant="ghost" className="w-full justify-start text-base font-medium" asChild>
