@@ -15,13 +15,12 @@ const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'
 const WORD_INTERVAL = 3500;
 const GRID_SIZE = 6;
 
-// ── Detect reduced motion once ──
 function prefersReducedMotion() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// ── Search bar ──
+// ── Search bar (centered) ──
 function HeroSearch() {
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -34,8 +33,8 @@ function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} role="search" className="w-full max-w-xl">
-      <div className="bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
+    <form onSubmit={handleSubmit} role="search" className="w-full flex justify-center">
+      <div className="w-full max-w-xl bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
         <input
           type="text"
           placeholder="Buscar productos, categorías..."
@@ -178,49 +177,51 @@ export default function Hero() {
 
   return (
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
-      {/* Row 1: Search + CTAs */}
+
+      {/* Search bar — centered */}
       <div className="container relative z-10 py-5">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <HeroSearch />
-          <div className="flex items-center gap-3 flex-shrink-0" style={entranceStyle(0.1)}>
-            <Button
-              asChild
-              size="lg"
-              className="bg-white text-primary hover:bg-white/90 rounded-full px-6 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
-            >
-              <Link href="/productos">
-                Ver colección
-                <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-6 transition-all duration-300 font-semibold hover:scale-[1.03]"
-            >
-              <Link href="/contacto">Cotizar ahora</Link>
-            </Button>
-          </div>
-        </div>
+        <HeroSearch />
       </div>
 
-      {/* Row 2: Banner — edge to edge */}
+      {/* Banner — edge to edge */}
       <HeroBanner />
 
-      {/* Row 3: H1 + Product grid */}
-      <div className="container relative z-10 py-8 pb-12 md:pb-16">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left: copy */}
-          <div className="text-center lg:text-left" style={entranceStyle(0.15)}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
+      {/* Content: H1 + CTAs left, Product grid right */}
+      <div className="container relative z-10 py-10 md:py-14 lg:py-16">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+
+          {/* Left: copy + CTAs */}
+          <div className="text-center lg:text-left space-y-6" style={entranceStyle(0.1)}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
               Regalos<br />
               <RotatingWord /><br />
               que Inspiran
             </h1>
+
             <p className="text-sm md:text-base text-white/85 max-w-lg mx-auto lg:mx-0">
               Merchandising personalizado, trofeos, copas y reconocimientos. Cotiza online y recibe en todo Chile.
             </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <Button
+                asChild
+                size="lg"
+                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
+              >
+                <Link href="/productos">
+                  Ver colección
+                  <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
+              >
+                <Link href="/contacto">Cotizar ahora</Link>
+              </Button>
+            </div>
           </div>
 
           {/* Right: product grid 3x2 */}
@@ -236,7 +237,7 @@ export default function Hero() {
                   }),
             }}
           >
-            <div className="grid grid-cols-3 grid-rows-2 gap-2 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto">
+            <div className="grid grid-cols-3 grid-rows-2 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto">
               {products.slice(0, GRID_SIZE).map((product, index) => (
                 <Link
                   key={product.id}
