@@ -8,17 +8,28 @@ import { parse } from 'csv-parse/sync';
 
 const require = createRequire(import.meta.url);
 
-// Load env
-const envContent = readFileSync('.env.local', 'utf-8');
+// Load env from file specified by ENV_FILE or default to .env.local
+const envFile = process.env.ENV_FILE || '.env.local';
+const envContent = readFileSync(envFile, 'utf-8');
 for (const line of envContent.split('\n')) {
   const match = line.match(/^([^#=]+)=(.*)$/);
-  if (match) process.env[match[1].trim()] = match[2].trim();
+  if (match && !process.env[match[1].trim()]) process.env[match[1].trim()] = match[2].trim();
 }
 
 const { PrismaPg } = require('@prisma/adapter-pg');
 const { PrismaClient } = require('@prisma/client');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL, max: 5 });
+let connectionString = process.env.DATABASE_URL;
+const needsSsl = connectionString.includes('supabase.com') || connectionString.includes('sslmode=require');
+// Remove sslmode from connection string to avoid pg driver conflict, we handle SSL manually
+if (needsSsl) {
+  connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, '').replace(/\?$/, '');
+}
+const adapter = new PrismaPg({
+  connectionString,
+  max: 5,
+  ...(needsSsl && { ssl: { rejectUnauthorized: false } }),
+});
 const prisma = new PrismaClient({ adapter });
 
 function slugify(text) {
