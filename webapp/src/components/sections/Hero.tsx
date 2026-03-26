@@ -109,7 +109,7 @@ function RotatingWord() {
 
 // ── Banner slider ──
 const BANNER_IMAGES = [
-  { src: '/banner1-suvernirs.png', alt: 'Suvenirs — Regalos Corporativos Personalizados', href: '/productos' },
+  { src: '/banner2.jpg', alt: 'Suvenirs — Regalos Corporativos Personalizados', href: '/productos' },
 ];
 
 function HeroBanner() {
