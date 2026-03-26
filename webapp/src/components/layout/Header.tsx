@@ -164,64 +164,23 @@ export default function Header() {
                 >
                   Categorías
                 </NavigationMenuTrigger>
-                <NavigationMenuContent >
-                  <div className="flex" onMouseLeave={() => setHoveredParent(null)}>
-                    {/* Left panel */}
-                    <div className="w-[300px] py-3 border-r border-border/30 max-h-[480px] overflow-y-auto text-left">
-                      <NavigationMenuLink asChild>
-                        <Link href="/productos" className="flex items-center justify-between px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
-                          onMouseEnter={() => setHoveredParent(null)}>
-                          Ver todos los productos
-                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+                <NavigationMenuContent>
+                  <div className="w-[260px] py-3 max-h-[480px] overflow-y-auto text-left">
+                    <NavigationMenuLink asChild>
+                      <Link href="/productos" className="block px-5 py-2.5 text-sm font-semibold text-foreground hover:text-primary hover:bg-muted/40 transition-colors">
+                        Ver todos los productos
+                      </Link>
+                    </NavigationMenuLink>
+                    {parentCategories.map((cat) => (
+                      <NavigationMenuLink key={cat.id} asChild>
+                        <Link
+                          href={`/productos?category=${cat.slug}`}
+                          className="block px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                        >
+                          {cat.name}
                         </Link>
                       </NavigationMenuLink>
-                      {parentCategories.map((cat) => {
-                        const children = getChildren(cat.id);
-                        const hasChildren = children.length > 0;
-                        return (
-                          <NavigationMenuLink key={cat.id} asChild>
-                            <Link
-                              href={`/productos?category=${cat.slug}`}
-                              className={cn(
-                                "flex items-center justify-between px-5 py-2.5 text-sm transition-colors",
-                                hoveredParent === cat.id ? "bg-muted/60 text-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                              )}
-                              onMouseEnter={() => hasChildren ? setHoveredParent(cat.id) : setHoveredParent(null)}
-                            >
-                              <span>{cat.name}</span>
-                              {hasChildren && <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30" />}
-                            </Link>
-                          </NavigationMenuLink>
-                        );
-                      })}
-                    </div>
-
-                    {/* Right: subcategories */}
-                    {hoveredParent && getChildren(hoveredParent).length > 0 && (
-                      <div className="w-[260px] py-3 max-h-[480px] overflow-y-auto text-left">
-                        <p className="px-5 pb-2 text-sm font-semibold text-foreground">
-                          {parentCategories.find(c => c.id === hoveredParent)?.name}
-                        </p>
-                        {getChildren(hoveredParent).map((sub) => (
-                          <NavigationMenuLink key={sub.id} asChild>
-                            <Link
-                              href={`/productos?category=${sub.slug}`}
-                              className="block px-5 py-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              {sub.name}
-                            </Link>
-                          </NavigationMenuLink>
-                        ))}
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={`/productos?category=${parentCategories.find(c => c.id === hoveredParent)?.slug}`}
-                            className="block px-5 py-1.5 mt-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                          >
-                            Ver todo en {parentCategories.find(c => c.id === hoveredParent)?.name} →
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    )}
+                    ))}
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
