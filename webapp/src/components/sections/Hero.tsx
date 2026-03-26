@@ -187,7 +187,7 @@ export default function Hero() {
       <HeroBanner />
 
       {/* Content: H1 + CTAs left, Product grid right */}
-      <div className="container relative z-10 py-10 md:py-14 lg:py-16">
+      <div className="container relative z-10 px-4 sm:px-6 lg:px-8 py-10 md:py-14 lg:py-16">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* Left: copy + CTAs */}
