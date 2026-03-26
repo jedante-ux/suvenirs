@@ -109,8 +109,8 @@ export default function Categories() {
   if (categories.length === 0) return null;
 
   return (
-    <section className="section" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
-      <div className="container">
+    <section className="section overflow-hidden" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
+      <div className="container overflow-hidden">
         {/* Section header */}
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 backdrop-blur-sm">
@@ -135,7 +135,7 @@ export default function Categories() {
           spaceBetween={20}
           loop={categories.length > 3}
           autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          className="!overflow-visible"
+          className="!overflow-hidden"
         >
           {categories.map((category) => {
             const Icon = getCategoryIcon(category.name);
