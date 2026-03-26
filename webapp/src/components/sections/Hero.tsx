@@ -24,20 +24,19 @@ function HeroSearch() {
 
   return (
     <form onSubmit={handleSubmit} className="pt-4 pb-2">
-      <div className="max-w-xl mx-auto lg:mx-0 bg-white/15 backdrop-blur-xl border border-white/25 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/25 focus-within:border-white/40">
-        <Search className="h-4 w-4 text-white/60 ml-3 flex-shrink-0" />
+      <div className="max-w-xl mx-auto bg-white/15 backdrop-blur-xl border border-white/25 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/25 focus-within:border-white/40">
         <input
           type="text"
           placeholder="Buscar productos, categorías..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 bg-transparent border-none text-white placeholder:text-white/50 text-sm px-3 py-1.5 focus:outline-none"
+          className="flex-1 bg-transparent border-none text-white placeholder:text-white/50 text-sm px-4 py-1.5 focus:outline-none"
         />
         <button
           type="submit"
-          className="bg-white text-[#FE248A] rounded-full px-5 py-1.5 text-sm font-semibold hover:bg-white/90 transition-colors flex-shrink-0"
+          className="bg-white text-[#FE248A] rounded-full p-2 hover:bg-white/90 transition-colors flex-shrink-0"
         >
-          Buscar
+          <Search className="h-4 w-4" />
         </button>
       </div>
     </form>
