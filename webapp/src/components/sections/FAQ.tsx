@@ -70,13 +70,13 @@ function AccordionItem({
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-start gap-5 md:gap-7 py-7 md:py-8 text-left cursor-pointer border-b border-foreground/[0.06] transition-colors duration-300 hover:border-[#F2C94C]/40"
+        className="w-full flex items-start gap-5 md:gap-7 py-7 md:py-8 text-left cursor-pointer border-b border-foreground/[0.06] transition-colors duration-300 hover:border-[#F5D966]/40"
         aria-expanded={isOpen}
       >
         {/* Number */}
         <span
           className="text-sm font-semibold tabular-nums flex-shrink-0 mt-0.5 transition-colors duration-300"
-          style={{ color: isOpen ? '#F2C94C' : 'rgba(0,0,0,0.2)' }}
+          style={{ color: isOpen ? '#F5D966' : 'rgba(0,0,0,0.2)' }}
         >
           {num}
         </span>
@@ -95,18 +95,18 @@ function AccordionItem({
         <span
           className="relative flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mt-0.5 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
           style={{
-            backgroundColor: isOpen ? '#F2C94C' : 'rgba(242,201,76,0.12)',
+            backgroundColor: isOpen ? '#F5D966' : 'rgba(245,217,102,0.12)',
           }}
           aria-hidden="true"
         >
           <span
             className="absolute w-4 h-[2px] rounded-full transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
-            style={{ backgroundColor: isOpen ? '#1F1F1F' : '#F2C94C' }}
+            style={{ backgroundColor: isOpen ? '#1F1F1F' : '#F5D966' }}
           />
           <span
             className="absolute w-4 h-[2px] rounded-full transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)]"
             style={{
-              backgroundColor: isOpen ? '#1F1F1F' : '#F2C94C',
+              backgroundColor: isOpen ? '#1F1F1F' : '#F5D966',
               transform: isOpen ? 'rotate(0deg)' : 'rotate(90deg)',
             }}
           />
@@ -145,13 +145,13 @@ export default function FAQ() {
       style={{ backgroundColor: '#FAFAF7' }}
     >
       {/* Decorative gradient line at top */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F2C94C]/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#F5D966]/50 to-transparent" />
 
       {/* Subtle ambient glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(242,201,76,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, rgba(245,217,102,0.04) 0%, transparent 70%)',
         }}
       />
 
@@ -166,7 +166,7 @@ export default function FAQ() {
               'opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         >
-          <span className="inline-block text-xs font-semibold uppercase tracking-[0.2em] text-[#F2C94C] mb-4">
+          <span className="inline-block text-xs font-semibold uppercase tracking-[0.2em] text-[#F5D966] mb-4">
             Resuelve tus dudas
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-foreground tracking-tight leading-[1.1]">

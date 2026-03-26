@@ -44,7 +44,7 @@ function RotatingWord() {
 
   if (reduced.current) {
     return (
-      <span className="text-[#B8F044] font-extrabold">
+      <span className="text-[#F5D966] font-extrabold">
         {ROTATING_WORDS[index]}
       </span>
     );
@@ -58,7 +58,7 @@ function RotatingWord() {
       aria-label={`Categoría: ${ROTATING_WORDS[index]}`}
     >
       <span
-        className="inline-block text-[#B8F044] font-extrabold whitespace-nowrap"
+        className="inline-block text-[#F5D966] font-extrabold whitespace-nowrap"
         style={{
           transform: animating ? 'translateY(-110%)' : 'translateY(0)',
           opacity: animating ? 0 : 1,

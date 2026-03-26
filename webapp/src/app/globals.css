@@ -7,7 +7,7 @@
   --radius: 0.625rem;
 
   /* Suvenirs Brand Colors — "House of Jefas" palette */
-  /* Primary: #FE248A (amor) | Secondary: #F47920 (jefas) | Accent: #F2C94C (vitalidad) | Soft Pink: #FFD4E0 (balance) */
+  /* Primary: #FE248A (amor) | Secondary: #F47920 (jefas) | Accent: #F5D966 (vitalidad) | Soft Pink: #FFD4E0 (balance) */
 
   --background: oklch(0.99 0.01 350);
   --foreground: #6B1035;
@@ -30,8 +30,8 @@
   --muted: #F5E1EA;
   --muted-foreground: oklch(0.45 0.02 340);
 
-  /* Accent — Golden Yellow #F2C94C (vitalidad) */
-  --accent: #F2C94C;
+  /* Accent — Golden Yellow #F5D966 (vitalidad) */
+  --accent: #F5D966;
   --accent-foreground: #3D2E0A;
 
   /* Destructive — Red for errors */
@@ -68,7 +68,7 @@
   --color-warning: #ffcd35;
   --color-success: #00b090;
   --color-azure: #357df9;
-  --color-lime: #F2C94C;
+  --color-lime: #F5D966;
   --color-orange: #F47920;
   --color-soft-pink: #FFD4E0;
   --color-white: #ffffff;
