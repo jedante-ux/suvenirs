@@ -118,6 +118,10 @@ export default function Header() {
     prevCountRef.current = totalItems;
   }, [totalItems]);
 
+  // Pages with colored hero (pink bg) vs white bg pages
+  const isHeroPage = pathname === '/';
+  const showDarkNav = isScrolled || !isHeroPage;
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -143,14 +147,14 @@ export default function Header() {
     <header
       className={cn(
         'fixed left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md border-b border-border/50' : 'top-7 bg-transparent'
+        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md border-b border-border/50' : (isHeroPage ? 'top-7 bg-transparent' : 'top-7 bg-white/95 backdrop-blur-md')
       )}
     >
       <div className="container">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Logo size="md" variant={isScrolled ? 'default' : 'white'} />
+            <Logo size="md" variant={showDarkNav ? 'default' : 'white'} />
           </Link>
 
           {/* Desktop Navigation */}
@@ -161,8 +165,8 @@ export default function Header() {
                 <NavigationMenuTrigger
                   className={cn(
                     'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
-                    !isScrolled && 'text-white hover:text-white/80',
-                    isScrolled && (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'text-primary font-semibold'
+                    !showDarkNav && 'text-white hover:text-white/80',
+                    showDarkNav && (pathname === '/productos' || pathname === '/categorias' || pathname === '/kits') && 'text-primary font-semibold'
                   )}
                 >
                   Productos
@@ -234,7 +238,7 @@ export default function Header() {
                 <NavigationMenuTrigger
                   className={cn(
                     'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
-                    !isScrolled && 'text-white hover:text-white/80',
+                    !showDarkNav && 'text-white hover:text-white/80',
                   )}
                 >
                   Populares
@@ -265,7 +269,7 @@ export default function Header() {
                 <NavigationMenuTrigger
                   className={cn(
                     'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-all duration-300 hover:opacity-70',
-                    !isScrolled && 'text-white hover:text-white/80',
+                    !showDarkNav && 'text-white hover:text-white/80',
                   )}
                 >
                   Tecnología
@@ -300,8 +304,8 @@ export default function Header() {
                       className={cn(
                         navigationMenuTriggerStyle(),
                         'bg-transparent hover:bg-transparent focus:bg-transparent transition-all duration-300 hover:opacity-70',
-                        !isScrolled && 'text-white hover:text-white/80',
-                        isScrolled && pathname === link.href && 'text-primary font-semibold'
+                        !showDarkNav && 'text-white hover:text-white/80',
+                        showDarkNav && pathname === link.href && 'text-primary font-semibold'
                       )}
                     >
                       {link.name}
@@ -319,9 +323,9 @@ export default function Header() {
               variant="outline"
               className={cn(
                 "relative rounded-full px-4 gap-2 transition-all duration-300",
-                isScrolled
-                  ? "border-primary text-primary bg-transparent hover:bg-transparent"
-                  : "border-white text-white bg-transparent hover:bg-transparent"
+                showDarkNav
+                  ? "border-primary text-primary bg-transparent hover:bg-primary/5"
+                  : "border-white/30 text-[#FE248A] bg-white hover:bg-white/90"
               )}
               onClick={openCart}
             >
@@ -342,7 +346,7 @@ export default function Header() {
             {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={cn("lg:hidden transition-colors duration-300 bg-transparent hover:bg-transparent", !isScrolled && "text-white hover:text-white/80")}>
+                <Button variant="ghost" size="icon" className={cn("lg:hidden transition-colors duration-300 bg-transparent hover:bg-transparent", !showDarkNav && "text-white hover:text-white/80")}>
                   <MenuIcon size={24} />
                 </Button>
               </SheetTrigger>
