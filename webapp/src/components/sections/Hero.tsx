@@ -204,7 +204,7 @@ export default function Hero() {
               Merchandising personalizado, trofeos, copas y reconocimientos. Cotiza online y recibe en todo Chile.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-10">
               <Button
                 asChild
                 size="lg"
