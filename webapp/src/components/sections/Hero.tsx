@@ -183,9 +183,11 @@ export default function Hero() {
         <HeroSearch />
       </div>
 
-      {/* Banner — edge to edge */}
-      <div className="mt-4">
-        <HeroBanner />
+      {/* Banner — contained with rounded corners */}
+      <div className="container mt-4">
+        <div className="rounded-2xl overflow-hidden">
+          <HeroBanner />
+        </div>
       </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}

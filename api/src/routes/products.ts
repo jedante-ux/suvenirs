@@ -109,7 +109,7 @@ router.get('/', async (req: Request, res: Response) => {
         .populate('category', 'name slug description icon')
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       Product.countDocuments(query),
     ]);
 

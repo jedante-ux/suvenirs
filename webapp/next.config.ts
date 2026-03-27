@@ -1,8 +1,19 @@
 import type { NextConfig } from "next";
 
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-XSS-Protection', value: '1; mode=block' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+];
+
 const nextConfig: NextConfig = {
-  // Prevent stale HTML cache after deploys
   headers: async () => [
+    {
+      source: '/:path*',
+      headers: securityHeaders,
+    },
     {
       source: '/gestion/:path*',
       headers: [
@@ -12,10 +23,10 @@ const nextConfig: NextConfig = {
   ],
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'images.pexels.com' },
+      { protocol: 'https', hostname: 'www.pexels.com' },
+      { protocol: 'https', hostname: 'vdxzhvkwmxybskvywwdt.supabase.co' },
+      { protocol: 'https', hostname: '*.supabase.co' },
     ],
   },
 };

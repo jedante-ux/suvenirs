@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 import { connectDatabase } from './config/database.js';
 import { env } from './config/env.js';
 import routes from './routes/index.js';
@@ -12,13 +13,26 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
+// Global rate limiter
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many requests, please try again later' },
+}));
+
 // Parse CORS origins from environment variable (comma-separated for multiple origins)
-const corsOrigins = env.CORS_ORIGIN.split(',').map(origin => origin.trim());
+const corsOrigins = env.CORS_ORIGIN.split(',')
+  .map(origin => origin.trim())
+  .filter(origin => origin !== '*');
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin || corsOrigins.includes(origin) || corsOrigins.includes('*')) {
+    // Allow requests with no origin (like mobile apps or curl) only in development
+    if (!origin && env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else if (origin && corsOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

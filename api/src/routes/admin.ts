@@ -5,6 +5,7 @@ import { Product } from '../models/Product.js';
 import { Quote } from '../models/Quote.js';
 import { Category } from '../models/Category.js';
 import { authenticate, authorize } from '../middleware/auth.js';
+import { escapeRegex } from '../utils/sanitize.js';
 
 const router = Router();
 
@@ -135,10 +136,11 @@ router.get('/users', async (req: Request, res: Response) => {
     }
 
     if (search) {
+      const safeSearch = escapeRegex(search as string);
       query.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
+        { firstName: { $regex: safeSearch, $options: 'i' } },
+        { lastName: { $regex: safeSearch, $options: 'i' } },
+        { email: { $regex: safeSearch, $options: 'i' } },
       ];
     }
 
@@ -149,7 +151,7 @@ router.get('/users', async (req: Request, res: Response) => {
       User.find(query)
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       User.countDocuments(query),
     ]);
 
@@ -305,9 +307,9 @@ router.get('/products', async (req: Request, res: Response) => {
 
     if (search) {
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { productId: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
+        { name: { $regex: escapeRegex(search as string), $options: 'i' } },
+        { productId: { $regex: escapeRegex(search as string), $options: 'i' } },
+        { description: { $regex: escapeRegex(search as string), $options: 'i' } },
       ];
     }
 
@@ -338,7 +340,7 @@ router.get('/products', async (req: Request, res: Response) => {
         .populate('category', 'name slug')
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       Product.countDocuments(query),
     ]);
 
@@ -362,6 +364,17 @@ router.post('/products/import', upload.single('file'), async (req: Request, res:
   try {
     if (!req.file) {
       res.status(400).json({ success: false, error: 'No file uploaded' });
+      return;
+    }
+
+    // Validate file type
+    const allowedMimes = ['text/csv', 'application/vnd.ms-excel', 'text/plain'];
+    if (!allowedMimes.includes(req.file.mimetype)) {
+      res.status(400).json({ success: false, error: 'Invalid file type. Only CSV files are allowed.' });
+      return;
+    }
+    if (!req.file.originalname.toLowerCase().endsWith('.csv')) {
+      res.status(400).json({ success: false, error: 'File must have .csv extension' });
       return;
     }
 
@@ -474,6 +487,17 @@ router.post('/products/import-prices', upload.single('file'), async (req: Reques
   try {
     if (!req.file) {
       res.status(400).json({ success: false, error: 'No file uploaded' });
+      return;
+    }
+
+    // Validate file type
+    const allowedMimes = ['text/csv', 'application/vnd.ms-excel', 'text/plain'];
+    if (!allowedMimes.includes(req.file.mimetype)) {
+      res.status(400).json({ success: false, error: 'Invalid file type. Only CSV files are allowed.' });
+      return;
+    }
+    if (!req.file.originalname.toLowerCase().endsWith('.csv')) {
+      res.status(400).json({ success: false, error: 'File must have .csv extension' });
       return;
     }
 

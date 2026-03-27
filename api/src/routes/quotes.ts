@@ -1,18 +1,43 @@
 import { Router, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
+import { z } from 'zod';
 import { Quote } from '../models/Quote.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 
+const createQuoteSchema = z.object({
+  items: z.array(z.object({
+    productId: z.string().min(1),
+    name: z.string().min(1).optional(),
+    quantity: z.number().int().positive(),
+    customization: z.string().max(500).optional(),
+  })).min(1, 'At least one item is required'),
+  customerName: z.string().min(1).max(200).optional(),
+  customerEmail: z.string().email().max(254).optional(),
+  customerPhone: z.string().max(20).optional(),
+  customerCompany: z.string().max(200).optional(),
+  notes: z.string().max(1000).optional(),
+  source: z.enum(['web', 'whatsapp', 'email', 'phone']).optional(),
+});
+
 const router = Router();
 
-// POST /api/quotes - Create a new quote (public - from cart)
-router.post('/', async (req: Request, res: Response) => {
-  try {
-    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source } = req.body;
+const quoteLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many quote requests, please try again later' },
+});
 
-    if (!items || items.length === 0) {
-      res.status(400).json({ success: false, error: 'At least one item is required' });
+// POST /api/quotes - Create a new quote (public - from cart)
+router.post('/', quoteLimiter, async (req: Request, res: Response) => {
+  try {
+    const parsed = createQuoteSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ success: false, error: parsed.error.errors[0].message });
       return;
     }
+    const { items, customerName, customerEmail, customerPhone, customerCompany, notes, source } = parsed.data;
 
     const totalItems = items.length;
     const totalUnits = items.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0);
@@ -59,7 +84,7 @@ router.get('/', authenticate, authorize('admin'), async (req: Request, res: Resp
       Quote.find(query)
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       Quote.countDocuments(query),
     ]);
 

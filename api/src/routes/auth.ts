@@ -1,14 +1,41 @@
 import { Router, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import { User } from '../models/User.js';
 import { generateToken, authenticate } from '../middleware/auth.js';
 import { AuthRequest } from '../types/index.js';
 
 const router = Router();
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many attempts, please try again later' },
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many registration attempts, please try again later' },
+});
+
 // POST /api/auth/register - Register user
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', registerLimiter, async (req: Request, res: Response) => {
   try {
     const { email, password, firstName, lastName, phone, company } = req.body;
+
+    // Validate password strength
+    if (!password || password.length < 8) {
+      res.status(400).json({ success: false, error: 'Password must be at least 8 characters' });
+      return;
+    }
+    if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      res.status(400).json({ success: false, error: 'Password must contain at least one uppercase letter and one number' });
+      return;
+    }
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -53,7 +80,7 @@ router.post('/register', async (req: Request, res: Response) => {
 });
 
 // POST /api/auth/login - Login user
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', authLimiter, async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -175,6 +202,11 @@ router.put('/password', authenticate, async (req: AuthRequest, res: Response) =>
 
     if (!currentPassword || !newPassword) {
       res.status(400).json({ success: false, error: 'Current and new password are required' });
+      return;
+    }
+
+    if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+      res.status(400).json({ success: false, error: 'New password must be at least 8 characters with one uppercase letter and one number' });
       return;
     }
 

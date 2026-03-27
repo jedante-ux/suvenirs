@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { BlogPost } from '../models/BlogPost.js';
 import { authenticate, authorize } from '../middleware/auth.js';
+import { escapeRegex } from '../utils/sanitize.js';
 
 const router = Router();
 
@@ -34,7 +35,7 @@ router.get('/', async (req: Request, res: Response) => {
         .populate('author', 'firstName lastName')
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       BlogPost.countDocuments(query),
     ]);
 
@@ -121,9 +122,10 @@ router.get('/admin/all', authenticate, authorize('admin'), async (req: Request, 
     const query: any = {};
 
     if (search) {
+      const safeSearch = escapeRegex(search as string);
       query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { excerpt: { $regex: search, $options: 'i' } },
+        { title: { $regex: safeSearch, $options: 'i' } },
+        { excerpt: { $regex: safeSearch, $options: 'i' } },
       ];
     }
 
@@ -139,7 +141,7 @@ router.get('/admin/all', authenticate, authorize('admin'), async (req: Request, 
         .populate('author', 'firstName lastName email')
         .sort({ [sort as string]: sortOrder })
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Math.min(Number(limit), 100)),
       BlogPost.countDocuments(query),
     ]);
 

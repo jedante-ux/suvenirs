@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
@@ -53,26 +54,32 @@ export default function RootLayout({
   return (
     <html lang="es-CL">
       <head>
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1JWT23MNW" />
-        <script dangerouslySetInnerHTML={{ __html: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-N1JWT23MNW');
-        `}} />
-        <script dangerouslySetInnerHTML={{ __html: `
-          window.addEventListener('error', function(e) {
-            if (e.message && (
-              e.message.includes('Loading chunk') ||
-              e.message.includes('Failed to fetch dynamically imported module') ||
-              e.message.includes('Importing a module script failed') ||
-              e.message.includes('ChunkLoadError')
-            )) {
-              window.location.reload();
-            }
-          });
-        `}} />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-N1JWT23MNW"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-N1JWT23MNW');
+          `}
+        </Script>
+        <Script id="chunk-error-handler" strategy="afterInteractive">
+          {`
+            window.addEventListener('error', function(e) {
+              if (e.message && (
+                e.message.includes('Loading chunk') ||
+                e.message.includes('Failed to fetch dynamically imported module') ||
+                e.message.includes('Importing a module script failed') ||
+                e.message.includes('ChunkLoadError')
+              )) {
+                window.location.reload();
+              }
+            });
+          `}
+        </Script>
       </head>
       <body className={`${poppins.variable} antialiased`}>
         <CartProvider>
