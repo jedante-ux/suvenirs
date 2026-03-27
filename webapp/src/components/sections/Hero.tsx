@@ -194,7 +194,7 @@ export default function Hero() {
 
           {/* Left: copy + CTAs */}
           <div className="text-center lg:text-left space-y-6" style={entranceStyle(0.1)}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mt-10">
               Regalos<br />
               <RotatingWord /><br />
               que Inspiran
