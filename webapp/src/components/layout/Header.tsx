@@ -144,7 +144,7 @@ export default function Header() {
       )}
     >
       <div className="container">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-12 md:h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Logo size="md" variant={showDarkNav ? 'default' : 'white'} />
