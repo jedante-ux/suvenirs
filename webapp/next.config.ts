@@ -23,10 +23,10 @@ const nextConfig: NextConfig = {
   ],
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'images.pexels.com' },
-      { protocol: 'https', hostname: 'www.pexels.com' },
-      { protocol: 'https', hostname: 'vdxzhvkwmxybskvywwdt.supabase.co' },
-      { protocol: 'https', hostname: '*.supabase.co' },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
   },
 };
