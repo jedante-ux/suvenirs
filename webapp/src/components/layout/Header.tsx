@@ -164,7 +164,7 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-[#3A050F]',
+      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-[#3A050F]',
     )} style={{ backgroundColor: '#F6DCA3' }}>
       <div className="container flex items-center justify-between">
         <a href="mailto:contacto@suvenirs.cl" className="hover:underline">contacto@suvenirs.cl</a>
@@ -174,7 +174,7 @@ export default function Header() {
     </div>
     <header
       className={cn(
-        'fixed left-0 right-0 z-50 top-7 transition-all duration-300',
+        'fixed left-0 right-0 z-50 top-9 transition-all duration-300',
         isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : (isHeroPage ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md')
       )}
     >
