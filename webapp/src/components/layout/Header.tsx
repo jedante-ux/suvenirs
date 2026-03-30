@@ -51,7 +51,46 @@ function getCategoryIcon(name: string) {
   if (n.includes('caja') || n.includes('estuche') || n.includes('packaging')) return Box;
   if (n.includes('lanyard') || n.includes('identificación')) return Briefcase;
   if (n.includes('bamboo')) return BookOpen;
+  if (n.includes('accesorio') || n.includes('herramienta')) return Briefcase;
+  if (n.includes('parrill') || n.includes('destapador')) return Wine;
+  if (n.includes('yute') || n.includes('saco')) return ShoppingBag;
+  if (n.includes('novedade')) return Star;
   return Package;
+}
+
+// Map slug-like category names to friendly display names
+function getCategoryDisplayName(name: string): string {
+  const map: Record<string, string> = {
+    'Set De Regalos': 'Set de Regalos',
+    'Bolígrafos-lápices-estuches': 'Bolígrafos, Lápices y Estuches',
+    'Libretas-cuadernos-memo Set': 'Libretas, Cuadernos y Memo Set',
+    'Tecnológicos': 'Tecnológicos',
+    'Accesorios-herramientas': 'Accesorios y Herramientas',
+    'Bolsas Publicitarias': 'Bolsas Publicitarias',
+    'Mochilas-bananos-bolsos-morrales': 'Mochilas, Bolsos y Morrales',
+    'Botellas-mugs-tazones-termos-vasos': 'Botellas, Mugs, Termos y Vasos',
+    'Lanyards E Identificación': 'Lanyards e Identificación',
+    'Línea Bamboo': 'Línea Bamboo',
+    'Llaveros': 'Llaveros',
+    'Novedades Publicitarios': 'Novedades',
+    'Set De Vino-descorchadores-bolsas Para Vinos': 'Set de Vino y Descorchadores',
+    'Set Parrillero-destapadores-posavasos': 'Set Parrillero y Destapadores',
+    'Sacos De Yute': 'Sacos de Yute',
+    'Trofeos Y Premios': 'Trofeos y Premios',
+    'Belleza Y Salud': 'Belleza y Salud',
+    'Packaging': 'Packaging',
+    'Galvanos De Cristal': 'Galvanos de Cristal',
+    'Galvanos De Madera Y Varios': 'Galvanos de Madera',
+    'Copas 2024-2025': 'Copas 2024-2025',
+    'Copas Línea Clásica': 'Copas Línea Clásica',
+    'Copas Línea Comercial': 'Copas Línea Comercial',
+    'Copas Y Torres': 'Copas y Torres',
+    'Línea Cobre': 'Línea Cobre',
+    'Medallas': 'Medallas',
+    'Placas': 'Placas',
+    'Trofeos': 'Trofeos',
+  };
+  return map[name] || name.replace(/-/g, ' ');
 }
 
 const popularItems = [
@@ -125,8 +164,8 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-white',
-    )} style={{ background: 'linear-gradient(90deg, #F5D966, #F47920, #F5D966)' }}>
+      'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-[#3A050F]',
+    )} style={{ backgroundColor: '#F6DCA3' }}>
       <div className="container flex items-center justify-between">
         <a href="mailto:contacto@suvenirs.cl" className="hover:underline">contacto@suvenirs.cl</a>
         <span className="flex items-center"><Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!</span>
@@ -169,14 +208,15 @@ export default function Header() {
                     </NavigationMenuLink>
                     {parentCategories.map((cat) => {
                       const Icon = getCategoryIcon(cat.name);
+                      const displayName = getCategoryDisplayName(cat.name);
                       return (
                         <NavigationMenuLink key={cat.id} asChild>
                           <Link
                             href={`/productos?category=${cat.slug}`}
-                            className="flex items-center gap-2.5 px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                            className="!flex !flex-row !items-center gap-2.5 px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
                           >
                             <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                            {cat.name}
+                            <span>{displayName}</span>
                           </Link>
                         </NavigationMenuLink>
                       );
