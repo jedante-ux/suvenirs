@@ -86,13 +86,13 @@ export default function Categories() {
 
   if (loading) {
     return (
-      <section className="section" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
+      <section className="section" style={{ backgroundColor: '#F6DCA3' }}>
         <div className="container">
           <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 text-sm px-4 py-1.5">
+            <Badge variant="outline" className="mb-4 bg-[#3A050F]/10 text-[#3A050F] border-[#3A050F]/25 text-sm px-4 py-1.5">
               Nuestras Categorías
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3A050F] mb-4">
               Lo que buscas para tus empleados está aquí
             </h2>
           </div>
@@ -109,17 +109,17 @@ export default function Categories() {
   if (categories.length === 0) return null;
 
   return (
-    <section className="section overflow-hidden" style={{ background: 'linear-gradient(135deg, #F47920 0%, #FF9A4D 50%, #F47920 100%)' }}>
+    <section className="section overflow-hidden" style={{ backgroundColor: '#F6DCA3' }}>
       <div className="container overflow-hidden">
         {/* Section header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 bg-white/15 text-white border-white/25 backdrop-blur-sm">
+          <Badge variant="outline" className="mb-4 bg-[#3A050F]/10 text-[#3A050F] border-[#3A050F]/25 backdrop-blur-sm">
             Nuestras Categorías
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#3A050F] mb-4">
             Lo que buscas para tus empleados está aquí
           </h2>
-          <p className="text-white/80 max-w-2xl mx-auto">
+          <p className="text-[#3A050F]/70 max-w-2xl mx-auto">
             Encuentra el regalo corporativo perfecto para reconocer, motivar y sorprender a tu equipo
             en cada momento importante.
           </p>

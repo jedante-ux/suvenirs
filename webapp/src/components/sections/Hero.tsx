@@ -179,12 +179,12 @@ export default function Hero() {
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
 
       {/* Search bar — centered */}
-      <div className="container relative z-10 pt-[10px] pb-[20px]">
+      <div className="container relative z-10 pt-[10px] mb-[40px]">
         <HeroSearch />
       </div>
 
       {/* Banner — contained with rounded corners */}
-      <div className="container mt-[20px]">
+      <div className="container">
         <div className="rounded-2xl overflow-hidden">
           <HeroBanner />
         </div>
