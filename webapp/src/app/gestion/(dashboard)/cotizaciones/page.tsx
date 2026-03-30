@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Quote, QuoteItem, StampingType, Product } from '@/types';
+import { Quote, QuoteItem, StampingType, Product, ProductVariant, ProductAttribute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -93,6 +93,7 @@ export default function CotizacionesPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedQty, setSelectedQty] = useState(1);
   const [replacingItemId, setReplacingItemId] = useState<string | null>(null);
+  const [selectedAttrs, setSelectedAttrs] = useState<Record<string, string>>({});
   const [supplierMsgOpen, setSupplierMsgOpen] = useState(false);
   const [supplierMsgCopied, setSupplierMsgCopied] = useState(false);
 
@@ -319,20 +320,41 @@ export default function CotizacionesPage() {
     setSelectedProduct(null);
     setSelectedQty(1);
     setReplacingItemId(null);
+    setSelectedAttrs({});
   };
 
   const confirmAddProduct = () => {
     if (!selectedProduct) return;
     const qty = Math.max(1, selectedQty);
 
+    // Find matching variant
+    const attributes = selectedProduct.attributes || [];
+    const variants = selectedProduct.variants || [];
+    const hasVariants = attributes.length > 0 && variants.length > 0;
+    let matchedVariant: ProductVariant | null = null;
+
+    if (hasVariants) {
+      matchedVariant = variants.find(v => {
+        const vAttrs = v.attributes as Record<string, string>;
+        return Object.entries(selectedAttrs).every(([key, val]) => vAttrs[key] === val);
+      }) || null;
+    }
+
+    const variantSku = matchedVariant?.sku || null;
+    const variantLabel = hasVariants && Object.keys(selectedAttrs).length > 0
+      ? Object.values(selectedAttrs).join(' / ')
+      : null;
+    const unitPrice = matchedVariant?.price ?? matchedVariant?.salePrice ?? selectedProduct.price ?? 0;
+
     if (replacingItemId) {
-      // Adding as a replacement
       const newItem: QuoteItem = {
         id: `new-${Date.now()}`,
         productId: selectedProduct.productId,
         productName: selectedProduct.name,
+        variantSku,
+        variantLabel,
         quantity: qty,
-        unitPrice: selectedProduct.price || 0,
+        unitPrice,
         description: selectedProduct.description || '',
         outOfStock: false,
         replacesItemId: replacingItemId,
@@ -340,8 +362,12 @@ export default function CotizacionesPage() {
       setEditForm({ ...editForm, items: [...editForm.items, newItem] });
       setReplacingItemId(null);
     } else {
-      // Normal add
-      const existing = editForm.items.findIndex(i => i.productId === selectedProduct.productId && !i.replacesItemId);
+      // Check for duplicate (same product + same variant)
+      const itemKey = variantSku ? `${selectedProduct.productId}::${variantSku}` : selectedProduct.productId;
+      const existing = editForm.items.findIndex(i => {
+        const iKey = i.variantSku ? `${i.productId}::${i.variantSku}` : i.productId;
+        return iKey === itemKey && !i.replacesItemId;
+      });
       if (existing >= 0) {
         const items = [...editForm.items];
         items[existing] = { ...items[existing], quantity: items[existing].quantity + qty };
@@ -351,8 +377,10 @@ export default function CotizacionesPage() {
           id: `new-${Date.now()}`,
           productId: selectedProduct.productId,
           productName: selectedProduct.name,
+          variantSku,
+          variantLabel,
           quantity: qty,
-          unitPrice: selectedProduct.price || 0,
+          unitPrice,
           description: selectedProduct.description || '',
           outOfStock: false,
           replacesItemId: null,
@@ -1298,10 +1326,45 @@ export default function CotizacionesPage() {
                     <p className="text-xs text-primary font-medium mt-0.5">${selectedProduct.price.toLocaleString('es-CL')} / u.</p>
                   )}
                 </div>
-                <button className="text-xs text-muted-foreground hover:text-foreground underline flex-shrink-0" onClick={() => setSelectedProduct(null)}>
+                <button className="text-xs text-muted-foreground hover:text-foreground underline flex-shrink-0" onClick={() => { setSelectedProduct(null); setSelectedAttrs({}); }}>
                   Cambiar
                 </button>
               </div>
+
+              {/* Variant selectors */}
+              {(selectedProduct.attributes || []).length > 0 && (selectedProduct.variants || []).length > 0 && (
+                <div className="space-y-3">
+                  {(selectedProduct.attributes || []).map((attr: ProductAttribute) => (
+                    <div key={attr.id} className="space-y-1.5">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        {attr.name}
+                        {selectedAttrs[attr.name] && (
+                          <span className="text-primary ml-1.5">— {selectedAttrs[attr.name]}</span>
+                        )}
+                      </label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {attr.values.map((val: string) => {
+                          const isSelected = selectedAttrs[attr.name] === val;
+                          return (
+                            <button
+                              key={val}
+                              type="button"
+                              onClick={() => setSelectedAttrs(prev => ({ ...prev, [attr.name]: val }))}
+                              className={`px-2.5 py-1 rounded-md text-xs border transition-all ${
+                                isSelected
+                                  ? 'border-primary bg-primary/10 text-primary font-medium'
+                                  : 'border-border hover:border-primary/50 text-foreground'
+                              }`}
+                            >
+                              {val}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label>Cantidad</Label>
