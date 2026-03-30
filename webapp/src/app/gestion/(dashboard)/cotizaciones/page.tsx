@@ -101,10 +101,10 @@ export default function CotizacionesPage() {
     const lines = activeItems.map(item => {
       const variant = item.variantLabel ? ` (${item.variantLabel})` : '';
       const sku = item.variantSku || item.productId;
-      return `${item.quantity} Uds de ${item.productName} SKU: ${sku}${variant}`;
+      return `• ${item.quantity} Uds de ${item.productName} SKU: ${sku}${variant}`;
     });
 
-    return `Estimados, buen día.\n\nFavor cotizar los siguientes productos:\n\n${lines.join('\n\n')}\n\nQuedamos atentos,\n\nSuvenirs Corporativos\nRut: 78.204.353-6\nAv. Irarrázaval 2401 Of. 607. Ñuñoa\n+56 9 3146 4930`;
+    return `Estimados, buen día.\n\nFavor enviar nota de venta de los siguientes productos:\n\n${lines.join('\n\n')}\n\nQuedamos atentos,\n\nSuvenirs Corporativos\nRut: 78.204.353-6\nAv. Irarrázaval 2401 Of. 607. Ñuñoa\n+56 9 3146 4930`;
   };
 
   const copySupplierMessage = () => {
