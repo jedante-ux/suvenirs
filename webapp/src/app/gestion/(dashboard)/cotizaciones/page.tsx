@@ -843,9 +843,16 @@ export default function CotizacionesPage() {
                             <p className={`text-sm font-medium leading-snug ${item.outOfStock ? 'line-through text-muted-foreground' : ''}`}>
                               {item.productName}
                             </p>
-                            {item.outOfStock && (
-                              <span className="text-xs text-red-500 font-medium">Agotado</span>
-                            )}
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              {(item as any).proveedor && (
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                                  {(item as any).proveedor}
+                                </span>
+                              )}
+                              {item.outOfStock && (
+                                <span className="text-xs text-red-500 font-medium">Agotado</span>
+                              )}
+                            </div>
                           </div>
                           <div className="flex items-center gap-1 flex-shrink-0 -mt-0.5">
                             <Button
