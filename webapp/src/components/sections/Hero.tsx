@@ -33,7 +33,7 @@ function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} role="search" className="w-full flex justify-center">
+    <form onSubmit={handleSubmit} role="search" className="w-full flex justify-center pb-[20px]">
       <div className="w-full max-w-xl bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
         <input
           type="text"
