@@ -64,9 +64,6 @@ const popularItems = [
   { name: 'Encobrizados', slug: '', search: 'cobre' },
   { name: 'Ecológicos', slug: 'l-nea-bamboo', search: '' },
   { name: 'Tecnológicos', slug: 'tecnol-gicos', search: '' },
-  { name: 'Parlantes y Bluetooth', slug: '', search: 'parlante bluetooth' },
-  { name: 'Cargadores', slug: '', search: 'cargador' },
-  { name: 'USB y Pendrive', slug: '', search: 'usb pendrive' },
 ];
 
 const navLinks = [
@@ -128,8 +125,7 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-white transition-all duration-300',
-      isScrolled ? 'opacity-0 -translate-y-full' : 'opacity-100'
+      'fixed top-0 left-0 right-0 z-50 py-1.5 text-xs font-medium text-white',
     )} style={{ background: 'linear-gradient(90deg, #F5D966, #F47920, #F5D966)' }}>
       <div className="container flex items-center justify-between">
         <a href="mailto:contacto@suvenirs.cl" className="hover:underline">contacto@suvenirs.cl</a>
@@ -139,8 +135,8 @@ export default function Header() {
     </div>
     <header
       className={cn(
-        'fixed left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'top-0 bg-white/95 backdrop-blur-md' : (isHeroPage ? 'top-7 bg-transparent' : 'top-7 bg-white/95 backdrop-blur-md')
+        'fixed left-0 right-0 z-50 top-7 transition-all duration-300',
+        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : (isHeroPage ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md')
       )}
     >
       <div className="container">
@@ -171,16 +167,20 @@ export default function Header() {
                         Ver todos los productos
                       </Link>
                     </NavigationMenuLink>
-                    {parentCategories.map((cat) => (
-                      <NavigationMenuLink key={cat.id} asChild>
-                        <Link
-                          href={`/productos?category=${cat.slug}`}
-                          className="block px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
-                        >
-                          {cat.name}
-                        </Link>
-                      </NavigationMenuLink>
-                    ))}
+                    {parentCategories.map((cat) => {
+                      const Icon = getCategoryIcon(cat.name);
+                      return (
+                        <NavigationMenuLink key={cat.id} asChild>
+                          <Link
+                            href={`/productos?category=${cat.slug}`}
+                            className="flex items-center gap-2.5 px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                          >
+                            <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+                            {cat.name}
+                          </Link>
+                        </NavigationMenuLink>
+                      );
+                    })}
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
