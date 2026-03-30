@@ -549,7 +549,7 @@ export default function CotizacionesPage() {
                             {item.variantLabel && <span className="text-xs text-primary ml-1">({item.variantLabel})</span>}
                           </TableCell>
                           <TableCell>
-                            <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-blue-100 text-blue-700' : (item as any).proveedor === 'imblasco' ? 'bg-amber-100 text-amber-700' : 'text-muted-foreground'}`}>
+                            <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-green-100 text-green-700' : (item as any).proveedor === 'imblasco' ? 'bg-blue-100 text-blue-700' : 'text-muted-foreground'}`}>
                               {(item as any).proveedor || '—'}
                             </span>
                           </TableCell>
@@ -845,7 +845,7 @@ export default function CotizacionesPage() {
                             </p>
                             <div className="flex items-center gap-1.5 mt-0.5">
                               {(item as any).proveedor && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                                   {(item as any).proveedor}
                                 </span>
                               )}
