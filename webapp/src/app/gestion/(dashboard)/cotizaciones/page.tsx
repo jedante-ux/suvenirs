@@ -341,9 +341,18 @@ export default function CotizacionesPage() {
     }
 
     const variantSku = matchedVariant?.sku || null;
-    const variantLabel = hasVariants && Object.keys(selectedAttrs).length > 0
-      ? Object.values(selectedAttrs).join(' / ')
-      : null;
+    let variantLabel: string | null = null;
+    if (hasVariants && Object.keys(selectedAttrs).length > 0) {
+      const parts = Object.entries(selectedAttrs).map(([key, val]) => {
+        if (matchedVariant) {
+          const skuParts = matchedVariant.sku.split('-');
+          const code = skuParts[skuParts.length - 1];
+          return `${val} ${code}`;
+        }
+        return val;
+      });
+      variantLabel = parts.join(' / ');
+    }
     const unitPrice = matchedVariant?.price ?? matchedVariant?.salePrice ?? selectedProduct.price ?? 0;
 
     if (replacingItemId) {
@@ -1332,39 +1341,55 @@ export default function CotizacionesPage() {
               </div>
 
               {/* Variant selectors */}
-              {(selectedProduct.attributes || []).length > 0 && (selectedProduct.variants || []).length > 0 && (
-                <div className="space-y-3">
-                  {(selectedProduct.attributes || []).map((attr: ProductAttribute) => (
-                    <div key={attr.id} className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">
-                        {attr.name}
-                        {selectedAttrs[attr.name] && (
-                          <span className="text-primary ml-1.5">— {selectedAttrs[attr.name]}</span>
-                        )}
-                      </label>
-                      <div className="flex flex-wrap gap-1.5">
-                        {attr.values.map((val: string) => {
-                          const isSelected = selectedAttrs[attr.name] === val;
-                          return (
-                            <button
-                              key={val}
-                              type="button"
-                              onClick={() => setSelectedAttrs(prev => ({ ...prev, [attr.name]: val }))}
-                              className={`px-2.5 py-1 rounded-md text-xs border transition-all ${
-                                isSelected
-                                  ? 'border-primary bg-primary/10 text-primary font-medium'
-                                  : 'border-border hover:border-primary/50 text-foreground'
-                              }`}
-                            >
-                              {val}
-                            </button>
-                          );
-                        })}
+              {(selectedProduct.attributes || []).length > 0 && (selectedProduct.variants || []).length > 0 && (() => {
+                const variants = selectedProduct.variants || [];
+                // Build a map: attrName -> value -> variant code (from SKU suffix)
+                const codeMap = new Map<string, string>();
+                for (const v of variants) {
+                  const vAttrs = v.attributes as Record<string, string>;
+                  const skuParts = v.sku.split('-');
+                  const code = skuParts[skuParts.length - 1];
+                  for (const [key, val] of Object.entries(vAttrs)) {
+                    codeMap.set(`${key}::${val}`, code);
+                  }
+                }
+
+                return (
+                  <div className="space-y-3">
+                    {(selectedProduct.attributes || []).map((attr: ProductAttribute) => (
+                      <div key={attr.id} className="space-y-1.5">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          {attr.name}
+                          {selectedAttrs[attr.name] && (() => {
+                            const code = codeMap.get(`${attr.name}::${selectedAttrs[attr.name]}`);
+                            return <span className="text-primary ml-1.5">— {selectedAttrs[attr.name]}{code ? ` (${code})` : ''}</span>;
+                          })()}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5">
+                          {attr.values.map((val: string) => {
+                            const isSelected = selectedAttrs[attr.name] === val;
+                            const code = codeMap.get(`${attr.name}::${val}`);
+                            return (
+                              <button
+                                key={val}
+                                type="button"
+                                onClick={() => setSelectedAttrs(prev => ({ ...prev, [attr.name]: val }))}
+                                className={`px-2.5 py-1 rounded-md text-xs border transition-all ${
+                                  isSelected
+                                    ? 'border-primary bg-primary/10 text-primary font-medium'
+                                    : 'border-border hover:border-primary/50 text-foreground'
+                                }`}
+                              >
+                                {val}{code ? ` (${code})` : ''}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                );
+              })()}
 
               <div className="space-y-2">
                 <Label>Cantidad</Label>
