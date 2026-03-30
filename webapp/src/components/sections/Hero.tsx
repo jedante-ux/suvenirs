@@ -179,12 +179,12 @@ export default function Hero() {
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
 
       {/* Search bar — centered */}
-      <div className="container relative z-10 py-5">
+      <div className="container relative z-10 pt-5 pb-8">
         <HeroSearch />
       </div>
 
       {/* Banner — contained with rounded corners */}
-      <div className="container mt-4">
+      <div className="container">
         <div className="rounded-2xl overflow-hidden">
           <HeroBanner />
         </div>
