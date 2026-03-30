@@ -176,7 +176,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
+    <section className="relative pt-[6.5rem] md:pt-[7.5rem] overflow-hidden" style={{ backgroundColor: '#E8B0BD' }}>
 
       {/* Search bar — centered */}
       <div className="container relative z-10 pt-[10px] pb-[20px]">

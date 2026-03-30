@@ -19,7 +19,7 @@
   --popover-foreground: #6B1035;
 
   /* Primary — Hot Pink #FE248A (amor) — exact logo color */
-  --primary: #FE248A;
+  --primary: #3A050F;
   --primary-foreground: oklch(1 0 0);
 
   /* Secondary — Vibrant Orange #F47920 (jefas) */
@@ -82,7 +82,7 @@
   --card-foreground: oklch(0.985 0.005 90);
   --popover: oklch(0.21 0.01 340);
   --popover-foreground: oklch(0.985 0.005 90);
-  --primary: #FE248A;
+  --primary: #3A050F;
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.75 0.16 55);
   --secondary-foreground: oklch(1 0 0);
