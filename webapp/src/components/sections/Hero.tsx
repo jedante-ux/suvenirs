@@ -184,7 +184,7 @@ export default function Hero() {
       </div>
 
       {/* Banner — contained with rounded corners */}
-      <div className="container">
+      <div className="container mt-[20px]">
         <div className="rounded-2xl overflow-hidden">
           <HeroBanner />
         </div>
