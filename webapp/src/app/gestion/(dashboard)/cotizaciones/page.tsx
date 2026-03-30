@@ -878,7 +878,7 @@ export default function CotizacionesPage() {
                                 onClick={() => updateItemQty(index, item.quantity - 1)}>
                                 <Minus className="h-3 w-3" />
                               </Button>
-                              <Input type="number" min="0" className="w-14 h-7 text-center text-sm"
+                              <Input type="number" min="0" className="w-20 h-7 text-center text-sm"
                                 value={item.quantity}
                                 onChange={e => updateItemQty(index, parseInt(e.target.value) || 0)} />
                               <Button variant="outline" size="icon" className="h-7 w-7"
@@ -935,7 +935,7 @@ export default function CotizacionesPage() {
                                       onClick={() => updateItemQty(rep._index, rep.quantity - 1)}>
                                       <Minus className="h-3 w-3" />
                                     </Button>
-                                    <Input type="number" min="0" className="w-14 h-7 text-center text-sm"
+                                    <Input type="number" min="0" className="w-20 h-7 text-center text-sm"
                                       value={rep.quantity}
                                       onChange={e => updateItemQty(rep._index, parseInt(e.target.value) || 0)} />
                                     <Button variant="outline" size="icon" className="h-7 w-7"
