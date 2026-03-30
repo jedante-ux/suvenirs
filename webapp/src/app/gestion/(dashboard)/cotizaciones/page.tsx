@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Eye, Loader2, MessageCircle, Trash2, Pencil, Link2, Check, Minus, Plus, Truck, RefreshCw, FileText, User, Package, Search, PlusCircle, PackageX } from 'lucide-react';
+import { Eye, Loader2, MessageCircle, Trash2, Pencil, Link2, Check, Minus, Plus, Truck, RefreshCw, FileText, User, Package, Search, PlusCircle, PackageX, Copy, Send } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { getStatusBadgeClass, getStatusLabel, QUOTE_STATUSES } from '@/lib/statusBadge';
 
@@ -93,6 +93,25 @@ export default function CotizacionesPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedQty, setSelectedQty] = useState(1);
   const [replacingItemId, setReplacingItemId] = useState<string | null>(null);
+  const [supplierMsgOpen, setSupplierMsgOpen] = useState(false);
+  const [supplierMsgCopied, setSupplierMsgCopied] = useState(false);
+
+  const generateSupplierMessage = () => {
+    const activeItems = editForm.items.filter(i => !i.outOfStock && !i.replacesItemId);
+    const lines = activeItems.map(item => {
+      const variant = item.variantLabel ? ` (${item.variantLabel})` : '';
+      const sku = item.variantSku || item.productId;
+      return `${item.quantity} Uds de ${item.productName} SKU: ${sku}${variant}`;
+    });
+
+    return `Estimados, buen día.\n\nFavor cotizar los siguientes productos:\n\n${lines.join('\n\n')}\n\nQuedamos atentos,\n\nSuvenirs Corporativos\nRut: 78.204.353-6\nAv. Irarrázaval 2401 Of. 607. Ñuñoa\n+56 9 3146 4930`;
+  };
+
+  const copySupplierMessage = () => {
+    navigator.clipboard.writeText(generateSupplierMessage());
+    setSupplierMsgCopied(true);
+    setTimeout(() => setSupplierMsgCopied(false), 2000);
+  };
 
   const fetchQuotes = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -816,10 +835,16 @@ export default function CotizacionesPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Productos ({editForm.items.length})
                 </p>
-                <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs" onClick={() => { setProductSearch(''); setProductResults([]); setAddProductOpen(true); }}>
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  Agregar producto
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs" onClick={() => { setSupplierMsgCopied(false); setSupplierMsgOpen(true); }}>
+                    <Send className="h-3.5 w-3.5" />
+                    Msg proveedor
+                  </Button>
+                  <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs" onClick={() => { setProductSearch(''); setProductResults([]); setAddProductOpen(true); }}>
+                    <PlusCircle className="h-3.5 w-3.5" />
+                    Agregar producto
+                  </Button>
+                </div>
               </div>
 
               <div className="border rounded-lg divide-y flex-1">
@@ -1183,6 +1208,25 @@ export default function CotizacionesPage() {
       </Dialog>
 
       {/* Add Product Dialog */}
+      {/* Supplier message modal */}
+      <Dialog open={supplierMsgOpen} onOpenChange={setSupplierMsgOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Mensaje para proveedor</DialogTitle>
+            <DialogDescription>Copia este texto para enviar por WhatsApp, email u otro canal.</DialogDescription>
+          </DialogHeader>
+          <div className="bg-muted/50 border rounded-lg p-4 max-h-[400px] overflow-y-auto">
+            <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">{generateSupplierMessage()}</pre>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSupplierMsgOpen(false)}>Cerrar</Button>
+            <Button onClick={copySupplierMessage} className="gap-2">
+              {supplierMsgCopied ? <><Check className="h-4 w-4" /> Copiado</> : <><Copy className="h-4 w-4" /> Copiar texto</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={addProductOpen} onOpenChange={(o) => { if (!o) resetAddProduct(); else setAddProductOpen(true); }}>
         <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
