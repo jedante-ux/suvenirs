@@ -534,6 +534,7 @@ export default function CotizacionesPage() {
                       <TableRow>
                         <TableHead>ID</TableHead>
                         <TableHead>Producto</TableHead>
+                        <TableHead>Proveedor</TableHead>
                         <TableHead className="text-right">Cant.</TableHead>
                         <TableHead className="text-right">P. Unit.</TableHead>
                         <TableHead className="text-right">Total</TableHead>
@@ -546,6 +547,11 @@ export default function CotizacionesPage() {
                           <TableCell>
                             {item.productName}
                             {item.variantLabel && <span className="text-xs text-primary ml-1">({item.variantLabel})</span>}
+                          </TableCell>
+                          <TableCell>
+                            <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${(item as any).proveedor === 'promoimport' ? 'bg-blue-100 text-blue-700' : (item as any).proveedor === 'imblasco' ? 'bg-amber-100 text-amber-700' : 'text-muted-foreground'}`}>
+                              {(item as any).proveedor || '—'}
+                            </span>
                           </TableCell>
                           <TableCell className="text-right">{item.quantity}</TableCell>
                           <TableCell className="text-right">

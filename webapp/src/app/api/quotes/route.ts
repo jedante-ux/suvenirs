@@ -103,9 +103,27 @@ export async function GET(req: NextRequest) {
       prisma.quote.count({ where }),
     ])
 
+    // Enrich items with product proveedor
+    const allProductIds = [...new Set(quotes.flatMap(q => q.items.map(i => i.productId)))]
+    const products = allProductIds.length > 0
+      ? await prisma.product.findMany({
+          where: { productId: { in: allProductIds } },
+          select: { productId: true, proveedor: true },
+        })
+      : []
+    const proveedorMap = new Map(products.map(p => [p.productId, p.proveedor]))
+
+    const enrichedQuotes = quotes.map(q => ({
+      ...q,
+      items: q.items.map(item => ({
+        ...item,
+        proveedor: proveedorMap.get(item.productId) || null,
+      })),
+    }))
+
     return NextResponse.json({
       success: true,
-      data: quotes,
+      data: enrichedQuotes,
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     })
   } catch {
