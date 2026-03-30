@@ -179,7 +179,7 @@ export default function Hero() {
     <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
 
       {/* Search bar — centered */}
-      <div className="container relative z-10 pt-5 pb-8">
+      <div className="container relative z-10 py-5 mb-4">
         <HeroSearch />
       </div>
 
