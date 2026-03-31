@@ -62,17 +62,18 @@ import { getCategoryDisplayName } from '@/lib/categoryDisplayNames';
 
 const popularItems = [
   { name: 'Bolígrafos y Lápices', slug: 'bol-grafos-l-pices-estuches', search: '' },
-  { name: 'Tazas y Mugs', slug: 'botellas-mugs-tazones-termos-vasos', search: '' },
+  { name: 'Bolsas Publicitarias', slug: 'bolsas-publicitarias', search: '' },
+  { name: 'Cuadernos y Libretas', slug: 'libretas-cuadernos-memo-set', search: '' },
+  { name: 'Ecológicos', slug: 'l-nea-bamboo', search: '' },
+  { name: 'Encobrizados', slug: '', search: 'cobre' },
   { name: 'Galvanos', slug: 'galvanos-de-cristal', search: '' },
   { name: 'Llaveros', slug: 'llaveros', search: '' },
-  { name: 'Cuadernos y Libretas', slug: 'libretas-cuadernos-memo-set', search: '' },
-  { name: 'Bolsas Publicitarias', slug: 'bolsas-publicitarias', search: '' },
-  { name: 'Encobrizados', slug: '', search: 'cobre' },
-  { name: 'Ecológicos', slug: 'l-nea-bamboo', search: '' },
+  { name: 'Tazas y Mugs', slug: 'botellas-mugs-tazones-termos-vasos', search: '' },
   { name: 'Tecnológicos', slug: 'tecnol-gicos', search: '' },
 ];
 
 const navLinks = [
+  { name: 'Kits', href: '/kits' },
   { name: 'Blog', href: '/blog' },
   { name: 'Contacto', href: '/contacto' },
 ];
@@ -95,9 +96,9 @@ export default function Header() {
     }).catch(() => {});
   }, []);
 
-  // All categories sorted by product count
+  // All categories sorted alphabetically by display name
   const parentCategories = allCategories
-    .sort((a, b) => b.productCount - a.productCount);
+    .sort((a, b) => getCategoryDisplayName(a.name).localeCompare(getCategoryDisplayName(b.name), 'es'));
 
   // Get children for a given parent
   const getChildren = (parentId: string) =>
