@@ -95,9 +95,8 @@ export default function Header() {
     }).catch(() => {});
   }, []);
 
-  // Parent categories (no parentId) sorted by product count
+  // All categories sorted by product count
   const parentCategories = allCategories
-    .filter(c => !c.parentId)
     .sort((a, b) => b.productCount - a.productCount);
 
   // Get children for a given parent
