@@ -11,7 +11,7 @@ const kitInclude = {
           name: true,
           slug: true,
           description: true,
-          image: true,
+          images: true,
           price: true,
           salePrice: true,
           currency: true,

@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const page = Number(searchParams.get('page') || 1)
-    const limit = Number(searchParams.get('limit') || 12)
+    const limit = Math.max(1, Number(searchParams.get('limit') || 12))
     const search = searchParams.get('search') || ''
     const category = searchParams.get('category') || ''
     const featured = searchParams.get('featured')
@@ -53,7 +53,9 @@ export async function GET(req: NextRequest) {
     }
 
     const skip = (page - 1) * limit
-    const orderBy = { [sort]: order } as Record<string, unknown>
+    const orderBy = sort === 'price'
+      ? { price: { sort: order, nulls: 'last' } }
+      : { [sort]: order } as Record<string, unknown>
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
