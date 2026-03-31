@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { getProducts, GetProductsParams, getCategories } from '@/lib/api';
 import { addSearchToHistory } from '@/lib/searchHistory';
 import { Product, Category, PaginatedResponse } from '@/types';
+import { getCategoryDisplayName } from '@/lib/categoryDisplayNames';
 import ProductList from '@/components/products/ProductList';
 import SearchBar from '@/components/products/SearchBar';
 import ProductFilters, { FilterOptions } from '@/components/products/ProductFilters';
@@ -316,7 +317,7 @@ function ProductosContent() {
                         onSelect={(e) => e.preventDefault()}
                       >
                         <div className="flex items-center justify-between w-full">
-                          <span>{category.name}</span>
+                          <span>{getCategoryDisplayName(category.name)}</span>
                           <span className="text-xs text-muted-foreground ml-2">
                             ({category.productCount})
                           </span>

@@ -58,40 +58,7 @@ function getCategoryIcon(name: string) {
   return Package;
 }
 
-// Map slug-like category names to friendly display names
-function getCategoryDisplayName(name: string): string {
-  const map: Record<string, string> = {
-    'Set De Regalos': 'Set de Regalos',
-    'Bolígrafos-lápices-estuches': 'Bolígrafos, Lápices y Estuches',
-    'Libretas-cuadernos-memo Set': 'Libretas, Cuadernos y Memo Set',
-    'Tecnológicos': 'Tecnológicos',
-    'Accesorios-herramientas': 'Accesorios y Herramientas',
-    'Bolsas Publicitarias': 'Bolsas Publicitarias',
-    'Mochilas-bananos-bolsos-morrales': 'Mochilas, Bolsos y Morrales',
-    'Botellas-mugs-tazones-termos-vasos': 'Botellas, Mugs, Termos y Vasos',
-    'Lanyards E Identificación': 'Lanyards e Identificación',
-    'Línea Bamboo': 'Línea Bamboo',
-    'Llaveros': 'Llaveros',
-    'Novedades Publicitarios': 'Novedades',
-    'Set De Vino-descorchadores-bolsas Para Vinos': 'Set de Vino y Descorchadores',
-    'Set Parrillero-destapadores-posavasos': 'Set Parrillero y Destapadores',
-    'Sacos De Yute': 'Sacos de Yute',
-    'Trofeos Y Premios': 'Trofeos y Premios',
-    'Belleza Y Salud': 'Belleza y Salud',
-    'Packaging': 'Packaging',
-    'Galvanos De Cristal': 'Galvanos de Cristal',
-    'Galvanos De Madera Y Varios': 'Galvanos de Madera',
-    'Copas 2024-2025': 'Copas 2024-2025',
-    'Copas Línea Clásica': 'Copas Línea Clásica',
-    'Copas Línea Comercial': 'Copas Línea Comercial',
-    'Copas Y Torres': 'Copas y Torres',
-    'Línea Cobre': 'Línea Cobre',
-    'Medallas': 'Medallas',
-    'Placas': 'Placas',
-    'Trofeos': 'Trofeos',
-  };
-  return map[name] || name.replace(/-/g, ' ');
-}
+import { getCategoryDisplayName } from '@/lib/categoryDisplayNames';
 
 const popularItems = [
   { name: 'Bolígrafos y Lápices', slug: 'bol-grafos-l-pices-estuches', search: '' },
