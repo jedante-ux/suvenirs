@@ -191,7 +191,7 @@ export default function Hero() {
       </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}
-      <div className="container relative z-10 pb-16 md:pb-24 lg:pb-28">
+      <div className="container relative z-10 pb-[40px] md:pb-[60px]">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* Left: copy + CTAs */}
