@@ -131,11 +131,11 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-white',
-    )} style={{ backgroundColor: '#FE248A' }}>
+      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-[#3A050F]',
+    )} style={{ backgroundColor: '#E8B0BD' }}>
       <div className="container flex items-center justify-center gap-4">
         <span className="flex items-center"><Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!</span>
-        <Link href="/productos" className="bg-white text-[#FE248A] font-bold px-3 py-0.5 rounded-full hover:bg-white/90 transition-colors text-[11px]">
+        <Link href="/productos" className="bg-[#3A050F] text-white font-bold px-3 py-0.5 rounded-full hover:bg-[#3A050F]/80 transition-colors text-[11px]">
           Cotizar ahora
         </Link>
       </div>
