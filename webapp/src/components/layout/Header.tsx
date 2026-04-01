@@ -131,12 +131,13 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-[#3A050F]',
-    )} style={{ backgroundColor: '#F6DCA3' }}>
-      <div className="container flex items-center justify-between">
-        <a href="mailto:contacto@suvenirs.cl" className="hover:underline">contacto@suvenirs.cl</a>
+      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-white',
+    )} style={{ backgroundColor: '#FE248A' }}>
+      <div className="container flex items-center justify-center gap-4">
         <span className="flex items-center"><Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!</span>
-        <a href="tel:+56931464930" className="hover:underline">+56 9 3146 4930</a>
+        <Link href="/productos" className="bg-white text-[#FE248A] font-bold px-3 py-0.5 rounded-full hover:bg-white/90 transition-colors text-[11px]">
+          Cotizar ahora
+        </Link>
       </div>
     </div>
     <header
