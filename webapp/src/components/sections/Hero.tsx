@@ -241,7 +241,7 @@ export default function Hero() {
                   }),
             }}
           >
-            <div className="grid grid-cols-3 grid-rows-2 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto overflow-hidden">
               {products.slice(0, GRID_SIZE).map((product, index) => (
                 <Link
                   key={product.id}

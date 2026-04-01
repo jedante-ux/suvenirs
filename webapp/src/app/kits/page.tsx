@@ -236,7 +236,7 @@ export default function KitsPage() {
                                 className="object-cover"
                               />
                             </div>
-                            <span className="text-sm truncate">{item.product.name}</span>
+                            <span className="text-sm truncate min-w-0">{item.product.name}</span>
                           </div>
                         ))}
                       </div>

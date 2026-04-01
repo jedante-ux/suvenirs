@@ -188,11 +188,11 @@ export default function ResumenPedidoPage() {
                           className="object-cover"
                         />
                       </div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
-                          <div>
-                            <p className="text-xs text-muted-foreground font-mono mb-1">{itemSku}</p>
-                            <h3 className="font-semibold text-lg">{item.product.name}</h3>
+                          <div className="min-w-0">
+                            <p className="text-xs text-muted-foreground font-mono mb-1 truncate">{itemSku}</p>
+                            <h3 className="font-semibold text-lg truncate">{item.product.name}</h3>
                             {variantLabel && (
                               <p className="text-sm text-primary font-medium">{variantLabel}</p>
                             )}

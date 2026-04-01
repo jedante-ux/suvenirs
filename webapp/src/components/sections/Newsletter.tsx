@@ -28,7 +28,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="section bg-gradient-to-r from-primary to-secondary">
+    <section className="section bg-gradient-to-r from-primary to-secondary overflow-hidden">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">

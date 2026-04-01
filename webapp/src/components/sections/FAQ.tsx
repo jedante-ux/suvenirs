@@ -70,7 +70,7 @@ function AccordionItem({
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-start gap-5 md:gap-7 py-7 md:py-8 text-left cursor-pointer border-b border-foreground/[0.06] transition-colors duration-300 hover:border-[#F5D966]/40"
+        className="w-full flex items-start gap-3 md:gap-5 py-7 md:py-8 text-left cursor-pointer border-b border-foreground/[0.06] transition-colors duration-300 hover:border-[#F5D966]/40"
         aria-expanded={isOpen}
       >
         {/* Number */}

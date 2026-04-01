@@ -65,7 +65,7 @@ export default function Stats() {
   return (
     <section className="py-12 md:py-16 relative bg-muted">
       <div className="container">
-        <div ref={ref} className="grid grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
           {stats.map((stat, index) => (
             <StatCard
               key={stat.label}

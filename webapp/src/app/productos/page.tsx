@@ -247,7 +247,7 @@ function ProductosContent() {
         <div className="container">
           {/* Search and Filters - Horizontal Layout */}
           <div className="mb-8">
-            <div className="flex flex-col lg:flex-row gap-4 items-end">
+            <div className="flex flex-col lg:flex-row gap-4 items-end overflow-hidden">
               {/* Search bar */}
               <div className="flex-1 min-w-0">
                 <label className="flex items-center gap-2 text-sm font-medium mb-2">
@@ -265,7 +265,7 @@ function ProductosContent() {
               </div>
 
               {/* Category Filter */}
-              <div className="w-full lg:w-64">
+              <div className="w-full lg:w-64 min-w-0">
                 <label className="flex items-center gap-2 text-sm font-medium mb-2">
                   <FolderTree className="h-4 w-4" />
                   Categoría
@@ -329,7 +329,7 @@ function ProductosContent() {
               </div>
 
               {/* Sort Dropdown */}
-              <div className="w-full lg:w-auto">
+              <div className="w-full lg:w-auto min-w-0">
                 <label className="block text-sm font-medium mb-2 lg:invisible">Ordenar</label>
                 <TooltipProvider>
                   <Tooltip>

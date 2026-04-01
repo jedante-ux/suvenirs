@@ -115,7 +115,7 @@ export default function CorporateSection() {
             </div>
 
             {/* Stats card */}
-            <div className="absolute -left-4 bottom-8 bg-white rounded-2xl border border-border/60 p-6 max-w-xs">
+            <div className="absolute left-2 sm:-left-4 bottom-8 bg-white rounded-2xl border border-border/60 p-6 max-w-xs">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 bg-[#673de6]/10 rounded-xl flex items-center justify-center">
                   <GiftIcon size={28} className="text-[#673de6]" />

@@ -193,18 +193,18 @@ body {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
 }
 
 @media (min-width: 640px) {
   .container {
-    padding: 0 0.75rem;
+    padding: 0 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .container {
-    padding: 0 1rem;
+    padding: 0 2rem;
   }
 }
 
@@ -488,7 +488,7 @@ body {
 /* Swiper customization for categories — Coverflow 3D */
 .categories-swiper {
   padding: 20px 0 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .categories-swiper .swiper-wrapper {

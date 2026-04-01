@@ -58,9 +58,9 @@ export default function Footer() {
               </a>
               <div className="flex items-start text-white/70">
                 <LocationIcon size={18} className="mr-3 mt-1 flex-shrink-0" />
-                <div className="flex flex-col">
+                <div className="flex flex-col break-words">
                   <span>Av. Irarrázaval 2401 Of. 607</span>
-                  <span className="text-white/70/70 text-sm">Ñuñoa, Región Metropolitana</span>
+                  <span className="text-white/70 text-sm">Ñuñoa, Región Metropolitana</span>
                 </div>
               </div>
             </div>
@@ -105,16 +105,16 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-white">Ayuda</h3>
             <ul className="space-y-3">
               <li key="Pagos y entregas">
-                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
+                <span className="text-white/50 cursor-not-allowed text-sm" title="Próximamente">Pagos y entregas</span>
               </li>
               <li key="Política de devoluciones">
-                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Política de devoluciones</span>
+                <span className="text-white/50 cursor-not-allowed text-sm" title="Próximamente">Política de devoluciones</span>
               </li>
               <li key="Preguntas frecuentes">
-                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Preguntas frecuentes</span>
+                <span className="text-white/50 cursor-not-allowed text-sm" title="Próximamente">Preguntas frecuentes</span>
               </li>
               <li key="Términos y condiciones">
-                <span className="text-white/70/50 cursor-not-allowed text-sm" title="Próximamente">Términos y condiciones</span>
+                <span className="text-white/50 cursor-not-allowed text-sm" title="Próximamente">Términos y condiciones</span>
               </li>
             </ul>
           </div>
@@ -125,7 +125,7 @@ export default function Footer() {
       <div className="border-t border-white/20">
         <div className="container py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/70/70 text-sm">
+            <p className="text-white/70 text-sm">
               &copy; {new Date().getFullYear()} Suvenirs. Todos los derechos reservados.
             </p>
 

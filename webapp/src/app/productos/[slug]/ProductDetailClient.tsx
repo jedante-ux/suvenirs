@@ -134,7 +134,7 @@ export default function ProductActions({ product }: ProductActionsProps) {
         </div>
         {/* Thumbnails */}
         {allImages.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide max-w-full">
             {allImages.map((img, i) => (
               <button
                 key={i}
