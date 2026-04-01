@@ -184,14 +184,14 @@ export default function Hero() {
       </div>
 
       {/* Banner — contained with rounded corners */}
-      <div className="container">
+      <div className="container mb-8 md:mb-12">
         <div className="rounded-2xl overflow-hidden">
           <HeroBanner />
         </div>
       </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}
-      <div className="container relative z-10 px-4 sm:px-6 lg:px-8 pt-16 pb-24 md:pt-24 md:pb-32 lg:pt-28 lg:pb-36">
+      <div className="container relative z-10 pb-16 md:pb-24 lg:pb-28">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* Left: copy + CTAs */}
