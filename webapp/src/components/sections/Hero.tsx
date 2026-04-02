@@ -191,7 +191,7 @@ export default function Hero() {
       </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}
-      <div className="container relative z-10 pb-[40px] md:pb-[60px]">
+      <div className="container relative z-10">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* Left: copy + CTAs */}
@@ -241,7 +241,7 @@ export default function Hero() {
                   }),
             }}
           >
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto overflow-hidden">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto overflow-hidden mb-[40px] md:mb-[60px]">
               {products.slice(0, GRID_SIZE).map((product, index) => (
                 <Link
                   key={product.id}
