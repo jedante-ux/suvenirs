@@ -21,7 +21,7 @@ export function Logo({ size = 'md', variant = 'default' }: LogoProps) {
       width={width}
       height={height}
       className="w-auto object-contain transition-all duration-300 max-h-[50px]"
-      style={variant === 'white' ? { filter: 'brightness(10) saturate(0)' } : { filter: 'none' }}
+      style={variant === 'white' ? { filter: 'brightness(10) saturate(0)' } : { filter: 'brightness(0.42) hue-rotate(6deg) saturate(0.75)' }}
       priority
     />
   );
