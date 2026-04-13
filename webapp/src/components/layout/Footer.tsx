@@ -31,7 +31,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="text-white" style={{ background: '#3A050F' }}>
+    <footer className="text-white" style={{ background: '#6B1035' }}>
       <div className="py-[75px]">
       {/* Main footer content */}
       <div className="container pb-12">

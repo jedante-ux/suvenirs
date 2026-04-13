@@ -131,11 +131,11 @@ export default function Header() {
     <>
     {/* Top announcement bar */}
     <div className={cn(
-      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-[#3A050F]',
+      'fixed top-0 left-0 right-0 z-50 py-2.5 text-xs font-medium text-[#6B1035]',
     )} style={{ backgroundColor: '#E8B0BD' }}>
       <div className="container flex items-center justify-center gap-4">
         <span className="flex items-center"><Clock className="inline h-3 w-3 mr-1.5" />¡Respuesta en menos de 24 horas!</span>
-        <Link href="/productos" className="bg-[#3A050F] text-white font-bold px-3 py-0.5 rounded-full hover:bg-[#3A050F]/80 transition-colors text-[11px]">
+        <Link href="/productos" className="bg-[#6B1035] text-white font-bold px-3 py-0.5 rounded-full hover:bg-[#6B1035]/80 transition-colors text-[11px]">
           Cotizar ahora
         </Link>
       </div>
@@ -254,7 +254,7 @@ export default function Header() {
                 "relative rounded-full px-4 gap-2 transition-all duration-300",
                 showDarkNav
                   ? "border-primary bg-primary text-white hover:bg-primary/90"
-                  : "border-white/30 text-[#3A050F] bg-white hover:bg-white/90"
+                  : "border-white/30 text-[#6B1035] bg-white hover:bg-white/90"
               )}
               onClick={openCart}
             >
