@@ -253,8 +253,8 @@ export default function Header() {
               className={cn(
                 "relative rounded-full px-4 gap-2 transition-all duration-300",
                 showDarkNav
-                  ? "border-primary text-primary bg-transparent hover:bg-primary/5"
-                  : "border-white/30 text-[#FE248A] bg-white hover:bg-white/90"
+                  ? "border-primary bg-primary text-white hover:bg-primary/90"
+                  : "border-white/30 text-[#3A050F] bg-white hover:bg-white/90"
               )}
               onClick={openCart}
             >
