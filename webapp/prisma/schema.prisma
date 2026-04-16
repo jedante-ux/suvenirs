@@ -217,6 +217,28 @@ model KitItem {
   @@map("kit_items")
 }
 
+model SiteBanner {
+  id        String   @id @default(uuid()) @db.Uuid
+  imageUrl  String
+  alt       String   @default("")
+  linkUrl   String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_banners")
+}
+
+model SiteSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
 model BlogPost {
   id          String    @id @default(uuid()) @db.Uuid
   title       String

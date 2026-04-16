@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import { Toaster } from "@/components/ui/sonner";
 import GlitterCursor from "@/components/effects/GlitterCursor";
+import DynamicTheme from "@/components/DynamicTheme";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -82,6 +83,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${poppins.variable} antialiased`}>
+        <DynamicTheme />
         <CartProvider>
           <GlitterCursor />
           <ConditionalLayout>{children}</ConditionalLayout>

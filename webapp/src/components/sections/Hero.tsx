@@ -94,39 +94,54 @@ function RotatingWord() {
   );
 }
 
-// ── Banner ──
-const BANNER_IMAGES = [
-  { src: '/banner2.jpg', alt: 'Suvenirs — Regalos Corporativos Personalizados', href: '/productos' },
-];
+// ── Banner (dynamic from DB) ──
+const FALLBACK_BANNER = { imageUrl: '/banner2.jpg', alt: 'Suvenirs', linkUrl: '/productos' };
 
 function HeroBanner() {
+  const [banners, setBanners] = useState<{ imageUrl: string; alt: string; linkUrl: string | null }[]>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (BANNER_IMAGES.length <= 1) return;
-    const timer = setInterval(() => setActive(p => (p + 1) % BANNER_IMAGES.length), 5000);
-    return () => clearInterval(timer);
+    fetch('/api/site/banners')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.data.length > 0) setBanners(d.data);
+        else setBanners([FALLBACK_BANNER]);
+      })
+      .catch(() => setBanners([FALLBACK_BANNER]));
   }, []);
 
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const timer = setInterval(() => setActive(p => (p + 1) % banners.length), 5000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
+  if (banners.length === 0) return <div className="w-full aspect-[4/1] bg-primary/20 animate-pulse rounded-2xl" />;
+
+  const current = banners[active];
+  const Wrapper = current.linkUrl ? Link : 'div';
+  const wrapperProps = current.linkUrl ? { href: current.linkUrl } : {};
+
   return (
-    <Link href={BANNER_IMAGES[active].href} className="block relative w-full aspect-[4/1]">
+    <Wrapper {...wrapperProps as any} className="block relative w-full aspect-[4/1]">
       <SafeImage
-        src={BANNER_IMAGES[active].src}
-        alt={BANNER_IMAGES[active].alt}
+        src={current.imageUrl}
+        alt={current.alt}
         fill
         sizes="100vw"
         className="object-cover"
         priority
       />
-      {BANNER_IMAGES.length > 1 && (
+      {banners.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
-          {BANNER_IMAGES.map((banner, i) => (
+          {banners.map((banner, i) => (
             <button
               key={i}
               role="tab"
               aria-selected={i === active}
               aria-label={`Banner ${i + 1}: ${banner.alt}`}
-              onClick={(e) => { e.preventDefault(); setActive(i); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActive(i); }}
               className="w-11 h-11 flex items-center justify-center"
             >
               <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
@@ -134,7 +149,7 @@ function HeroBanner() {
           ))}
         </div>
       )}
-    </Link>
+    </Wrapper>
   );
 }
 

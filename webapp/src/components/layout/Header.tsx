@@ -209,13 +209,15 @@ export default function Header() {
                       const href = item.search
                         ? `/productos?search=${encodeURIComponent(item.search)}`
                         : `/productos?category=${item.slug}`;
+                      const Icon = getCategoryIcon(item.name);
                       return (
                         <NavigationMenuLink key={item.name} asChild>
                           <Link
                             href={href}
-                            className="block px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                            className="!flex !flex-row !items-center gap-2.5 px-5 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
                           >
-                            {item.name}
+                            <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span>{item.name}</span>
                           </Link>
                         </NavigationMenuLink>
                       );

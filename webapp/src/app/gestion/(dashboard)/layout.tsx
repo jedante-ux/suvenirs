@@ -18,6 +18,7 @@ import {
   FolderTree,
   Newspaper,
   Boxes,
+  Paintbrush,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,7 @@ const navItems = [
   { href: '/gestion/categorias', label: 'Categorías', icon: FolderTree },
   { href: '/gestion/cotizaciones', label: 'Cotizaciones', icon: FileText },
   { href: '/gestion/kits', label: 'Kits', icon: Boxes },
+  { href: '/gestion/personalizar', label: 'Personalizar', icon: Paintbrush },
   { href: '/gestion/blog', label: 'Blog', icon: Newspaper },
   { href: '/gestion/usuarios', label: 'Usuarios', icon: Users },
 ];
