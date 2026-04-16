@@ -94,12 +94,14 @@ function RotatingWord() {
   );
 }
 
-// ── Banner (dynamic from DB) ──
+// ── Banner (dynamic from DB, full-width, swipeable) ──
 const FALLBACK_BANNER = { imageUrl: '/banner2.jpg', alt: 'Suvenirs', linkUrl: '/productos' };
 
 function HeroBanner() {
   const [banners, setBanners] = useState<{ imageUrl: string; alt: string; linkUrl: string | null }[]>([]);
   const [active, setActive] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     fetch('/api/site/banners')
@@ -117,39 +119,72 @@ function HeroBanner() {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  if (banners.length === 0) return <div className="w-full aspect-[4/1] bg-primary/20 animate-pulse rounded-2xl" />;
+  const goTo = (index: number) => {
+    setActive((index + banners.length) % banners.length);
+  };
 
-  const current = banners[active];
-  const Wrapper = current.linkUrl ? Link : 'div';
-  const wrapperProps = current.linkUrl ? { href: current.linkUrl } : {};
+  const handleSwipe = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      goTo(diff > 0 ? active + 1 : active - 1);
+    }
+  };
+
+  if (banners.length === 0) return <div className="w-full aspect-[4/1] bg-primary/20 animate-pulse" />;
 
   return (
-    <Wrapper {...wrapperProps as any} className="block relative w-full aspect-[4/1]">
-      <SafeImage
-        src={current.imageUrl}
-        alt={current.alt}
-        fill
-        sizes="100vw"
-        className="object-cover"
-        priority
-      />
+    <div className="w-full">
+      {/* Slider */}
+      <div
+        className="relative w-full aspect-[4/1] overflow-hidden cursor-grab active:cursor-grabbing"
+        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => { touchEndX.current = e.changedTouches[0].clientX; handleSwipe(); }}
+        onMouseDown={(e) => { touchStartX.current = e.clientX; }}
+        onMouseUp={(e) => { touchEndX.current = e.clientX; handleSwipe(); }}
+      >
+        <div
+          className="flex h-full transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${active * 100}%)` }}
+        >
+          {banners.map((banner, i) => {
+            const inner = (
+              <div key={i} className="relative w-full h-full flex-shrink-0" style={{ minWidth: '100%' }}>
+                <SafeImage
+                  src={banner.imageUrl}
+                  alt={banner.alt}
+                  fill
+                  sizes="100vw"
+                  className="object-cover pointer-events-none"
+                  priority={i === 0}
+                />
+              </div>
+            );
+            if (banner.linkUrl) {
+              return <Link key={i} href={banner.linkUrl} className="block w-full h-full flex-shrink-0" style={{ minWidth: '100%' }}><div className="relative w-full h-full"><SafeImage src={banner.imageUrl} alt={banner.alt} fill sizes="100vw" className="object-cover pointer-events-none" priority={i === 0} /></div></Link>;
+            }
+            return inner;
+          })}
+        </div>
+      </div>
+
+      {/* Dots below the banner */}
       {banners.length > 1 && (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1" role="tablist" aria-label="Banners">
+        <div className="flex justify-center gap-2 py-3" role="tablist" aria-label="Banners">
           {banners.map((banner, i) => (
             <button
               key={i}
               role="tab"
               aria-selected={i === active}
               aria-label={`Banner ${i + 1}: ${banner.alt}`}
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActive(i); }}
-              className="w-11 h-11 flex items-center justify-center"
+              onClick={() => setActive(i)}
+              className="w-10 h-10 flex items-center justify-center"
             >
               <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
             </button>
           ))}
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 }
 
@@ -198,11 +233,9 @@ export default function Hero() {
         <HeroSearch />
       </div>
 
-      {/* Banner — contained with rounded corners */}
-      <div className="container mb-8 md:mb-12">
-        <div className="rounded-2xl overflow-hidden">
-          <HeroBanner />
-        </div>
+      {/* Banner — full width, edge to edge */}
+      <div className="mb-8 md:mb-12">
+        <HeroBanner />
       </div>
 
       {/* Content: H1 + CTAs left, Product grid right */}
