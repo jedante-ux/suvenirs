@@ -7,20 +7,20 @@ import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from '../icons';
 import { Product } from '@/types';
 import { getProducts } from '@/lib/api';
-import { Search } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // ── Config ──
 const ROTATING_WORDS = ['Corporativos', 'Personalizados', 'Únicos', 'Creativos'];
 const WORD_INTERVAL = 3500;
-const GRID_SIZE = 6;
+const GRID_SIZE = 4;
 
 function prefersReducedMotion() {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// ── Search bar (centered) ──
+// ── Search bar ──
 function HeroSearch() {
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -33,20 +33,20 @@ function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSubmit} role="search" className="w-full flex justify-center pb-[20px]">
-      <div className="w-full max-w-xl bg-white/20 border border-white/30 rounded-full flex items-center px-2 py-1.5 transition-all focus-within:bg-white/30 focus-within:border-white/50">
+    <form onSubmit={handleSubmit} role="search" className="w-full flex justify-center">
+      <div className="w-full max-w-xl bg-white border border-white/40 rounded-full flex items-center px-1.5 py-1 transition-all shadow-sm">
         <input
           type="text"
           placeholder="Busca lo que necesites para tu empresa..."
           aria-label="Buscar productos"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 bg-transparent border-none text-white placeholder:text-white/60 text-sm px-4 py-1.5 focus:outline-none"
+          className="flex-1 bg-transparent border-none text-foreground placeholder:text-foreground/50 text-sm px-4 py-1.5 focus:outline-none"
         />
         <button
           type="submit"
           aria-label="Buscar"
-          className="bg-white text-primary rounded-full p-2.5 hover:bg-white/90 transition-colors flex-shrink-0"
+          className="bg-primary text-white rounded-full p-2.5 hover:bg-primary/90 transition-colors flex-shrink-0"
         >
           <Search className="h-4 w-4" />
         </button>
@@ -94,100 +94,6 @@ function RotatingWord() {
   );
 }
 
-// ── Banner (dynamic from DB, full-width, swipeable) ──
-const FALLBACK_BANNER = { imageUrl: '/banner2.jpg', alt: 'Suvenirs', linkUrl: '/productos' };
-
-function HeroBanner() {
-  const [banners, setBanners] = useState<{ imageUrl: string; alt: string; linkUrl: string | null }[]>([]);
-  const [active, setActive] = useState(0);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
-  useEffect(() => {
-    fetch('/api/site/banners')
-      .then(r => r.json())
-      .then(d => {
-        if (d.success && d.data.length > 0) setBanners(d.data);
-        else setBanners([FALLBACK_BANNER]);
-      })
-      .catch(() => setBanners([FALLBACK_BANNER]));
-  }, []);
-
-  useEffect(() => {
-    if (banners.length <= 1) return;
-    const timer = setInterval(() => setActive(p => (p + 1) % banners.length), 5000);
-    return () => clearInterval(timer);
-  }, [banners.length]);
-
-  const goTo = (index: number) => {
-    setActive((index + banners.length) % banners.length);
-  };
-
-  const handleSwipe = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 50) {
-      goTo(diff > 0 ? active + 1 : active - 1);
-    }
-  };
-
-  if (banners.length === 0) return <div className="w-full aspect-[4/1] bg-primary/20 animate-pulse" />;
-
-  return (
-    <div className="w-full">
-      {/* Slider */}
-      <div
-        className="relative w-full aspect-[4/1] overflow-hidden cursor-grab active:cursor-grabbing"
-        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
-        onTouchEnd={(e) => { touchEndX.current = e.changedTouches[0].clientX; handleSwipe(); }}
-        onMouseDown={(e) => { touchStartX.current = e.clientX; }}
-        onMouseUp={(e) => { touchEndX.current = e.clientX; handleSwipe(); }}
-      >
-        <div
-          className="flex h-full transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${active * 100}%)` }}
-        >
-          {banners.map((banner, i) => {
-            const inner = (
-              <div key={i} className="relative w-full h-full flex-shrink-0" style={{ minWidth: '100%' }}>
-                <SafeImage
-                  src={banner.imageUrl}
-                  alt={banner.alt}
-                  fill
-                  sizes="100vw"
-                  className="object-cover pointer-events-none"
-                  priority={i === 0}
-                />
-              </div>
-            );
-            if (banner.linkUrl) {
-              return <Link key={i} href={banner.linkUrl} className="block w-full h-full flex-shrink-0" style={{ minWidth: '100%' }}><div className="relative w-full h-full"><SafeImage src={banner.imageUrl} alt={banner.alt} fill sizes="100vw" className="object-cover pointer-events-none" priority={i === 0} /></div></Link>;
-            }
-            return inner;
-          })}
-        </div>
-      </div>
-
-      {/* Dots below the banner */}
-      {banners.length > 1 && (
-        <div className="flex justify-center gap-2 py-3" role="tablist" aria-label="Banners">
-          {banners.map((banner, i) => (
-            <button
-              key={i}
-              role="tab"
-              aria-selected={i === active}
-              aria-label={`Banner ${i + 1}: ${banner.alt}`}
-              onClick={() => setActive(i)}
-              className="w-10 h-10 flex items-center justify-center"
-            >
-              <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${i === active ? 'bg-white' : 'bg-white/40'}`} />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ── Entrance animation ──
 function useEntrance() {
   const [mounted, setMounted] = useState(false);
@@ -214,10 +120,17 @@ function useEntrance() {
   return { mounted, style, reduced: reduced.current };
 }
 
+// ── Banner data ──
+const FALLBACK_BANNER = { imageUrl: '/banner2.jpg', alt: 'Suvenirs', linkUrl: null };
+
 // ── Main Hero ──
 export default function Hero() {
   const [products, setProducts] = useState<Product[]>([]);
-  const { mounted, style: entranceStyle, reduced } = useEntrance();
+  const [banners, setBanners] = useState<{ imageUrl: string; alt: string; linkUrl: string | null }[]>([]);
+  const [active, setActive] = useState(0);
+  const { style: entranceStyle } = useEntrance();
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     getProducts({ limit: GRID_SIZE, random: true })
@@ -225,99 +138,198 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  return (
-    <section className="relative pt-[6.5rem] md:pt-[7.5rem] bg-primary overflow-hidden">
+  useEffect(() => {
+    fetch('/api/site/banners')
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.data.length > 0) setBanners(d.data);
+        else setBanners([FALLBACK_BANNER]);
+      })
+      .catch(() => setBanners([FALLBACK_BANNER]));
+  }, []);
 
-      {/* Search bar — centered */}
-      <div className="container relative z-10 pt-[10px] mb-[40px]">
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const timer = setInterval(() => setActive(p => (p + 1) % banners.length), 6000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
+  const goTo = (index: number) => {
+    if (banners.length === 0) return;
+    setActive((index + banners.length) % banners.length);
+  };
+
+  const handleSwipe = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      goTo(diff > 0 ? active + 1 : active - 1);
+    }
+  };
+
+  const currentBanner = banners[active] || FALLBACK_BANNER;
+
+  return (
+    <section className="relative pt-[5.5rem] md:pt-[6.5rem] bg-primary overflow-hidden">
+      {/* Search bar */}
+      <div className="container relative z-20 pt-3 pb-5">
         <HeroSearch />
       </div>
 
-      {/* Banner — full width, edge to edge */}
-      <div className="mb-8 md:mb-12">
-        <HeroBanner />
-      </div>
-
-      {/* Content: H1 + CTAs left, Product grid right */}
-      <div className="container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-
-          {/* Left: copy + CTAs */}
-          <div className="text-center lg:text-left space-y-6" style={entranceStyle(0.1)}>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mt-10">
-              Regalos<br />
-              <RotatingWord /><br />
-              que Inspiran
-            </h1>
-
-            <p className="text-sm md:text-base text-white/85 max-w-lg mx-auto lg:mx-0">
-              Merchandising personalizado, trofeos, copas y reconocimientos. Cotiza online y recibe en todo Chile.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-10">
-              <Button
-                asChild
-                size="lg"
-                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-full px-8 group hero-cta-shimmer relative overflow-hidden font-bold transition-transform duration-300 hover:scale-[1.03]"
-              >
-                <Link href="/productos">
-                  Ver colección
-                  <ArrowRightIcon size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 transition-all duration-300 font-semibold hover:scale-[1.03]"
-              >
-                <Link href="/contacto">Cotizar ahora</Link>
-              </Button>
-            </div>
+      {/* Banner background slider */}
+      <div className="relative w-full">
+        <div
+          className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
+          style={{ height: 'clamp(420px, 65vh, 620px)' }}
+          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => { touchEndX.current = e.changedTouches[0].clientX; handleSwipe(); }}
+          onMouseDown={(e) => { touchStartX.current = e.clientX; }}
+          onMouseUp={(e) => { touchEndX.current = e.clientX; handleSwipe(); }}
+        >
+          {/* Banner images sliding */}
+          <div
+            className="flex h-full transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${active * 100}%)` }}
+          >
+            {banners.map((banner, i) => (
+              <div key={i} className="relative h-full flex-shrink-0" style={{ minWidth: '100%' }}>
+                <SafeImage
+                  src={banner.imageUrl}
+                  alt={banner.alt}
+                  fill
+                  sizes="100vw"
+                  className="object-cover pointer-events-none"
+                  priority={i === 0}
+                />
+              </div>
+            ))}
+            {banners.length === 0 && (
+              <div className="relative h-full flex-shrink-0 bg-primary/30" style={{ minWidth: '100%' }} />
+            )}
           </div>
 
-          {/* Right: product grid 3x2 */}
-          <div
-            style={{
-              ...(reduced
-                ? { opacity: 1 }
-                : {
-                    opacity: mounted ? 1 : 0,
-                    transform: mounted ? 'scale(1)' : 'scale(0.92)',
-                    transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-                    transitionDelay: '0.25s',
-                  }),
-            }}
-          >
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto overflow-hidden mb-[40px] md:mb-[60px]">
-              {products.slice(0, GRID_SIZE).map((product, index) => (
-                <Link
-                  key={product.id}
-                  href={`/productos/${product.slug || product.productId}`}
-                  className="group relative aspect-square rounded-xl overflow-hidden hover:scale-[1.04] transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-                >
-                  <SafeImage
-                    src={product.images?.[0] || '/placeholder-product.jpg'}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 170px"
-                    className="object-cover"
-                    priority={index < 3}
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
-                    <p className="text-white text-xs font-semibold text-center px-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      {product.name}
-                    </p>
+          {/* Subtle dark overlay for card legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/30 pointer-events-none" />
+
+          {/* Side arrows */}
+          {banners.length > 1 && (
+            <>
+              <button
+                onClick={() => goTo(active - 1)}
+                aria-label="Banner anterior"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+              </button>
+              <button
+                onClick={() => goTo(active + 1)}
+                aria-label="Banner siguiente"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
+              >
+                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+              </button>
+            </>
+          )}
+
+          {/* ── Floating cards over banner ── */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="container h-full relative">
+              {/* Left card: title */}
+              <div
+                className="pointer-events-auto absolute left-2 sm:left-6 lg:left-10 bottom-6 lg:bottom-10 max-w-[280px] sm:max-w-xs lg:max-w-sm"
+                style={entranceStyle(0.1)}
+              >
+                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-5 sm:p-6 shadow-xl">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.05]">
+                    Regalos<br />
+                    <RotatingWord /><br />
+                    que Inspiran
+                  </h1>
+                </div>
+              </div>
+
+              {/* Right card: description + CTAs */}
+              <div
+                className="pointer-events-auto absolute right-2 sm:right-6 lg:right-10 bottom-6 lg:bottom-10 max-w-[280px] sm:max-w-xs lg:max-w-sm"
+                style={entranceStyle(0.2)}
+              >
+                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-5 sm:p-6 shadow-xl space-y-4">
+                  <p className="text-sm sm:text-base text-white leading-snug">
+                    Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      asChild
+                      size="sm"
+                      className="w-full bg-white text-primary hover:bg-white/90 rounded-full font-bold"
+                    >
+                      <Link href="/contacto">Cotizar ahora</Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full border-white/50 text-white bg-white/10 hover:bg-white/25 rounded-full font-semibold"
+                    >
+                      <Link href="/productos">
+                        Ver colección
+                        <ArrowRightIcon size={14} className="ml-1.5" />
+                      </Link>
+                    </Button>
                   </div>
-                </Link>
-              ))}
-              {products.length === 0 &&
-                Array.from({ length: GRID_SIZE }).map((_, i) => (
-                  <div key={`ph-${i}`} className="aspect-square rounded-xl bg-white/20 animate-pulse" />
-                ))}
+                </div>
+              </div>
+
+              {/* Center card: product strip (hidden on mobile, shown sm+) */}
+              <div
+                className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-6 lg:bottom-10 hidden md:block"
+                style={entranceStyle(0.15)}
+              >
+                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl">
+                  <div className="flex gap-2">
+                    {products.slice(0, GRID_SIZE).map((product, index) => (
+                      <Link
+                        key={product.id}
+                        href={`/productos/${product.slug || product.productId}`}
+                        className="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-xl overflow-hidden bg-white/40 border border-white/40 hover:scale-[1.04] transition-transform"
+                      >
+                        <SafeImage
+                          src={product.images?.[0] || '/placeholder-product.jpg'}
+                          alt={product.name}
+                          fill
+                          sizes="100px"
+                          className="object-cover"
+                          priority={index < 2}
+                        />
+                      </Link>
+                    ))}
+                    {products.length === 0 &&
+                      Array.from({ length: GRID_SIZE }).map((_, i) => (
+                        <div key={`ph-${i}`} className="w-20 h-20 lg:w-24 lg:h-24 rounded-xl bg-white/30 animate-pulse" />
+                      ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Dots below the banner */}
+        {banners.length > 1 && (
+          <div className="flex justify-center gap-2 py-4 bg-primary" role="tablist" aria-label="Banners">
+            {banners.map((banner, i) => (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Banner ${i + 1}: ${banner.alt}`}
+                onClick={() => goTo(i)}
+                className="w-10 h-10 flex items-center justify-center"
+              >
+                <span className={`block rounded-full transition-all ${i === active ? 'bg-white w-6 h-2' : 'bg-white/40 w-2 h-2'}`} />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
