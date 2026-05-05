@@ -235,11 +235,11 @@ export default function Hero() {
             <div className="container h-full relative">
               {/* Left card: title */}
               <div
-                className="pointer-events-auto absolute left-2 sm:left-6 lg:left-10 bottom-6 lg:bottom-10 max-w-[280px] sm:max-w-xs lg:max-w-sm"
+                className="pointer-events-auto absolute left-14 sm:left-20 lg:left-24 bottom-6 lg:bottom-10 max-w-[240px] sm:max-w-[260px] lg:max-w-[300px]"
                 style={entranceStyle(0.1)}
               >
-                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-5 sm:p-6 shadow-xl">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.05]">
+                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl">
+                  <h1 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-bold text-white leading-[1.1]">
                     Regalos<br />
                     <RotatingWord /><br />
                     que Inspiran
@@ -249,11 +249,11 @@ export default function Hero() {
 
               {/* Right card: description + CTAs */}
               <div
-                className="pointer-events-auto absolute right-2 sm:right-6 lg:right-10 bottom-6 lg:bottom-10 max-w-[280px] sm:max-w-xs lg:max-w-sm"
+                className="pointer-events-auto absolute right-14 sm:right-20 lg:right-24 bottom-6 lg:bottom-10 max-w-[240px] sm:max-w-[260px] lg:max-w-[300px]"
                 style={entranceStyle(0.2)}
               >
-                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-5 sm:p-6 shadow-xl space-y-4">
-                  <p className="text-sm sm:text-base text-white leading-snug">
+                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl space-y-3">
+                  <p className="text-sm text-white leading-snug">
                     Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
                   </p>
                   <div className="flex flex-col gap-2">
@@ -313,23 +313,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Dots below the banner */}
-        {banners.length > 1 && (
-          <div className="flex justify-center gap-2 py-4 bg-primary" role="tablist" aria-label="Banners">
-            {banners.map((banner, i) => (
-              <button
-                key={i}
-                role="tab"
-                aria-selected={i === active}
-                aria-label={`Banner ${i + 1}: ${banner.alt}`}
-                onClick={() => goTo(i)}
-                className="w-10 h-10 flex items-center justify-center"
-              >
-                <span className={`block rounded-full transition-all ${i === active ? 'bg-white w-6 h-2' : 'bg-white/40 w-2 h-2'}`} />
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Dots removed — navigation via arrows and swipe only */}
       </div>
     </section>
   );
