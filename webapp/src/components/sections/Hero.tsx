@@ -231,15 +231,55 @@ export default function Hero() {
           )}
 
           {/* ── Floating cards over banner ── */}
-          <div className="absolute inset-0 pointer-events-none">
+          {/* Mobile: stacked column at bottom, full width */}
+          <div className="md:hidden absolute inset-x-0 bottom-3 px-3 pointer-events-none">
+            <div className="flex flex-col gap-2 max-w-md mx-auto">
+              <div
+                className="pointer-events-auto rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl"
+                style={entranceStyle(0.1)}
+              >
+                <h1 className="text-xl font-bold text-white leading-[1.15]">
+                  Regalos <RotatingWord /> que Inspiran
+                </h1>
+              </div>
+              <div
+                className="pointer-events-auto rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl"
+                style={entranceStyle(0.2)}
+              >
+                <p className="text-xs text-white leading-snug mb-2">
+                  Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    asChild
+                    size="sm"
+                    className="flex-1 bg-white text-primary hover:bg-white/90 rounded-full font-bold h-8 text-xs"
+                  >
+                    <Link href="/contacto">Cotizar</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 border-white/50 text-white bg-white/10 hover:bg-white/25 rounded-full font-semibold h-8 text-xs"
+                  >
+                    <Link href="/productos">Ver colección</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: floating cards positioned absolutely */}
+          <div className="hidden md:block absolute inset-0 pointer-events-none">
             <div className="container h-full relative">
               {/* Left card: title */}
               <div
-                className="pointer-events-auto absolute left-14 sm:left-20 lg:left-24 bottom-6 lg:bottom-10 max-w-[240px] sm:max-w-[260px] lg:max-w-[300px]"
+                className="pointer-events-auto absolute left-20 lg:left-24 bottom-6 lg:bottom-10 max-w-[260px] lg:max-w-[300px]"
                 style={entranceStyle(0.1)}
               >
                 <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl">
-                  <h1 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-bold text-white leading-[1.1]">
+                  <h1 className="text-3xl lg:text-[2.25rem] font-bold text-white leading-[1.1]">
                     Regalos<br />
                     <RotatingWord /><br />
                     que Inspiran
@@ -249,7 +289,7 @@ export default function Hero() {
 
               {/* Right card: description + CTAs */}
               <div
-                className="pointer-events-auto absolute right-14 sm:right-20 lg:right-24 bottom-6 lg:bottom-10 max-w-[240px] sm:max-w-[260px] lg:max-w-[300px]"
+                className="pointer-events-auto absolute right-20 lg:right-24 bottom-6 lg:bottom-10 max-w-[260px] lg:max-w-[300px]"
                 style={entranceStyle(0.2)}
               >
                 <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl space-y-3">
@@ -279,9 +319,9 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Center card: product strip (hidden on mobile, shown sm+) */}
+              {/* Center card: product strip (md+ only) */}
               <div
-                className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-6 lg:bottom-10 hidden md:block"
+                className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-6 lg:bottom-10"
                 style={entranceStyle(0.15)}
               >
                 <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl">
