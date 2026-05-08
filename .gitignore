@@ -58,4 +58,10 @@ next-env.d.ts
 # Docker volumes (if local)
 mongo_data/
 .claude/
-webapp/src/proveedores/
+src/proveedores/
+
+# Prisma generated
+src/generated/prisma
+
+# Adobe Illustrator
+*.ai
