@@ -12,13 +12,19 @@ function createPrismaClient() {
     connectionString = connectionString.replace(':5432', ':6543')
   }
 
+  // Strip sslmode from URL to prevent conflict with explicit ssl option.
+  // Some hosts (Hostinger LiteSpeed) reject the cert chain when both
+  // sslmode in URL AND ssl options coexist.
+  const isSupabase = connectionString.includes('supabase.com')
+  const cleanedString = connectionString
+    .replace(/[?&]sslmode=[^&]+/g, '')
+    .replace(/\?$/, '')
+
   const adapter = new PrismaPg({
-    connectionString,
+    connectionString: cleanedString,
     max: 5,
     idleTimeoutMillis: 20_000,
-    ssl: connectionString.includes('sslmode=require')
-      ? { rejectUnauthorized: false }
-      : undefined,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
   })
   return new PrismaClient({ adapter })
 }
