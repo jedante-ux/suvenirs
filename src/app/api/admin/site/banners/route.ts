@@ -1,12 +1,20 @@
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
+export const dynamic = 'force-dynamic'
+
+let _supabase: SupabaseClient | null = null
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
+  }
+  return _supabase
+}
 
 export async function GET() {
   const admin = await requireAdmin()
@@ -37,7 +45,8 @@ export async function POST(req: NextRequest) {
       const fileName = `banner-${Date.now()}.${ext}`
       const buffer = Buffer.from(await file.arrayBuffer())
 
-      const { error: uploadError } = await supabase.storage
+      const sb = getSupabase()
+      const { error: uploadError } = await sb.storage
         .from('banners')
         .upload(fileName, buffer, { contentType: file.type, upsert: true })
 
@@ -45,7 +54,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: uploadError.message }, { status: 400 })
       }
 
-      const { data: urlData } = supabase.storage.from('banners').getPublicUrl(fileName)
+      const { data: urlData } = sb.storage.from('banners').getPublicUrl(fileName)
       imageUrl = urlData.publicUrl
     } else {
       imageUrl = (formData.get('imageUrl') as string) || ''
@@ -108,7 +117,7 @@ export async function DELETE(req: NextRequest) {
     // Delete from storage if Supabase URL
     if (banner.imageUrl.includes('supabase')) {
       const path = banner.imageUrl.split('/banners/').pop()
-      if (path) await supabase.storage.from('banners').remove([path])
+      if (path) await getSupabase().storage.from('banners').remove([path])
     }
 
     await prisma.siteBanner.delete({ where: { id } })
