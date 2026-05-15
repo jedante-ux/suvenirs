@@ -175,23 +175,29 @@ export default function Hero() {
         <HeroSearch />
       </div>
 
-      {/* Banner background slider */}
-      <div className="relative w-full">
+      {/* Banner strip — edge to edge, top of hero */}
+      <div
+        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
+        style={{ aspectRatio: '5 / 1' }}
+        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => { touchEndX.current = e.changedTouches[0].clientX; handleSwipe(); }}
+        onMouseDown={(e) => { touchStartX.current = e.clientX; }}
+        onMouseUp={(e) => { touchEndX.current = e.clientX; handleSwipe(); }}
+      >
         <div
-          className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
-          style={{ height: 'clamp(420px, 65vh, 620px)' }}
-          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
-          onTouchEnd={(e) => { touchEndX.current = e.changedTouches[0].clientX; handleSwipe(); }}
-          onMouseDown={(e) => { touchStartX.current = e.clientX; }}
-          onMouseUp={(e) => { touchEndX.current = e.clientX; handleSwipe(); }}
+          className="flex h-full transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${active * 100}%)` }}
         >
-          {/* Banner images sliding */}
-          <div
-            className="flex h-full transition-transform duration-700 ease-out"
-            style={{ transform: `translateX(-${active * 100}%)` }}
-          >
-            {banners.map((banner, i) => (
-              <div key={i} className="relative h-full flex-shrink-0" style={{ minWidth: '100%' }}>
+          {banners.map((banner, i) => {
+            const Wrapper = banner.linkUrl ? Link : 'div'
+            const wrapperProps = banner.linkUrl ? { href: banner.linkUrl } : {}
+            return (
+              <Wrapper
+                key={i}
+                {...wrapperProps as any}
+                className="relative h-full flex-shrink-0 block"
+                style={{ minWidth: '100%' }}
+              >
                 <SafeImage
                   src={banner.imageUrl}
                   alt={banner.alt}
@@ -200,160 +206,96 @@ export default function Hero() {
                   className="object-cover pointer-events-none"
                   priority={i === 0}
                 />
-              </div>
-            ))}
-            {banners.length === 0 && (
-              <div className="relative h-full flex-shrink-0 bg-primary/30" style={{ minWidth: '100%' }} />
-            )}
-          </div>
-
-          {/* Subtle dark overlay for card legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/30 pointer-events-none" />
-
-          {/* Side arrows */}
-          {banners.length > 1 && (
-            <>
-              <button
-                onClick={() => goTo(active - 1)}
-                aria-label="Banner anterior"
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
-              <button
-                onClick={() => goTo(active + 1)}
-                aria-label="Banner siguiente"
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
-              >
-                <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
-            </>
+              </Wrapper>
+            )
+          })}
+          {banners.length === 0 && (
+            <div className="relative h-full flex-shrink-0 bg-primary/30" style={{ minWidth: '100%' }} />
           )}
+        </div>
 
-          {/* ── Floating cards over banner ── */}
-          {/* Mobile: stacked column at bottom, full width */}
-          <div className="md:hidden absolute inset-x-0 bottom-3 px-3 pointer-events-none">
-            <div className="flex flex-col gap-2 max-w-md mx-auto">
-              <div
-                className="pointer-events-auto rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl"
-                style={entranceStyle(0.1)}
+        {/* Side arrows */}
+        {banners.length > 1 && (
+          <>
+            <button
+              onClick={() => goTo(active - 1)}
+              aria-label="Banner anterior"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+            <button
+              onClick={() => goTo(active + 1)}
+              aria-label="Banner siguiente"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/30 backdrop-blur-md border border-white/40 flex items-center justify-center text-white hover:bg-white/50 transition-colors"
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Content below banner: title + CTAs + product grid */}
+      <div className="container relative z-10 py-10 md:py-14">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left: copy + CTAs */}
+          <div className="text-center lg:text-left space-y-5" style={entranceStyle(0.1)}>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.1]">
+              Regalos<br />
+              <RotatingWord /><br />
+              que Inspiran
+            </h1>
+            <p className="text-sm md:text-base text-white/85 max-w-lg mx-auto lg:mx-0">
+              Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <Button
+                asChild
+                size="lg"
+                className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 rounded-full px-8 font-bold transition-transform duration-300 hover:scale-[1.03]"
               >
-                <h1 className="text-xl font-bold text-white leading-[1.15]">
-                  Regalos <RotatingWord /> que Inspiran
-                </h1>
-              </div>
-              <div
-                className="pointer-events-auto rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl"
-                style={entranceStyle(0.2)}
+                <Link href="/contacto">Cotizar ahora</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-8 font-semibold hover:scale-[1.03]"
               >
-                <p className="text-xs text-white leading-snug mb-2">
-                  Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    asChild
-                    size="sm"
-                    className="flex-1 bg-white text-primary hover:bg-white/90 rounded-full font-bold h-8 text-xs"
-                  >
-                    <Link href="/contacto">Cotizar</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 border-white/50 text-white bg-white/10 hover:bg-white/25 rounded-full font-semibold h-8 text-xs"
-                  >
-                    <Link href="/productos">Ver colección</Link>
-                  </Button>
-                </div>
-              </div>
+                <Link href="/productos">
+                  Ver colección
+                  <ArrowRightIcon size={18} className="ml-2" />
+                </Link>
+              </Button>
             </div>
           </div>
 
-          {/* Desktop: floating cards positioned absolutely */}
-          <div className="hidden md:block absolute inset-0 pointer-events-none">
-            <div className="container h-full relative">
-              {/* Left card: title */}
-              <div
-                className="pointer-events-auto absolute left-20 lg:left-24 bottom-6 lg:bottom-10 max-w-[260px] lg:max-w-[300px]"
-                style={entranceStyle(0.1)}
-              >
-                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl">
-                  <h1 className="text-3xl lg:text-[2.25rem] font-bold text-white leading-[1.1]">
-                    Regalos<br />
-                    <RotatingWord /><br />
-                    que Inspiran
-                  </h1>
-                </div>
-              </div>
-
-              {/* Right card: description + CTAs */}
-              <div
-                className="pointer-events-auto absolute right-20 lg:right-24 bottom-6 lg:bottom-10 max-w-[260px] lg:max-w-[300px]"
-                style={entranceStyle(0.2)}
-              >
-                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-4 sm:p-5 shadow-xl space-y-3">
-                  <p className="text-sm text-white leading-snug">
-                    Merch personalizado para cada ocasión. Cotiza online y recibe en todo Chile.
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    <Button
-                      asChild
-                      size="sm"
-                      className="w-full bg-white text-primary hover:bg-white/90 rounded-full font-bold"
-                    >
-                      <Link href="/contacto">Cotizar ahora</Link>
-                    </Button>
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="w-full border-white/50 text-white bg-white/10 hover:bg-white/25 rounded-full font-semibold"
-                    >
-                      <Link href="/productos">
-                        Ver colección
-                        <ArrowRightIcon size={14} className="ml-1.5" />
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Center card: product strip (md+ only) */}
-              <div
-                className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-6 lg:bottom-10"
-                style={entranceStyle(0.15)}
-              >
-                <div className="rounded-2xl bg-white/15 backdrop-blur-md border border-white/30 p-3 shadow-xl">
-                  <div className="flex gap-2">
-                    {products.slice(0, GRID_SIZE).map((product, index) => (
-                      <Link
-                        key={product.id}
-                        href={`/productos/${product.slug || product.productId}`}
-                        className="group relative w-20 h-20 lg:w-24 lg:h-24 rounded-xl overflow-hidden bg-white/40 border border-white/40 hover:scale-[1.04] transition-transform"
-                      >
-                        <SafeImage
-                          src={product.images?.[0] || '/placeholder-product.jpg'}
-                          alt={product.name}
-                          fill
-                          sizes="100px"
-                          className="object-cover"
-                          priority={index < 2}
-                        />
-                      </Link>
-                    ))}
-                    {products.length === 0 &&
-                      Array.from({ length: GRID_SIZE }).map((_, i) => (
-                        <div key={`ph-${i}`} className="w-20 h-20 lg:w-24 lg:h-24 rounded-xl bg-white/30 animate-pulse" />
-                      ))}
-                  </div>
-                </div>
-              </div>
+          {/* Right: product grid */}
+          <div style={entranceStyle(0.2)}>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 lg:gap-3 w-full max-w-md lg:max-w-lg mx-auto">
+              {products.slice(0, GRID_SIZE).map((product, index) => (
+                <Link
+                  key={product.id}
+                  href={`/productos/${product.slug || product.productId}`}
+                  className="group relative aspect-square rounded-xl overflow-hidden bg-white/20 border border-white/20 hover:scale-[1.04] transition-transform"
+                >
+                  <SafeImage
+                    src={product.images?.[0] || '/placeholder-product.jpg'}
+                    alt={product.name}
+                    fill
+                    sizes="200px"
+                    className="object-cover"
+                    priority={index < 2}
+                  />
+                </Link>
+              ))}
+              {products.length === 0 &&
+                Array.from({ length: GRID_SIZE }).map((_, i) => (
+                  <div key={`ph-${i}`} className="aspect-square rounded-xl bg-white/20 animate-pulse" />
+                ))}
             </div>
           </div>
         </div>
-
-        {/* Dots removed — navigation via arrows and swipe only */}
       </div>
     </section>
   );
