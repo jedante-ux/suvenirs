@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Product, ProductVariant, ProductAttribute } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,18 @@ export default function ProductActions({ product }: ProductActionsProps) {
   const attributes = product.attributes || [];
   const variants = product.variants || [];
   const hasVariants = variants.length > 0;
+
+  // Auto-select attributes that have only one option (one-variant products)
+  useEffect(() => {
+    if (attributes.length === 0) return;
+    const autoSelected: Record<string, string> = {};
+    for (const attr of attributes) {
+      if (attr.values.length === 1) autoSelected[attr.name] = attr.values[0];
+    }
+    if (Object.keys(autoSelected).length > 0) {
+      setSelectedAttrs(prev => ({ ...autoSelected, ...prev }));
+    }
+  }, [attributes]);
 
   // Find matching variant based on selected attributes
   const selectedVariant = useMemo(() => {
