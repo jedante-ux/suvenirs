@@ -31,6 +31,18 @@ export default function ProductActions({ product }: ProductActionsProps) {
   const variants = product.variants || [];
   const hasVariants = variants.length > 0;
 
+  // Attribute names that are actually used by variants (variant-defining attrs).
+  // Other attributes (e.g. "Material", "Impresión", "Tamaño" with a single value)
+  // are informational and not required for variant matching.
+  const variantAttrKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const v of variants) {
+      const vAttrs = (v.attributes as Record<string, string>) || {};
+      for (const k of Object.keys(vAttrs)) keys.add(k);
+    }
+    return keys;
+  }, [variants]);
+
   // Auto-select attributes that have only one option (one-variant products)
   useEffect(() => {
     if (attributes.length === 0) return;
@@ -43,14 +55,19 @@ export default function ProductActions({ product }: ProductActionsProps) {
     }
   }, [attributes]);
 
-  // Find matching variant based on selected attributes
+  // Find matching variant based on selected variant-defining attrs only
   const selectedVariant = useMemo(() => {
-    if (!hasVariants || Object.keys(selectedAttrs).length === 0) return null;
+    if (!hasVariants) return null;
+    const relevantSel: Record<string, string> = {};
+    for (const k of Object.keys(selectedAttrs)) {
+      if (variantAttrKeys.has(k)) relevantSel[k] = selectedAttrs[k];
+    }
+    if (Object.keys(relevantSel).length === 0) return variants[0] || null;
     return variants.find(v => {
-      const vAttrs = v.attributes as Record<string, string>;
-      return Object.entries(selectedAttrs).every(([key, val]) => vAttrs[key] === val);
+      const vAttrs = (v.attributes as Record<string, string>) || {};
+      return Object.entries(relevantSel).every(([key, val]) => vAttrs[key] === val);
     }) || null;
-  }, [hasVariants, variants, selectedAttrs]);
+  }, [hasVariants, variants, selectedAttrs, variantAttrKeys]);
 
   // Build images list: product images + variant image if selected
   const allImages = useMemo(() => {
@@ -82,9 +99,13 @@ export default function ProductActions({ product }: ProductActionsProps) {
     }
   };
 
-  // Check if all required attributes are selected
-  const allAttrsSelected = attributes.length === 0 || attributes.every(a => selectedAttrs[a.name]);
-  const canAdd = !hasVariants || (allAttrsSelected && selectedVariant);
+  // Check if all variant-defining attributes are selected
+  const allVariantAttrsSelected =
+    !hasVariants ||
+    attributes
+      .filter(a => variantAttrKeys.has(a.name))
+      .every(a => selectedAttrs[a.name]);
+  const canAdd = !hasVariants || (allVariantAttrsSelected && !!selectedVariant);
 
   const handleAddToCart = () => {
     if (hasVariants && !selectedVariant) {
@@ -254,7 +275,7 @@ export default function ProductActions({ product }: ProductActionsProps) {
         </Button>
       </div>
 
-      {hasVariants && !allAttrsSelected && (
+      {hasVariants && !allVariantAttrsSelected && (
         <p className="text-sm text-amber-600">Selecciona todas las opciones para agregar al carrito</p>
       )}
     </div>
