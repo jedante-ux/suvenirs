@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import { prisma } from '@/lib/prisma'
 import {
   User,
   Building2,
@@ -53,11 +54,22 @@ interface Quote {
 
 async function getQuote(token: string): Promise<Quote | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/quotes/public/${token}`, { cache: 'no-store' })
-    if (!res.ok) return null
-    const result = await res.json()
-    return result.success ? result.data : null
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(token)) return null
+    const quote = await prisma.quote.findUnique({
+      where: { publicToken: token },
+      include: {
+        items: true,
+        stampingType: true,
+        kit: { select: { name: true, slug: true } },
+      },
+    })
+    if (!quote) return null
+    return {
+      ...quote,
+      createdAt: quote.createdAt.toISOString(),
+      items: quote.items.filter((item: any) => !item.outOfStock),
+    } as unknown as Quote
   } catch {
     return null
   }
